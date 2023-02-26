@@ -8,26 +8,6 @@ typedef struct linked_list
 	struct linked_list *p_prev;
 } List;
 
-List *list_init()
-{
-	List *p_head = NULL;
-
-	p_head = (List *)malloc(sizeof(List));
-	if (p_head == NULL)
-	{
-		printf("Memory allocation failed!\n");
-		exit(1);
-	}
-	printf("Please enter first value to add in the new list:\n");
-	scanf("%d", &(p_head->data));
-	p_head->p_next = NULL;
-	p_head->p_prev = NULL;
-
-	printf("List was initialized successfully.\nFirst element value: %d\nAddress of the first element: %d\n\n", p_head->data, p_head);
-
-	return p_head;
-}
-
 void push(List *p_head)
 {
 	if (p_head == NULL)
@@ -149,9 +129,10 @@ void shift(List **pp_head)
 
 void delete_list(List **pp_head)
 {
-	List * current = *pp_head;
-	while (current != NULL){
-		List * previous = current;
+	List *current = *pp_head;
+	while (current != NULL)
+	{
+		List *previous = current;
 		current = current->p_next;
 		free(previous);
 		printf("Memory was freed! :)\n");
@@ -264,4 +245,50 @@ void insert_after(List *p_head, int index)
 		right_elem->p_prev = new_elem;
 	}
 	printf("New list element was successfully added at #%d position.\n\n", index + 1);
+}
+
+List *create_list(int length)
+{
+	if (length < 1)
+	{
+		printf("Error! Invalid length entered.\n");
+		return NULL;
+	}
+
+	List *p_head = (List *)malloc(sizeof(List));
+	if (p_head == NULL)
+	{
+		printf("Memory allocation failed!\n");
+		exit(1);
+	}
+
+	int counter = 1;
+	printf("Please enter value to add at the #%d position of the list:\n", counter);
+	scanf("%d", &(p_head->data));
+
+	p_head->p_next = NULL;
+	p_head->p_prev = NULL;
+
+	List *current = p_head;
+	while (counter < length)
+	{
+		List *new_elem = (List *)malloc(sizeof(List));
+		if (new_elem == NULL)
+		{
+			printf("Memory allocation failed!\n");
+			exit(1);
+		}
+
+		printf("Please enter value to add at the #%d position of the list:\n", ++counter);
+		scanf("%d", &(new_elem->data));
+		new_elem->p_prev = current;
+		new_elem->p_next = NULL;
+
+		current->p_next = new_elem;
+		current = current->p_next;
+	}
+
+	printf("List was created succsessfully!\n");
+	print_list(p_head);
+	return p_head;
 }
