@@ -11,7 +11,7 @@ int main()
 	unshift(&p_list);
 	push(p_list);
 	print_list(p_list);
-	insert_after(p_list, 100, 3);
+	insert_after(p_list, 3);
 	print_list(p_list);
 	log_list(p_list);
 	pop(&p_list);

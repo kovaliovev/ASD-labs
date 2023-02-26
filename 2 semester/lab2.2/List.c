@@ -48,16 +48,16 @@ void push(List *p_head)
 
 	new_elem->p_next = NULL;
 	new_elem->p_prev = NULL;
-	
+
 	printf("New list element was created successfully.\nIts value: %d\nIts address: %d\n", new_elem->data, new_elem);
 
 	List *current = p_head;
-	
+
 	while (current->p_next != NULL)
 	{
 		current = current->p_next;
 	}
-	
+
 	current->p_next = new_elem;
 	new_elem->p_prev = current;
 	printf("This element was pushed in the end of list.\n\n");
@@ -209,26 +209,26 @@ int count_bigger_than(List *p_head, int number)
 	return counter;
 }
 
-void insert_after(List *p_head, int value, int number)
+void insert_after(List *p_head, int index)
 {
 	if (p_head == NULL)
 	{
 		printf("Error! List does not exist.");
 		return;
 	}
-	if (number < 1)
+	if (index < 1)
 	{
 		printf("Error! Invalid index of insertion.");
 		return;
 	}
 
 	List *left_elem = p_head;
-	int index = 1;
+	int counter = 1;
 
-	while (index < number && left_elem->p_next != NULL)
+	while (counter < index && left_elem->p_next != NULL)
 	{
 		left_elem = left_elem->p_next;
-		index++;
+		counter++;
 	}
 
 	List *right_elem = left_elem->p_next;
@@ -239,7 +239,8 @@ void insert_after(List *p_head, int value, int number)
 		printf("Memory allocation failed!\n");
 		exit(1);
 	}
-	new_elem->data = value;
+	printf("Please enter value to add at the #%d position of list:\n", index + 1);
+	scanf("%d", &(new_elem->data));
 	new_elem->p_prev = left_elem;
 	new_elem->p_next = right_elem;
 	printf("New list element was created successfully.\nIts value: %d\nIts address: %d\n", new_elem->data, new_elem);
