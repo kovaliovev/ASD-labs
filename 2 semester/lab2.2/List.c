@@ -27,7 +27,7 @@ List *list_init(int value)
 	return p_head;
 }
 
-void push(List *p_head, int value)
+void push(List *p_head)
 {
 	if (p_head == NULL)
 	{
@@ -42,9 +42,11 @@ void push(List *p_head, int value)
 		exit(1);
 	}
 
+	printf("Please enter value to add in the end of list list:\n");
+	scanf("%d", &(new_elem->data));
+
 	new_elem->p_next = NULL;
 	new_elem->p_prev = NULL;
-	new_elem->data = value;
 	
 	printf("New list element was created successfully.\nIts value: %d\nIts address: %d\n", new_elem->data, new_elem);
 
@@ -75,7 +77,9 @@ void unshift(List **pp_head, int value)
 		exit(1);
 	}
 
-	new_elem->data = value;
+	printf("Please enter value to add in the beginning of list:\n");
+	scanf("%d", &(new_elem->data));
+
 	new_elem->p_next = *pp_head;
 	new_elem->p_prev = NULL;
 	printf("New list element was created successfully.\nIts value: %d\nIts address: %d\n", new_elem->data, new_elem);
