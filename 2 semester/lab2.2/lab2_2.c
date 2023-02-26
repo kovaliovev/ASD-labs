@@ -14,12 +14,7 @@ int main()
 	insert_after(p_list, 3);
 	print_list(p_list);
 	log_list(p_list);
-	pop(&p_list);
-	pop(&p_list);
-	pop(&p_list);
-	pop(&p_list);
-	pop(&p_list);
-	pop(&p_list);
-	pop(&p_list);
+	delete_list(&p_list);
+	print_list(p_list);
 	return 0;
 }
