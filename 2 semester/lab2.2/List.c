@@ -9,15 +9,19 @@ typedef struct linked_list
 	struct linked_list *p_prev;
 } List;
 
-void check_mem_error(List * new_elem) {
-	if(new_elem == NULL){
+void check_mem_error(List *new_elem)
+{
+	if (new_elem == NULL)
+	{
 		printf("Memory allocation failed!\n");
 		exit(1);
 	}
 }
 
-bool is_list_exist(List *p_head){
-	if(p_head == NULL) {
+bool is_list_exist(List *p_head)
+{
+	if (p_head == NULL)
+	{
 		printf("Error! The list does not exist!\n\n");
 		return false;
 	}
@@ -25,8 +29,9 @@ bool is_list_exist(List *p_head){
 }
 
 void push(List *p_head)
-{	
-	if(!is_list_exist(p_head)) return;
+{
+	if (!is_list_exist(p_head))
+		return;
 
 	List *new_elem = (List *)malloc(sizeof(List));
 	check_mem_error(new_elem);
@@ -53,7 +58,8 @@ void push(List *p_head)
 
 void unshift(List **pp_head)
 {
-	if(!is_list_exist(*pp_head)) return;
+	if (!is_list_exist(*pp_head))
+		return;
 
 	List *new_elem = (List *)malloc(sizeof(List));
 	check_mem_error(new_elem);
@@ -72,7 +78,8 @@ void unshift(List **pp_head)
 
 void pop(List **pp_head)
 {
-	if(!is_list_exist(*pp_head)) return;
+	if (!is_list_exist(*pp_head))
+		return;
 
 	List *current = (*pp_head);
 	while (current->p_next != NULL)
@@ -98,7 +105,8 @@ void pop(List **pp_head)
 
 void shift(List **pp_head)
 {
-	if(!is_list_exist(*pp_head)) return;
+	if (!is_list_exist(*pp_head))
+		return;
 
 	List *current = (*pp_head);
 
@@ -120,8 +128,9 @@ void shift(List **pp_head)
 }
 
 void delete_list(List **pp_head)
-{	
-	if(!is_list_exist(*pp_head)) return;
+{
+	if (!is_list_exist(*pp_head))
+		return;
 
 	List *current = *pp_head;
 	while (current != NULL)
@@ -137,7 +146,8 @@ void delete_list(List **pp_head)
 
 void print_list(List *p_head)
 {
-	if(!is_list_exist(p_head)) return;
+	if (!is_list_exist(p_head))
+		return;
 
 	List *current = p_head;
 
@@ -153,7 +163,8 @@ void print_list(List *p_head)
 
 void log_list(List *p_head)
 {
-	if(!is_list_exist(p_head)) return;
+	if (!is_list_exist(p_head))
+		return;
 
 	List *current = p_head;
 	int counter = 1;
@@ -173,7 +184,8 @@ void log_list(List *p_head)
 
 int count_bigger_than(List *p_head, int number)
 {
-	if(!is_list_exist(p_head)) return -1;
+	if (!is_list_exist(p_head))
+		return -1;
 
 	int counter = 0;
 	List *current = p_head;
@@ -188,7 +200,8 @@ int count_bigger_than(List *p_head, int number)
 
 void insert_after(List *p_head, int index)
 {
-	if(!is_list_exist(p_head)) return;
+	if (!is_list_exist(p_head))
+		return;
 	if (index < 1)
 	{
 		printf("Error! Invalid index of insertion.");
