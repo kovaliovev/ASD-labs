@@ -8,6 +8,13 @@ typedef struct linked_list
 	struct linked_list *p_prev;
 } List;
 
+void check_error(List * new_elem) {
+	if(new_elem == NULL){
+		printf("Memory allocation failed!\n");
+		exit(1);
+	}
+}
+
 void push(List *p_head)
 {
 	if (p_head == NULL)
@@ -17,11 +24,7 @@ void push(List *p_head)
 	}
 
 	List *new_elem = (List *)malloc(sizeof(List));
-	if (new_elem == NULL)
-	{
-		printf("Memory allocation failed!\n");
-		exit(1);
-	}
+	check_error(new_elem);
 
 	printf("Please enter value to add in the end of list:\n");
 	scanf("%d", &(new_elem->data));
@@ -52,11 +55,7 @@ void unshift(List **pp_head)
 	}
 
 	List *new_elem = (List *)malloc(sizeof(List));
-	if (new_elem == NULL)
-	{
-		printf("Memory allocation failed!\n");
-		exit(1);
-	}
+	check_error(new_elem);
 
 	printf("Please enter value to add in the beginning of list:\n");
 	scanf("%d", &(new_elem->data));
@@ -234,11 +233,8 @@ void insert_after(List *p_head, int index)
 	List *right_elem = left_elem->p_next;
 
 	List *new_elem = (List *)malloc(sizeof(List));
-	if (new_elem == NULL)
-	{
-		printf("Memory allocation failed!\n");
-		exit(1);
-	}
+	check_error(new_elem);
+
 	printf("Please enter value to add at the #%d position of list:\n", index + 1);
 	scanf("%d", &(new_elem->data));
 	new_elem->p_prev = left_elem;
@@ -262,11 +258,7 @@ List *create_list(int length)
 	}
 
 	List *p_head = (List *)malloc(sizeof(List));
-	if (p_head == NULL)
-	{
-		printf("Memory allocation failed!\n");
-		exit(1);
-	}
+	check_error(p_head);
 
 	int counter = 1;
 	printf("Please enter value to add at the #%d position of the list:\n", counter);
@@ -279,11 +271,7 @@ List *create_list(int length)
 	while (counter < length)
 	{
 		List *new_elem = (List *)malloc(sizeof(List));
-		if (new_elem == NULL)
-		{
-			printf("Memory allocation failed!\n");
-			exit(1);
-		}
+		check_error(new_elem);
 
 		printf("Please enter value to add at the #%d position of the list:\n", ++counter);
 		scanf("%d", &(new_elem->data));
