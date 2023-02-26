@@ -2,7 +2,7 @@
 
 int main()
 {
-	List *p_list = create_list(3);
+	List *p_list = create_list(0);
 	delete_list(&p_list);
 	print_list(p_list);
 	return 0;

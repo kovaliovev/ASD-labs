@@ -128,7 +128,13 @@ void shift(List **pp_head)
 }
 
 void delete_list(List **pp_head)
-{
+{	
+	if ((*pp_head) == NULL)
+	{
+		printf("Error! The list does not exist!\n\n");
+		return;
+	}
+
 	List *current = *pp_head;
 	while (current != NULL)
 	{
@@ -251,7 +257,7 @@ List *create_list(int length)
 {
 	if (length < 1)
 	{
-		printf("Error! Invalid length entered.\n");
+		printf("Error! Invalid length entered.\n\n");
 		return NULL;
 	}
 
