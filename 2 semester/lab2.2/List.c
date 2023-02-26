@@ -8,7 +8,7 @@ typedef struct linked_list
 	struct linked_list *p_prev;
 } List;
 
-List *list_init(int value)
+List *list_init()
 {
 	List *p_head = NULL;
 
@@ -18,7 +18,8 @@ List *list_init(int value)
 		printf("Memory allocation failed!\n");
 		exit(1);
 	}
-	p_head->data = value;
+	printf("Please enter first value to add in the new list:\n");
+	scanf("%d", &(p_head->data));
 	p_head->p_next = NULL;
 	p_head->p_prev = NULL;
 
@@ -42,7 +43,7 @@ void push(List *p_head)
 		exit(1);
 	}
 
-	printf("Please enter value to add in the end of list list:\n");
+	printf("Please enter value to add in the end of list:\n");
 	scanf("%d", &(new_elem->data));
 
 	new_elem->p_next = NULL;
@@ -62,7 +63,7 @@ void push(List *p_head)
 	printf("This element was pushed in the end of list.\n\n");
 }
 
-void unshift(List **pp_head, int value)
+void unshift(List **pp_head)
 {
 	if ((*pp_head) == NULL)
 	{
