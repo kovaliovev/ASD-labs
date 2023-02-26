@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 typedef struct linked_list
 {
@@ -8,23 +9,27 @@ typedef struct linked_list
 	struct linked_list *p_prev;
 } List;
 
-void check_error(List * new_elem) {
+void check_mem_error(List * new_elem) {
 	if(new_elem == NULL){
 		printf("Memory allocation failed!\n");
 		exit(1);
 	}
 }
 
-void push(List *p_head)
-{
-	if (p_head == NULL)
-	{
+bool is_list_exist(List *p_head){
+	if(p_head == NULL) {
 		printf("Error! The list does not exist!\n\n");
-		return;
+		return false;
 	}
+	return true;
+}
+
+void push(List *p_head)
+{	
+	if(!is_list_exist(p_head)) return;
 
 	List *new_elem = (List *)malloc(sizeof(List));
-	check_error(new_elem);
+	check_mem_error(new_elem);
 
 	printf("Please enter value to add in the end of list:\n");
 	scanf("%d", &(new_elem->data));
@@ -48,14 +53,10 @@ void push(List *p_head)
 
 void unshift(List **pp_head)
 {
-	if ((*pp_head) == NULL)
-	{
-		printf("Error! The list does not exist!\n\n");
-		return;
-	}
+	if(!is_list_exist(*pp_head)) return;
 
 	List *new_elem = (List *)malloc(sizeof(List));
-	check_error(new_elem);
+	check_mem_error(new_elem);
 
 	printf("Please enter value to add in the beginning of list:\n");
 	scanf("%d", &(new_elem->data));
@@ -71,11 +72,7 @@ void unshift(List **pp_head)
 
 void pop(List **pp_head)
 {
-	if ((*pp_head) == NULL)
-	{
-		printf("Error! The list does not exist!\n\n");
-		return;
-	}
+	if(!is_list_exist(*pp_head)) return;
 
 	List *current = (*pp_head);
 	while (current->p_next != NULL)
@@ -101,11 +98,7 @@ void pop(List **pp_head)
 
 void shift(List **pp_head)
 {
-	if ((*pp_head) == NULL)
-	{
-		printf("Error!The list does not exist!\n\n");
-		return;
-	}
+	if(!is_list_exist(*pp_head)) return;
 
 	List *current = (*pp_head);
 
@@ -128,11 +121,7 @@ void shift(List **pp_head)
 
 void delete_list(List **pp_head)
 {	
-	if ((*pp_head) == NULL)
-	{
-		printf("Error! The list does not exist!\n\n");
-		return;
-	}
+	if(!is_list_exist(*pp_head)) return;
 
 	List *current = *pp_head;
 	while (current != NULL)
@@ -148,11 +137,7 @@ void delete_list(List **pp_head)
 
 void print_list(List *p_head)
 {
-	if (p_head == NULL)
-	{
-		printf("Error! The list does not exist!\n\n");
-		return;
-	}
+	if(!is_list_exist(p_head)) return;
 
 	List *current = p_head;
 
@@ -168,11 +153,7 @@ void print_list(List *p_head)
 
 void log_list(List *p_head)
 {
-	if (p_head == NULL)
-	{
-		printf("Error! The list does not exist!\n\n");
-		return;
-	}
+	if(!is_list_exist(p_head)) return;
 
 	List *current = p_head;
 	int counter = 1;
@@ -192,11 +173,8 @@ void log_list(List *p_head)
 
 int count_bigger_than(List *p_head, int number)
 {
-	if (p_head == NULL)
-	{
-		printf("Error! The list does not exist!\n\n");
-		return -1;
-	}
+	if(!is_list_exist(p_head)) return -1;
+
 	int counter = 0;
 	List *current = p_head;
 	while (current != NULL)
@@ -210,11 +188,7 @@ int count_bigger_than(List *p_head, int number)
 
 void insert_after(List *p_head, int index)
 {
-	if (p_head == NULL)
-	{
-		printf("Error! List does not exist.");
-		return;
-	}
+	if(!is_list_exist(p_head)) return;
 	if (index < 1)
 	{
 		printf("Error! Invalid index of insertion.");
@@ -233,7 +207,7 @@ void insert_after(List *p_head, int index)
 	List *right_elem = left_elem->p_next;
 
 	List *new_elem = (List *)malloc(sizeof(List));
-	check_error(new_elem);
+	check_mem_error(new_elem);
 
 	printf("Please enter value to add at the #%d position of list:\n", index + 1);
 	scanf("%d", &(new_elem->data));
@@ -258,7 +232,7 @@ List *create_list(int length)
 	}
 
 	List *p_head = (List *)malloc(sizeof(List));
-	check_error(p_head);
+	check_mem_error(p_head);
 
 	int counter = 1;
 	printf("Please enter value to add at the #%d position of the list:\n", counter);
@@ -271,7 +245,7 @@ List *create_list(int length)
 	while (counter < length)
 	{
 		List *new_elem = (List *)malloc(sizeof(List));
-		check_error(new_elem);
+		check_mem_error(new_elem);
 
 		printf("Please enter value to add at the #%d position of the list:\n", ++counter);
 		scanf("%d", &(new_elem->data));
