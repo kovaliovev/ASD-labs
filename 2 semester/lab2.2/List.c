@@ -204,7 +204,7 @@ void insert_after(List *p_head, int index)
 		return;
 	if (index < 1)
 	{
-		printf("Error! Invalid index of insertion.");
+		printf("Error! Invalid index of insertion.\n");
 		return;
 	}
 
