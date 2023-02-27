@@ -8,7 +8,7 @@ typedef struct linked_list
 	struct linked_list *p_next;
 	struct linked_list *p_prev;
 } List;
-//error-check functions
+// error-check functions
 void check_mem_error(List *new_elem)
 {
 	if (new_elem == NULL)
@@ -27,7 +27,7 @@ bool is_list_exist(List *p_head)
 	}
 	return true;
 }
-//basic functions
+// basic functions
 void push(List *p_head)
 {
 	if (!is_list_exist(p_head))
@@ -219,7 +219,7 @@ void delete_list(List **pp_head)
 	(*pp_head) = NULL;
 	printf("The list no longer exists!\n\n");
 }
-//functions to do the task
+// functions to do the task
 int count_bigger_than(List *p_head, int number)
 {
 	if (!is_list_exist(p_head))
@@ -273,4 +273,3 @@ void insert_after(List *p_head, int index)
 	}
 	printf("New list element was successfully added at #%d position.\n\n", index + 1);
 }
-
