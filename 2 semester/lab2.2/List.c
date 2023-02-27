@@ -8,7 +8,7 @@ typedef struct linked_list
 	struct linked_list *p_next;
 	struct linked_list *p_prev;
 } List;
-
+//error-check functions
 void check_mem_error(List *new_elem)
 {
 	if (new_elem == NULL)
@@ -27,7 +27,7 @@ bool is_list_exist(List *p_head)
 	}
 	return true;
 }
-
+//basic functions
 void push(List *p_head)
 {
 	if (!is_list_exist(p_head))
@@ -127,23 +127,6 @@ void shift(List **pp_head)
 	printf("Memory was freed! :)\n\n");
 }
 
-void delete_list(List **pp_head)
-{
-	if (!is_list_exist(*pp_head))
-		return;
-
-	List *current = *pp_head;
-	while (current != NULL)
-	{
-		List *previous = current;
-		current = current->p_next;
-		free(previous);
-		printf("Memory was freed! :)\n");
-	}
-	(*pp_head) = NULL;
-	printf("The list no longer exists!\n\n");
-}
-
 void print_list(List *p_head)
 {
 	if (!is_list_exist(p_head))
@@ -182,6 +165,61 @@ void log_list(List *p_head)
 	}
 }
 
+List *create_list(int length)
+{
+	if (length < 1)
+	{
+		printf("Error! Invalid length entered.\n\n");
+		return NULL;
+	}
+
+	List *p_head = (List *)malloc(sizeof(List));
+	check_mem_error(p_head);
+
+	int counter = 1;
+	printf("Please enter value to add at the #%d position of the list:\n", counter);
+	scanf("%d", &(p_head->data));
+
+	p_head->p_next = NULL;
+	p_head->p_prev = NULL;
+
+	List *current = p_head;
+	while (counter < length)
+	{
+		List *new_elem = (List *)malloc(sizeof(List));
+		check_mem_error(new_elem);
+
+		printf("Please enter value to add at the #%d position of the list:\n", ++counter);
+		scanf("%d", &(new_elem->data));
+		new_elem->p_prev = current;
+		new_elem->p_next = NULL;
+
+		current->p_next = new_elem;
+		current = current->p_next;
+	}
+
+	printf("List was created succsessfully!\n");
+	print_list(p_head);
+	return p_head;
+}
+
+void delete_list(List **pp_head)
+{
+	if (!is_list_exist(*pp_head))
+		return;
+
+	List *current = *pp_head;
+	while (current != NULL)
+	{
+		List *previous = current;
+		current = current->p_next;
+		free(previous);
+		printf("Memory was freed! :)\n");
+	}
+	(*pp_head) = NULL;
+	printf("The list no longer exists!\n\n");
+}
+//functions to do the task
 int count_bigger_than(List *p_head, int number)
 {
 	if (!is_list_exist(p_head))
@@ -236,40 +274,3 @@ void insert_after(List *p_head, int index)
 	printf("New list element was successfully added at #%d position.\n\n", index + 1);
 }
 
-List *create_list(int length)
-{
-	if (length < 1)
-	{
-		printf("Error! Invalid length entered.\n\n");
-		return NULL;
-	}
-
-	List *p_head = (List *)malloc(sizeof(List));
-	check_mem_error(p_head);
-
-	int counter = 1;
-	printf("Please enter value to add at the #%d position of the list:\n", counter);
-	scanf("%d", &(p_head->data));
-
-	p_head->p_next = NULL;
-	p_head->p_prev = NULL;
-
-	List *current = p_head;
-	while (counter < length)
-	{
-		List *new_elem = (List *)malloc(sizeof(List));
-		check_mem_error(new_elem);
-
-		printf("Please enter value to add at the #%d position of the list:\n", ++counter);
-		scanf("%d", &(new_elem->data));
-		new_elem->p_prev = current;
-		new_elem->p_next = NULL;
-
-		current->p_next = new_elem;
-		current = current->p_next;
-	}
-
-	printf("List was created succsessfully!\n");
-	print_list(p_head);
-	return p_head;
-}
