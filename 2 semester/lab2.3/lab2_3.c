@@ -11,7 +11,7 @@
 // Число вершин: 11
 // Розміщення вершин: коло
 
-LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM); // я прототип функції потоку вікна
+LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM); // прототип функції потоку вікна
 
 char ProgName[] = "Lab #3"; // ім'я програми
 
