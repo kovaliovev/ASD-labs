@@ -11,9 +11,9 @@
 // Число вершин: 11
 // Розміщення вершин: коло
 
-LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM); // я прототип функції потоку вікна
 
-char ProgName[] = "Lab #3";
+char ProgName[] = "Lab #3"; // ім'я програми
 
 void arrow(float fi, int px, int py, HDC hdc)
 {
@@ -55,16 +55,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 {
 	WNDCLASS window;
 
-	window.lpszClassName = ProgName;
-	window.hInstance = hInstance;
-	window.lpfnWndProc = WndProc;
-	window.hCursor = LoadCursor(NULL, IDC_ARROW);
-	window.hIcon = 0;
-	window.lpszMenuName = 0;
-	window.hbrBackground = WHITE_BRUSH;
-	window.style = CS_HREDRAW | CS_VREDRAW;
-	window.cbClsExtra = 0;
-	window.cbWndExtra = 0;
+	window.lpszClassName = "Lab #3";							// ім'я програми
+	window.hInstance = hInstance;									// ідентифікатор застосунку
+	window.lpfnWndProc = WndProc;									// вказівник на функцію вікна
+	window.hCursor = LoadCursor(NULL, IDC_ARROW); // завантажений курсор
+	window.hIcon = 0;															// піктограми(відсутня)
+	window.lpszMenuName = 0;											// меню(відсутнє)
+	window.hbrBackground = WHITE_BRUSH;						// колір фона вікна
+	window.style = CS_HREDRAW | CS_VREDRAW;				// стиль: можна перемальовувати
+	window.cbClsExtra = 0;												// кількість додаткових байтів для цього класу
+	window.cbWndExtra = 0;												// кількість додаткових байтів для цього вікна
 
 	if (!RegisterClass(&window))
 	{
@@ -75,23 +75,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 	HWND hWnd;
 	MSG lpMsg;
 
-	hWnd = CreateWindow(ProgName,
-											"Lab #3 by Evgheniy Kovaliov IM-21",
-											WS_OVERLAPPEDWINDOW,
-											100,
-											100,
-											460,
-											240,
-											(HWND)NULL,
-											(HMENU)NULL,
-											(HINSTANCE)hInstance,
-											(HINSTANCE)NULL);
+	hWnd = CreateWindow(ProgName,														 // ім'я програми
+											"Lab #3 by Evgheniy Kovaliov IM-21", // заголовок
+											WS_OVERLAPPEDWINDOW,								 // стиль вікна: комплексний
+											100,																 // положення верхнього правого кута вікна на екрані по x
+											100,																 // положення верхнього правого кута вікна на екрані по y
+											460,																 // ширина вікна
+											240,																 // висота вікна
+											(HWND)NULL,													 // ідентифікатор породжуючого вікна(відсутній)
+											(HMENU)NULL,												 // ідентифікатор меню(відсутній)
+											(HINSTANCE)hInstance,								 // ідентифікатор екземпляра вікна
+											(HINSTANCE)NULL);										 // додаткові параметри(відсутні)
 
 	ShowWindow(hWnd, nCmdShow);
 	while (GetMessage(&lpMsg, hWnd, 0, 0))
 	{
-		TranslateMessage(&lpMsg);
-		DispatchMessage(&lpMsg);
+		TranslateMessage(&lpMsg); // перетворення повідомлення
+		DispatchMessage(&lpMsg);	// передача повідомлення до функції вікна
 	}
 
 	return (lpMsg.wParam);
