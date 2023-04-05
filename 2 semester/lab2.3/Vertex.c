@@ -8,9 +8,9 @@ typedef struct node_list
 	double x;
 	double y;
 	struct node_list *p_next;
-} Nodes;
+} Vertex;
 
-void check_mem_error(Nodes *new_elem)
+void check_mem_error(Vertex *new_elem)
 {
 	if (new_elem == NULL)
 	{
@@ -19,7 +19,7 @@ void check_mem_error(Nodes *new_elem)
 	}
 }
 
-Nodes *create_nodes(double count, int margin)
+Vertex *create_vertices(double count, int margin)
 {
 	if (count < 1)
 	{
@@ -27,12 +27,12 @@ Nodes *create_nodes(double count, int margin)
 		return NULL;
 	}
 
-	Nodes *p_head = (Nodes *)malloc(sizeof(Nodes));
+	Vertex *p_head = (Vertex *)malloc(sizeof(Vertex));
 	check_mem_error(p_head);
 
 	double i;
 	double rotateAngle = 360 / count;
-	Nodes* current = p_head;
+	Vertex* current = p_head;
 	for (i = 0; i < count; i++) {
 		current->num = i + 1;
 		current->x = -cos((rotateAngle * 3.1416 / 180) * i) * 250.0 + margin;
@@ -42,7 +42,7 @@ Nodes *create_nodes(double count, int margin)
 			current->p_next = NULL;
 			break;
 		}
-		Nodes * new_elem = (Nodes*)malloc(sizeof(Nodes));
+		Vertex * new_elem = (Vertex*)malloc(sizeof(Vertex));
 		check_mem_error(new_elem);
 		current->p_next = new_elem;
 		current = current->p_next;
@@ -51,16 +51,16 @@ Nodes *create_nodes(double count, int margin)
 	return p_head;
 }
 
-void delete_nodes(Nodes **pp_head)
+void delete_vertices(Vertex **pp_head)
 {
-	Nodes *current = *pp_head;
+	Vertex *current = *pp_head;
 	while (current != NULL)
 	{
-		Nodes *previous = current;
+		Vertex *previous = current;
 		current = current->p_next;
 		free(previous);
 		printf("Memory was freed! :)\n");
 	}
 	(*pp_head) = NULL;
-	printf("Nodes are no exist!\n\n");
+	printf("Vertices have been deleted from memory!\n\n");
 }

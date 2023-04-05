@@ -1,5 +1,5 @@
 #include <windows.h>
-#include "Node.c"
+#include "Vertex.c"
 
 // n1 = 2
 // n2 = 1
@@ -9,7 +9,7 @@
 // Число вершин: 11
 // Розміщення вершин: коло
 
-#define NODES_COUNT 11
+#define VERTICES_COUNT 11
 #define RIGHT_TOP_CORNER_X 420
 #define RIGHT_TOP_CORNER_Y 50
 #define WINDOW_WIDTH 720
@@ -35,8 +35,8 @@ void drawArrow(float fi, int px, int py, HDC hdc)
 
 void drawWindow(HWND hWnd, HDC hdc)
 {
-	HPEN nodePen = CreatePen(PS_SOLID, 2, RGB(50, 0, 255)); // стиль = неперервний; товщина = 2; колір = синій
-	HPEN linePen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));	// стиль = неперервний; товщина = 1; колір = чорний
+	HPEN vertexPen = CreatePen(PS_SOLID, 2, RGB(50, 0, 255)); // стиль = неперервний; товщина = 2; колір = синій
+	HPEN edgePen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));	// стиль = неперервний; товщина = 1; колір = чорний
 
 	//SelectObject(hdc, linePen);
 	//MoveToEx(hdc, nodesX[0], nodesY[0], NULL);
@@ -49,18 +49,18 @@ void drawWindow(HWND hWnd, HDC hdc)
 	int nodeHeight = 32;
 	int textMargin = 5;
 
-	Nodes *nodes = create_nodes(NODES_COUNT, GRAPH_MARGIN);
-	SelectObject(hdc, nodePen);
-	while (nodes != NULL)
+	Vertex *vertex = create_vertices(VERTICES_COUNT, GRAPH_MARGIN);
+	SelectObject(hdc, vertexPen);
+	while (vertex != NULL)
 	{
-		Ellipse(hdc, nodes->x - nodeWidth, nodes->y - nodeHeight, nodes->x + nodeWidth, nodes->y + nodeHeight);
-		char name[3];
-		sprintf(name, "%d", nodes->num);
-		TextOut(hdc, nodes->x - textMargin, nodes->y - nodeHeight / 2 + 5, name, 2);
+		Ellipse(hdc, vertex->x - nodeWidth, vertex->y - nodeHeight, vertex->x + nodeWidth, vertex->y + nodeHeight);
+		char vertexName[3];
+		sprintf(vertexName, "%d", vertex->num);
+		TextOut(hdc, vertex->x - textMargin, vertex->y - nodeHeight / 2 + 5, vertexName, 2);
 
-		nodes = nodes->p_next;
+		vertex = vertex->p_next;
 	}
-	delete_nodes(&nodes);
+	delete_vertices(&vertex);
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int nCmdShow)
