@@ -1,5 +1,6 @@
 #include <windows.h>
 #include "Vertex.c"
+#include "matrix.c"
 
 // n1 = 2
 // n2 = 1
@@ -47,6 +48,9 @@ void drawWindow(HWND hWnd, HDC hdc)
 	// drawArrow(0, nodesX[1] - dx, nodesY[1], hdc);
 	// Arc(hdc, nodesX[0], nodesY[0] - 40, nodesX[2], nodesY[2] + 40, nodesX[2], nodesY[2], nodesX[0], nodesY[0]);
 	// drawArrow(-45.0, nodesX[2] - dx * 0.5, nodesY[2] - dy * 0.8, hdc);
+	double **matrix = getRandomMatrix(MATRIX_SIZE);
+	multMatrix(matrix, MATRIX_SIZE);
+	printMatrix(matrix, MATRIX_SIZE);
 
 	Vertex *vertex = create_vertices(VERTICES_COUNT, GRAPH_MARGIN);
 	SelectObject(hdc, vertexPen);
@@ -62,6 +66,7 @@ void drawWindow(HWND hWnd, HDC hdc)
 		vertex = vertex->p_next;
 	}
 	// очищення пам'яті
+	deleteMatrix(matrix, MATRIX_SIZE);
 	delete_vertices(&vertex);
 }
 

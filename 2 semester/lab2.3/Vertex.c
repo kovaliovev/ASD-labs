@@ -59,8 +59,8 @@ void delete_vertices(Vertex **pp_head)
 		Vertex *previous = current;
 		current = current->p_next;
 		free(previous);
-		printf("Memory was freed! :)\n");
+		printf("Memory was freed! :)\n"); // ??????????????????????????????
 	}
 	(*pp_head) = NULL;
-	printf("Vertices have been deleted from memory!\n\n");
+	printf("Vertices have been deleted from memory!\n");
 }
