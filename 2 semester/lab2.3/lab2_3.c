@@ -39,26 +39,29 @@ void drawArrow(float fi, int px, int py, HDC hdc)
 void drawWindow(HWND hWnd, HDC hdc)
 {
 	HPEN vertexPen = CreatePen(PS_SOLID, 2, RGB(50, 0, 255)); // стиль = неперервний; товщина = 2; колір = синій
-	HPEN edgePen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));	// стиль = неперервний; товщина = 1; колір = чорний
+	HPEN edgePen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));		// стиль = неперервний; товщина = 1; колір = чорний
 
-	//SelectObject(hdc, linePen);
-	//MoveToEx(hdc, nodesX[0], nodesY[0], NULL);
-	//LineTo(hdc, nodesX[1], nodesY[1]);
-	//drawArrow(0, nodesX[1] - dx, nodesY[1], hdc);
-	//Arc(hdc, nodesX[0], nodesY[0] - 40, nodesX[2], nodesY[2] + 40, nodesX[2], nodesY[2], nodesX[0], nodesY[0]);
-	//drawArrow(-45.0, nodesX[2] - dx * 0.5, nodesY[2] - dy * 0.8, hdc);
+	// SelectObject(hdc, linePen);
+	// MoveToEx(hdc, nodesX[0], nodesY[0], NULL);
+	// LineTo(hdc, nodesX[1], nodesY[1]);
+	// drawArrow(0, nodesX[1] - dx, nodesY[1], hdc);
+	// Arc(hdc, nodesX[0], nodesY[0] - 40, nodesX[2], nodesY[2] + 40, nodesX[2], nodesY[2], nodesX[0], nodesY[0]);
+	// drawArrow(-45.0, nodesX[2] - dx * 0.5, nodesY[2] - dy * 0.8, hdc);
 
 	Vertex *vertex = create_vertices(VERTICES_COUNT, GRAPH_MARGIN);
 	SelectObject(hdc, vertexPen);
 	while (vertex != NULL)
 	{
+		// малювання вершини
 		Ellipse(hdc, vertex->x - VERTEX_WIDTH, vertex->y - VERTEX_HEIGHT, vertex->x + VERTEX_WIDTH, vertex->y + VERTEX_HEIGHT);
 		char vertexName[3];
 		sprintf(vertexName, "%d", vertex->num);
+		// написання номеру вершини
 		TextOut(hdc, vertex->x - TEXT_MARGIN, vertex->y - VERTEX_HEIGHT / 2 + 5, vertexName, 2);
-
+		// перехід до наступної вершини
 		vertex = vertex->p_next;
 	}
+	// очищення пам'яті
 	delete_vertices(&vertex);
 }
 
