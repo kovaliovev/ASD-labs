@@ -1,7 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <windows.h>
-#include <math.h>
+#include "Node.c"
 
 // n1 = 2
 // n2 = 1
@@ -11,11 +9,12 @@
 // Число вершин: 11
 // Розміщення вершин: коло
 
-#define NODES_COUNT 3
-#define RIGHT_TOP_CORNER_X 100
-#define RIGHT_TOP_CORNER_Y 100
-#define WINDOW_WIDTH 1000
-#define WINDOW_HEIGHT 500
+#define NODES_COUNT 11
+#define RIGHT_TOP_CORNER_X 420
+#define RIGHT_TOP_CORNER_Y 50
+#define WINDOW_WIDTH 720
+#define WINDOW_HEIGHT 780
+#define GRAPH_MARGIN 340
 
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип функції потоку вікна
 
@@ -36,28 +35,32 @@ void drawArrow(float fi, int px, int py, HDC hdc)
 
 void drawWindow(HWND hWnd, HDC hdc)
 {
-	char *nodeNames[NODES_COUNT] = {"1", "2", "3"};
-	int nodeX[NODES_COUNT] = {100, 200, 300};
-	int nodeY[NODES_COUNT] = {100, 100, 100};
-	int dx = 16, dy = 16, dtx = 4;
-
 	HPEN nodePen = CreatePen(PS_SOLID, 2, RGB(50, 0, 255)); // стиль = неперервний; товщина = 2; колір = синій
 	HPEN linePen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));	// стиль = неперервний; товщина = 1; колір = чорний
 
-	SelectObject(hdc, linePen);
-	MoveToEx(hdc, nodeX[0], nodeY[0], NULL);
-	LineTo(hdc, nodeX[1], nodeY[1]);
-	drawArrow(0, nodeX[1] - dx, nodeY[1], hdc);
-	Arc(hdc, nodeX[0], nodeY[0] - 40, nodeX[2], nodeY[2] + 40, nodeX[2], nodeY[2], nodeX[0], nodeY[0]);
-	drawArrow(-45.0, nodeX[2] - dx * 0.5, nodeY[2] - dy * 0.8, hdc);
-	SelectObject(hdc, nodePen);
+	//SelectObject(hdc, linePen);
+	//MoveToEx(hdc, nodesX[0], nodesY[0], NULL);
+	//LineTo(hdc, nodesX[1], nodesY[1]);
+	//drawArrow(0, nodesX[1] - dx, nodesY[1], hdc);
+	//Arc(hdc, nodesX[0], nodesY[0] - 40, nodesX[2], nodesY[2] + 40, nodesX[2], nodesY[2], nodesX[0], nodesY[0]);
+	//drawArrow(-45.0, nodesX[2] - dx * 0.5, nodesY[2] - dy * 0.8, hdc);
 
-	int i;
-	for (i = 0; i < NODES_COUNT; i++)
+	int nodeWidth = 32; 
+	int nodeHeight = 32;
+	int textMargin = 5;
+
+	Nodes *nodes = create_nodes(NODES_COUNT, GRAPH_MARGIN);
+	SelectObject(hdc, nodePen);
+	while (nodes != NULL)
 	{
-		Ellipse(hdc, nodeX[i] - dx, nodeY[i] - dy, nodeX[i] + dx, nodeY[i] + dy);
-		TextOut(hdc, nodeX[i] - dtx, nodeY[i] - dy / 2, nodeNames[i], 1);
+		Ellipse(hdc, nodes->x - nodeWidth, nodes->y - nodeHeight, nodes->x + nodeWidth, nodes->y + nodeHeight);
+		char name[3];
+		sprintf(name, "%d", nodes->num);
+		TextOut(hdc, nodes->x - textMargin, nodes->y - nodeHeight / 2 + 5, name, 2);
+
+		nodes = nodes->p_next;
 	}
+	delete_nodes(&nodes);
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int nCmdShow)
