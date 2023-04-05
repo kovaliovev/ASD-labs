@@ -11,13 +11,19 @@
 // Число вершин: 11
 // Розміщення вершин: коло
 
+#define NODES_COUNT 3
+#define RIGHT_TOP_CORNER_X 100
+#define RIGHT_TOP_CORNER_Y 100
+#define WINDOW_WIDTH 1000
+#define WINDOW_HEIGHT 500
+
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип функції потоку вікна
 
 char ProgName[] = "Lab #3"; // ім'я програми
 
 void drawArrow(float fi, int px, int py, HDC hdc)
 {
-	fi = 3.1416 * (180.0 - fi) / 180.0;
+	fi = 3.1416 * (180.0 - fi) / 180.0; // перетворення градусів в радіани
 	int lx, ly, rx, ry;
 	lx = px + 15 * cos(fi + 0.3);
 	rx = px + 15 * cos(fi - 0.3);
@@ -30,13 +36,13 @@ void drawArrow(float fi, int px, int py, HDC hdc)
 
 void drawWindow(HWND hWnd, HDC hdc)
 {
-	char *nodeNames[3] = {"1", "2", "3"};
-	int nodeX[3] = {100, 200, 300};
-	int nodeY[3] = {100, 100, 100};
-	int dx = 16, dy = 16, dtx = 5;
+	char *nodeNames[NODES_COUNT] = {"1", "2", "3"};
+	int nodeX[NODES_COUNT] = {100, 200, 300};
+	int nodeY[NODES_COUNT] = {100, 100, 100};
+	int dx = 16, dy = 16, dtx = 4;
 
-	HPEN nodePen = CreatePen(PS_SOLID, 2, RGB(50, 0, 255));
-	HPEN linePen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));
+	HPEN nodePen = CreatePen(PS_SOLID, 2, RGB(50, 0, 255)); // стиль = неперервний; товщина = 2; колір = синій
+	HPEN linePen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));	// стиль = неперервний; товщина = 1; колір = чорний
 
 	SelectObject(hdc, linePen);
 	MoveToEx(hdc, nodeX[0], nodeY[0], NULL);
@@ -47,7 +53,7 @@ void drawWindow(HWND hWnd, HDC hdc)
 	SelectObject(hdc, nodePen);
 
 	int i;
-	for (i = 0; i <= 2; i++)
+	for (i = 0; i < NODES_COUNT; i++)
 	{
 		Ellipse(hdc, nodeX[i] - dx, nodeY[i] - dy, nodeX[i] + dx, nodeY[i] + dy);
 		TextOut(hdc, nodeX[i] - dtx, nodeY[i] - dy / 2, nodeNames[i], 1);
@@ -81,10 +87,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 	hWnd = CreateWindow(ProgName,														 // ім'я програми
 											"Lab #3 by Evgheniy Kovaliov IM-21", // заголовок
 											WS_OVERLAPPEDWINDOW,								 // стиль вікна: комплексний
-											100,																 // положення верхнього правого кута вікна на екрані по x
-											100,																 // положення верхнього правого кута вікна на екрані по y
-											460,																 // ширина вікна
-											240,																 // висота вікна
+											RIGHT_TOP_CORNER_X,									 // положення верхнього лівого кута вікна на екрані по x
+											RIGHT_TOP_CORNER_Y,									 // положення верхнього лівого кута вікна на екрані по y
+											WINDOW_WIDTH,												 // ширина вікна
+											WINDOW_HEIGHT,											 // висота вікна
 											(HWND)NULL,													 // ідентифікатор породжуючого вікна(відсутній)
 											(HMENU)NULL,												 // ідентифікатор меню(відсутній)
 											(HINSTANCE)hInstance,								 // ідентифікатор екземпляра вікна
