@@ -13,9 +13,9 @@
 #define VERTICES_COUNT 11
 #define RIGHT_TOP_CORNER_X 420
 #define RIGHT_TOP_CORNER_Y 50
-#define WINDOW_WIDTH 720
-#define WINDOW_HEIGHT 780
-#define GRAPH_MARGIN 340
+#define WINDOW_WIDTH 760
+#define WINDOW_HEIGHT 760
+#define GRAPH_MARGIN 350
 #define VERTEX_HEIGHT 32
 #define VERTEX_WIDTH 32
 #define TEXT_MARGIN 5
@@ -37,6 +37,17 @@ void drawArrow(float fi, int px, int py, HDC hdc)
 	LineTo(hdc, rx, ry);
 }
 
+void drawVertex(HPEN vertexPen, Vertex *vertex, HDC hdc)
+{
+	// малювання вершини
+	SelectObject(hdc, vertexPen);
+	Ellipse(hdc, vertex->x - VERTEX_WIDTH, vertex->y - VERTEX_HEIGHT, vertex->x + VERTEX_WIDTH, vertex->y + VERTEX_HEIGHT);
+	char vertexName[3];
+	sprintf(vertexName, "%d", vertex->num);
+	// написання номеру вершини
+	TextOut(hdc, vertex->x - TEXT_MARGIN, vertex->y - VERTEX_HEIGHT / 2 + 5, vertexName, 2);
+}
+
 void drawWindow(HWND hWnd, HDC hdc)
 {
 	HPEN vertexPen = CreatePen(PS_SOLID, 2, RGB(50, 0, 255)); // стиль = неперервний; товщина = 2; колір = синій
@@ -53,17 +64,52 @@ void drawWindow(HWND hWnd, HDC hdc)
 	printMatrix(matrix, MATRIX_SIZE);
 
 	Vertex *vertex = create_vertices(VERTICES_COUNT, GRAPH_MARGIN);
-	SelectObject(hdc, vertexPen);
-	Vertex * currentVertex = vertex;
+
+	Vertex *currentVertex = vertex;
+	int row;
+	int col;
+	for (row = 0; row < VERTICES_COUNT; row++)
+	{
+		for (col = 0; col < VERTICES_COUNT; col++)
+		{
+			if (matrix[row][col])
+			{
+				printf("MATRIX[%d][%d] IS 1!\n", row, col);
+				SelectObject(hdc, edgePen);
+				MoveToEx(hdc, currentVertex->x, currentVertex->y, NULL);
+				if (row == col)
+				{
+					if (row + 1 <= (VERTICES_COUNT + 1) / 4)
+					{
+						Ellipse(hdc, currentVertex->x - 75, currentVertex->y - 75, currentVertex->x, currentVertex->y);
+					}
+					else if (row + 1 <= (VERTICES_COUNT + 1) / 2)
+					{
+						Ellipse(hdc, currentVertex->x + 75, currentVertex->y - 75, currentVertex->x, currentVertex->y);
+					}
+					else if (row + 1 <= (VERTICES_COUNT + 1) * 3 / 4)
+					{
+						Ellipse(hdc, currentVertex->x + 75, currentVertex->y + 75, currentVertex->x, currentVertex->y);
+					}
+					else
+					{
+						Ellipse(hdc, currentVertex->x - 75, currentVertex->y + 75, currentVertex->x, currentVertex->y);
+					}
+				}
+				else
+				{
+					double endX = calcX(360.0 / VERTICES_COUNT, col, GRAPH_MARGIN);
+					double endY = calcY(360.0 / VERTICES_COUNT, col, GRAPH_MARGIN);
+					LineTo(hdc, endX, endY);
+				}
+			}
+		}
+		currentVertex = currentVertex->p_next;
+	}
+	currentVertex = vertex;
 	while (currentVertex != NULL)
 	{
-		// малювання вершини
-		Ellipse(hdc, currentVertex->x - VERTEX_WIDTH, currentVertex->y - VERTEX_HEIGHT, currentVertex->x + VERTEX_WIDTH, currentVertex->y + VERTEX_HEIGHT);
-		char vertexName[3];
-		sprintf(vertexName, "%d", currentVertex->num);
-		// написання номеру вершини
-		TextOut(hdc, currentVertex->x - TEXT_MARGIN, currentVertex->y - VERTEX_HEIGHT / 2 + 5, vertexName, 2);
-		// перехід до наступної вершини
+		drawVertex(vertexPen, currentVertex, hdc);
 		currentVertex = currentVertex->p_next;
 	}
 	// очищення пам'яті

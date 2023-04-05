@@ -19,6 +19,16 @@ void check_mem_error(Vertex *new_elem)
 	}
 }
 
+double calcX(double rotateAngle, int i, int margin){
+	double x = -cos((rotateAngle * 3.1416 / 180) * i) * 300 + margin;
+	return x;
+}
+
+double calcY(double rotateAngle, int i, int margin){
+	double y = -sin((rotateAngle * 3.1416 / 180) * i) * 300 + margin;
+	return y;
+}
+
 Vertex *create_vertices(double count, int margin)
 {
 	if (count < 1)
@@ -35,8 +45,8 @@ Vertex *create_vertices(double count, int margin)
 	Vertex* current = p_head;
 	for (i = 0; i < count; i++) {
 		current->num = i + 1;
-		current->x = -cos((rotateAngle * 3.1416 / 180) * i) * 250.0 + margin;
-		current->y = -sin((rotateAngle * 3.1416 / 180) * i) * 250.0 + margin;
+		current->x = calcX(rotateAngle, i, margin);
+		current->y = calcY(rotateAngle, i, margin);
 
 		if (i + 1 == count) {
 			current->p_next = NULL;
