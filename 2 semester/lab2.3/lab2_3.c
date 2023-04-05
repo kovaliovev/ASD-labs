@@ -15,6 +15,9 @@
 #define WINDOW_WIDTH 720
 #define WINDOW_HEIGHT 780
 #define GRAPH_MARGIN 340
+#define VERTEX_HEIGHT 32
+#define VERTEX_WIDTH 32
+#define TEXT_MARGIN 5
 
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип функції потоку вікна
 
@@ -45,18 +48,14 @@ void drawWindow(HWND hWnd, HDC hdc)
 	//Arc(hdc, nodesX[0], nodesY[0] - 40, nodesX[2], nodesY[2] + 40, nodesX[2], nodesY[2], nodesX[0], nodesY[0]);
 	//drawArrow(-45.0, nodesX[2] - dx * 0.5, nodesY[2] - dy * 0.8, hdc);
 
-	int nodeWidth = 32; 
-	int nodeHeight = 32;
-	int textMargin = 5;
-
 	Vertex *vertex = create_vertices(VERTICES_COUNT, GRAPH_MARGIN);
 	SelectObject(hdc, vertexPen);
 	while (vertex != NULL)
 	{
-		Ellipse(hdc, vertex->x - nodeWidth, vertex->y - nodeHeight, vertex->x + nodeWidth, vertex->y + nodeHeight);
+		Ellipse(hdc, vertex->x - VERTEX_WIDTH, vertex->y - VERTEX_HEIGHT, vertex->x + VERTEX_WIDTH, vertex->y + VERTEX_HEIGHT);
 		char vertexName[3];
 		sprintf(vertexName, "%d", vertex->num);
-		TextOut(hdc, vertex->x - textMargin, vertex->y - nodeHeight / 2 + 5, vertexName, 2);
+		TextOut(hdc, vertex->x - TEXT_MARGIN, vertex->y - VERTEX_HEIGHT / 2 + 5, vertexName, 2);
 
 		vertex = vertex->p_next;
 	}
