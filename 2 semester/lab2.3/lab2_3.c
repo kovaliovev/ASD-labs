@@ -54,16 +54,17 @@ void drawWindow(HWND hWnd, HDC hdc)
 
 	Vertex *vertex = create_vertices(VERTICES_COUNT, GRAPH_MARGIN);
 	SelectObject(hdc, vertexPen);
-	while (vertex != NULL)
+	Vertex * currentVertex = vertex;
+	while (currentVertex != NULL)
 	{
 		// малювання вершини
-		Ellipse(hdc, vertex->x - VERTEX_WIDTH, vertex->y - VERTEX_HEIGHT, vertex->x + VERTEX_WIDTH, vertex->y + VERTEX_HEIGHT);
+		Ellipse(hdc, currentVertex->x - VERTEX_WIDTH, currentVertex->y - VERTEX_HEIGHT, currentVertex->x + VERTEX_WIDTH, currentVertex->y + VERTEX_HEIGHT);
 		char vertexName[3];
-		sprintf(vertexName, "%d", vertex->num);
+		sprintf(vertexName, "%d", currentVertex->num);
 		// написання номеру вершини
-		TextOut(hdc, vertex->x - TEXT_MARGIN, vertex->y - VERTEX_HEIGHT / 2 + 5, vertexName, 2);
+		TextOut(hdc, currentVertex->x - TEXT_MARGIN, currentVertex->y - VERTEX_HEIGHT / 2 + 5, vertexName, 2);
 		// перехід до наступної вершини
-		vertex = vertex->p_next;
+		currentVertex = currentVertex->p_next;
 	}
 	// очищення пам'яті
 	deleteMatrix(matrix, MATRIX_SIZE);
