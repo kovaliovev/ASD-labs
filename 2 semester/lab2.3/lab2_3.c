@@ -11,13 +11,12 @@
 // Розміщення вершин: коло
 
 #define VERTICES_COUNT 11
-#define RIGHT_TOP_CORNER_X 420
-#define RIGHT_TOP_CORNER_Y 50
+#define WINDOW_RIGHT_TOP_CORNER_X 420
+#define WINDOW_RIGHT_TOP_CORNER_Y 50
 #define WINDOW_WIDTH 760
 #define WINDOW_HEIGHT 760
 #define GRAPH_MARGIN 350
-#define VERTEX_HEIGHT 32
-#define VERTEX_WIDTH 32
+#define VERTEX_RADIUS 32
 #define TEXT_MARGIN 5
 #define ARROW_LENGTH 16
 
@@ -25,7 +24,7 @@ LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип ф�
 
 char ProgName[] = "Lab #3"; // ім'я програми
 
-void drawArrowedEdge(HPEN edgePen, Vertex *startVertex, int endVertexNum, HDC hdc)
+void drawArrowedEdge(HPEN edgePen, Vertex *startVertex, int endVertexNum, HDC hdc) // CRINGE
 {
 	double startX = startVertex->x;
 	double startY = startVertex->y;
@@ -36,17 +35,17 @@ void drawArrowedEdge(HPEN edgePen, Vertex *startVertex, int endVertexNum, HDC hd
 	MoveToEx(hdc, startX, startY, NULL);
 	LineTo(hdc, endX, endY);
 
-	double angle = atan2(endX, endY);
-	double offsetX = VERTEX_HEIGHT/2 * -cos(angle);
-	double offsetY = VERTEX_HEIGHT/2 * -sin(angle);
+	// double angle = atan2(endX, endY);
+	// double offsetX = VERTEX_RADIUS/2 * -cos(angle);
+	// double offsetY = VERTEX_RADIUS/2 * -sin(angle);
 
-	endX += offsetX;
-	endY += offsetY;
+	// endX += offsetX;
+	// endY += offsetY;
 
 	double dx = startX - endX; // відстань по Х
 	double dy = startY - endY; // відстань по У
 	double edgeLength = sqrt(dx * dx + dy * dy);
-	double ratio = ARROW_LENGTH / edgeLength;	// відношення довжини боку стрілки до довжини лінії
+	double ratio = ARROW_LENGTH / edgeLength; // відношення довжини боку стрілки до довжини лінії
 	double lx = endX + ratio * (dx * cos(3.1416 / 6.0) + dy * sin(3.1416 / 6.0));
 	double ly = endY + ratio * (dy * cos(3.1416 / 6.0) - dx * sin(3.1416 / 6.0));
 
@@ -61,11 +60,18 @@ void drawVertex(HPEN vertexPen, Vertex *vertex, HDC hdc)
 {
 	// малювання вершини
 	SelectObject(hdc, vertexPen);
-	Ellipse(hdc, vertex->x - VERTEX_WIDTH, vertex->y - VERTEX_HEIGHT, vertex->x + VERTEX_WIDTH, vertex->y + VERTEX_HEIGHT);
+	Ellipse(hdc, vertex->x - VERTEX_RADIUS, vertex->y - VERTEX_RADIUS, vertex->x + VERTEX_RADIUS, vertex->y + VERTEX_RADIUS);
 	char vertexName[3];
 	sprintf(vertexName, "%d", vertex->num);
 	// написання номеру вершини
-	TextOut(hdc, vertex->x - TEXT_MARGIN, vertex->y - VERTEX_HEIGHT / 2 + 5, vertexName, 2);
+	if (vertex->num <= 9)
+	{
+		TextOut(hdc, vertex->x - TEXT_MARGIN, vertex->y - VERTEX_RADIUS / 2 + 8, vertexName, 1);
+	}
+	else
+	{
+		TextOut(hdc, vertex->x - TEXT_MARGIN - 4, vertex->y - VERTEX_RADIUS / 2 + 8, vertexName, 2);
+	}
 }
 
 void drawEdge(HPEN edgePen, Vertex *startVertex, int endVertexNum, HDC hdc)
@@ -101,12 +107,6 @@ void drawWindow(HWND hWnd, HDC hdc)
 	HPEN vertexPen = CreatePen(PS_SOLID, 2, RGB(50, 0, 255)); // стиль = неперервний; товщина = 2; колір = синій
 	HPEN edgePen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));		// стиль = неперервний; товщина = 1; колір = чорний
 
-	// SelectObject(hdc, linePen);
-	// MoveToEx(hdc, nodesX[0], nodesY[0], NULL);
-	// LineTo(hdc, nodesX[1], nodesY[1]);
-	// drawArrow(0, nodesX[1] - dx, nodesY[1], hdc);
-	// Arc(hdc, nodesX[0], nodesY[0] - 40, nodesX[2], nodesY[2] + 40, nodesX[2], nodesY[2], nodesX[0], nodesY[0]);
-	// drawArrow(-45.0, nodesX[2] - dx * 0.5, nodesY[2] - dy * 0.8, hdc);
 	double **matrix = getRandomMatrix(MATRIX_SIZE);
 	multMatrix(matrix, MATRIX_SIZE);
 	printMatrix(matrix, MATRIX_SIZE);
@@ -135,6 +135,7 @@ void drawWindow(HWND hWnd, HDC hdc)
 		}
 		currentVertex = currentVertex->p_next;
 	}
+	
 	currentVertex = vertex;
 	while (currentVertex != NULL)
 	{
@@ -173,8 +174,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 	hWnd = CreateWindow(ProgName,														 // ім'я програми
 											"Lab #3 by Evgheniy Kovaliov IM-21", // заголовок
 											WS_OVERLAPPEDWINDOW,								 // стиль вікна: комплексний
-											RIGHT_TOP_CORNER_X,									 // положення верхнього лівого кута вікна на екрані по x
-											RIGHT_TOP_CORNER_Y,									 // положення верхнього лівого кута вікна на екрані по y
+											WINDOW_RIGHT_TOP_CORNER_X,					 // положення верхнього лівого кута вікна на екрані по x
+											WINDOW_RIGHT_TOP_CORNER_Y,					 // положення верхнього лівого кута вікна на екрані по y
 											WINDOW_WIDTH,												 // ширина вікна
 											WINDOW_HEIGHT,											 // висота вікна
 											(HWND)NULL,													 // ідентифікатор породжуючого вікна(відсутній)
