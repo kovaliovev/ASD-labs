@@ -81,19 +81,19 @@ void drawWindow(HWND hWnd, HDC hdc)
 				{
 					if (row + 1 <= (VERTICES_COUNT + 1) / 4)
 					{
-						Ellipse(hdc, currentVertex->x - 75, currentVertex->y - 75, currentVertex->x, currentVertex->y);
+						Ellipse(hdc, currentVertex->x - 65, currentVertex->y - 65, currentVertex->x, currentVertex->y);
 					}
 					else if (row + 1 <= (VERTICES_COUNT + 1) / 2)
 					{
-						Ellipse(hdc, currentVertex->x + 75, currentVertex->y - 75, currentVertex->x, currentVertex->y);
+						Ellipse(hdc, currentVertex->x + 65, currentVertex->y - 65, currentVertex->x, currentVertex->y);
 					}
 					else if (row + 1 <= (VERTICES_COUNT + 1) * 3 / 4)
 					{
-						Ellipse(hdc, currentVertex->x + 75, currentVertex->y + 75, currentVertex->x, currentVertex->y);
+						Ellipse(hdc, currentVertex->x + 65, currentVertex->y + 65, currentVertex->x, currentVertex->y);
 					}
 					else
 					{
-						Ellipse(hdc, currentVertex->x - 75, currentVertex->y + 75, currentVertex->x, currentVertex->y);
+						Ellipse(hdc, currentVertex->x - 65, currentVertex->y + 65, currentVertex->x, currentVertex->y);
 					}
 				}
 				else
