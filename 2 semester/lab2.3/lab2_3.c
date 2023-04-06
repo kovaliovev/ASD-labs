@@ -48,6 +48,14 @@ void drawVertex(HPEN vertexPen, Vertex *vertex, HDC hdc)
 	TextOut(hdc, vertex->x - TEXT_MARGIN, vertex->y - VERTEX_HEIGHT / 2 + 5, vertexName, 2);
 }
 
+void drawEdge(HPEN edgePen, Vertex *startVertex, int endVertexNum, HDC hdc)
+{
+	MoveToEx(hdc, startVertex->x, startVertex->y, NULL);
+	double endX = calcX(360.0 / VERTICES_COUNT, endVertexNum, GRAPH_MARGIN);
+	double endY = calcY(360.0 / VERTICES_COUNT, endVertexNum, GRAPH_MARGIN);
+	LineTo(hdc, endX, endY);
+}
+
 void drawWindow(HWND hWnd, HDC hdc)
 {
 	HPEN vertexPen = CreatePen(PS_SOLID, 2, RGB(50, 0, 255)); // стиль = неперервний; товщина = 2; колір = синій
@@ -76,7 +84,6 @@ void drawWindow(HWND hWnd, HDC hdc)
 			{
 				printf("MATRIX[%d][%d] IS 1!\n", row, col);
 				SelectObject(hdc, edgePen);
-				MoveToEx(hdc, currentVertex->x, currentVertex->y, NULL);
 				if (row == col)
 				{
 					if (row + 1 <= (VERTICES_COUNT + 1) / 4)
@@ -98,9 +105,7 @@ void drawWindow(HWND hWnd, HDC hdc)
 				}
 				else
 				{
-					double endX = calcX(360.0 / VERTICES_COUNT, col, GRAPH_MARGIN);
-					double endY = calcY(360.0 / VERTICES_COUNT, col, GRAPH_MARGIN);
-					LineTo(hdc, endX, endY);
+					drawEdge(edgePen, currentVertex, col, hdc);
 				}
 			}
 		}
