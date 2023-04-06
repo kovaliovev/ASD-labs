@@ -56,6 +56,26 @@ void drawEdge(HPEN edgePen, Vertex *startVertex, int endVertexNum, HDC hdc)
 	LineTo(hdc, endX, endY);
 }
 
+void drawReflectEdge(HPEN edgePen, Vertex *vertex, int vertexNum, HDC hdc)
+{
+	if (vertexNum <= (VERTICES_COUNT + 1) / 4)
+	{
+		Ellipse(hdc, vertex->x - 65, vertex->y - 65, vertex->x, vertex->y);
+	}
+	else if (vertexNum <= (VERTICES_COUNT + 1) / 2)
+	{
+		Ellipse(hdc, vertex->x + 65, vertex->y - 65, vertex->x, vertex->y);
+	}
+	else if (vertexNum <= (VERTICES_COUNT + 1) * 3 / 4)
+	{
+		Ellipse(hdc, vertex->x + 65, vertex->y + 65, vertex->x, vertex->y);
+	}
+	else
+	{
+		Ellipse(hdc, vertex->x - 65, vertex->y + 65, vertex->x, vertex->y);
+	}
+}
+
 void drawWindow(HWND hWnd, HDC hdc)
 {
 	HPEN vertexPen = CreatePen(PS_SOLID, 2, RGB(50, 0, 255)); // стиль = неперервний; товщина = 2; колір = синій
@@ -82,26 +102,11 @@ void drawWindow(HWND hWnd, HDC hdc)
 		{
 			if (matrix[row][col])
 			{
-				printf("MATRIX[%d][%d] IS 1!\n", row, col);
+				//printf("MATRIX[%d][%d] IS 1!\n", row, col);
 				SelectObject(hdc, edgePen);
 				if (row == col)
 				{
-					if (row + 1 <= (VERTICES_COUNT + 1) / 4)
-					{
-						Ellipse(hdc, currentVertex->x - 65, currentVertex->y - 65, currentVertex->x, currentVertex->y);
-					}
-					else if (row + 1 <= (VERTICES_COUNT + 1) / 2)
-					{
-						Ellipse(hdc, currentVertex->x + 65, currentVertex->y - 65, currentVertex->x, currentVertex->y);
-					}
-					else if (row + 1 <= (VERTICES_COUNT + 1) * 3 / 4)
-					{
-						Ellipse(hdc, currentVertex->x + 65, currentVertex->y + 65, currentVertex->x, currentVertex->y);
-					}
-					else
-					{
-						Ellipse(hdc, currentVertex->x - 65, currentVertex->y + 65, currentVertex->x, currentVertex->y);
-					}
+					drawReflectEdge(edgePen, currentVertex, col+1, hdc);
 				}
 				else
 				{
