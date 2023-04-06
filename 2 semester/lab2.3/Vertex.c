@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <math.h>
 
-typedef struct node_list
+typedef struct vertices_list
 {
 	int num;
 	double x;
 	double y;
-	struct node_list *p_next;
+	struct vertices_list *p_next;
 } Vertex;
 
 void check_mem_error(Vertex *new_elem)
@@ -33,7 +33,7 @@ Vertex *create_vertices(double count, int margin)
 {
 	if (count < 1)
 	{
-		printf("Error! Invalid count entered.\n\n");
+		printf("Error! Invalid count entered.\n");
 		return NULL;
 	}
 
