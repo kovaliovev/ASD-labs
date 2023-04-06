@@ -19,21 +19,41 @@
 #define VERTEX_HEIGHT 32
 #define VERTEX_WIDTH 32
 #define TEXT_MARGIN 5
+#define ARROW_LENGTH 16
 
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип функції потоку вікна
 
 char ProgName[] = "Lab #3"; // ім'я програми
 
-void drawArrow(float fi, int px, int py, HDC hdc)
+void drawArrowedEdge(HPEN edgePen, Vertex *startVertex, int endVertexNum, HDC hdc)
 {
-	fi = 3.1416 * (180.0 - fi) / 180.0; // перетворення градусів в радіани
-	int lx, ly, rx, ry;
-	lx = px + 15 * cos(fi + 0.3);
-	rx = px + 15 * cos(fi - 0.3);
-	ly = py + 15 * sin(fi + 0.3);
-	ry = py + 15 * sin(fi - 0.3);
+	double startX = startVertex->x;
+	double startY = startVertex->y;
+
+	double endX = calcX(360.0 / VERTICES_COUNT, endVertexNum, GRAPH_MARGIN);
+	double endY = calcY(360.0 / VERTICES_COUNT, endVertexNum, GRAPH_MARGIN);
+
+	MoveToEx(hdc, startX, startY, NULL);
+	LineTo(hdc, endX, endY);
+
+	double angle = atan2(endX, endY);
+	double offsetX = VERTEX_HEIGHT/2 * -cos(angle);
+	double offsetY = VERTEX_HEIGHT/2 * -sin(angle);
+
+	endX += offsetX;
+	endY += offsetY;
+
+	double dx = startX - endX; // відстань по Х
+	double dy = startY - endY; // відстань по У
+	double edgeLength = sqrt(dx * dx + dy * dy);
+	double ratio = ARROW_LENGTH / edgeLength;	// відношення довжини боку стрілки до довжини лінії
+	double lx = endX + ratio * (dx * cos(3.1416 / 6.0) + dy * sin(3.1416 / 6.0));
+	double ly = endY + ratio * (dy * cos(3.1416 / 6.0) - dx * sin(3.1416 / 6.0));
+
+	double rx = endX + ratio * (dx * cos(3.1416 / 6.0) + dy * sin(3.1416 / 6.0));
+	double ry = endY + ratio * (dy * cos(3.1416 / 6.0) - dx * sin(3.1416 / 6.0));
 	MoveToEx(hdc, lx, ly, NULL);
-	LineTo(hdc, px, py);
+	LineTo(hdc, endX, endY);
 	LineTo(hdc, rx, ry);
 }
 
@@ -96,21 +116,20 @@ void drawWindow(HWND hWnd, HDC hdc)
 	Vertex *currentVertex = vertex;
 	int row;
 	int col;
+	SelectObject(hdc, edgePen);
 	for (row = 0; row < VERTICES_COUNT; row++)
 	{
 		for (col = 0; col < VERTICES_COUNT; col++)
 		{
 			if (matrix[row][col])
 			{
-				//printf("MATRIX[%d][%d] IS 1!\n", row, col);
-				SelectObject(hdc, edgePen);
 				if (row == col)
 				{
-					drawReflectEdge(edgePen, currentVertex, col+1, hdc);
+					drawReflectEdge(edgePen, currentVertex, col + 1, hdc);
 				}
 				else
 				{
-					drawEdge(edgePen, currentVertex, col, hdc);
+					drawArrowedEdge(edgePen, currentVertex, col, hdc);
 				}
 			}
 		}
