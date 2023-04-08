@@ -24,38 +24,6 @@ LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип ф�
 
 char ProgName[] = "Lab #3"; // ім'я програми
 
-void drawArrowedEdge(HPEN edgePen, Vertex *startVertex, int endVertexNum, HDC hdc) // CRINGE
-{
-	double startX = startVertex->x;
-	double startY = startVertex->y;
-
-	double endX = calcX(360.0 / VERTICES_COUNT, endVertexNum, GRAPH_MARGIN);
-	double endY = calcY(360.0 / VERTICES_COUNT, endVertexNum, GRAPH_MARGIN);
-
-	MoveToEx(hdc, startX, startY, NULL);
-	LineTo(hdc, endX, endY);
-
-	// double angle = atan2(endX, endY);
-	// double offsetX = VERTEX_RADIUS/2 * -cos(angle);
-	// double offsetY = VERTEX_RADIUS/2 * -sin(angle);
-
-	// endX += offsetX;
-	// endY += offsetY;
-
-	double dx = startX - endX; // відстань по Х
-	double dy = startY - endY; // відстань по У
-	double edgeLength = sqrt(dx * dx + dy * dy);
-	double ratio = ARROW_LENGTH / edgeLength; // відношення довжини боку стрілки до довжини лінії
-	double lx = endX + ratio * (dx * cos(3.1416 / 6.0) + dy * sin(3.1416 / 6.0));
-	double ly = endY + ratio * (dy * cos(3.1416 / 6.0) - dx * sin(3.1416 / 6.0));
-
-	double rx = endX + ratio * (dx * cos(3.1416 / 6.0) + dy * sin(3.1416 / 6.0));
-	double ry = endY + ratio * (dy * cos(3.1416 / 6.0) - dx * sin(3.1416 / 6.0));
-	MoveToEx(hdc, lx, ly, NULL);
-	LineTo(hdc, endX, endY);
-	LineTo(hdc, rx, ry);
-}
-
 void drawVertex(HPEN vertexPen, Vertex *vertex, HDC hdc)
 {
 	// малювання вершини
@@ -74,12 +42,37 @@ void drawVertex(HPEN vertexPen, Vertex *vertex, HDC hdc)
 	}
 }
 
-void drawEdge(HPEN edgePen, Vertex *startVertex, int endVertexNum, HDC hdc)
+void drawArrow(HPEN arrowPen, double fi, int arrowX, int arrowY, HDC hdc)
+{
+	int lx, ly, rx, ry;
+	lx = arrowX + VERTEX_RADIUS * cos(fi + 0.3);
+	rx = arrowX + VERTEX_RADIUS * cos(fi - 0.3);
+	ly = arrowY + VERTEX_RADIUS * sin(fi + 0.3);
+	ry = arrowY + VERTEX_RADIUS * sin(fi - 0.3);
+	MoveToEx(hdc, lx, ly, NULL);
+	LineTo(hdc, arrowX, arrowY);
+	LineTo(hdc, rx, ry);
+}
+
+void drawEdge(HPEN edgePen, Vertex *startVertex, double endX, double endY, HDC hdc)
 {
 	MoveToEx(hdc, startVertex->x, startVertex->y, NULL);
+	LineTo(hdc, endX, endY);
+}
+
+void drawArrowedEdge(HPEN edgePen, Vertex *startVertex, int endVertexNum, HDC hdc)
+{
+	double startX = startVertex->x;
+	double startY = startVertex->y;
+
 	double endX = calcX(360.0 / VERTICES_COUNT, endVertexNum, GRAPH_MARGIN);
 	double endY = calcY(360.0 / VERTICES_COUNT, endVertexNum, GRAPH_MARGIN);
-	LineTo(hdc, endX, endY);
+
+	double arrowX = endX + VERTEX_RADIUS * cos(atan2(startY - endY, startX - endX));
+	double arrowY = endY + VERTEX_RADIUS * sin(atan2(startY - endY, startX - endX));
+
+	drawEdge(edgePen, startVertex, endX, endY, hdc);
+	drawArrow(edgePen, atan2((startY - endY), (startX - endX)), arrowX, arrowY, hdc);
 }
 
 void drawReflectEdge(HPEN edgePen, Vertex *vertex, int vertexNum, HDC hdc)
@@ -135,7 +128,7 @@ void drawWindow(HWND hWnd, HDC hdc)
 		}
 		currentVertex = currentVertex->p_next;
 	}
-	
+
 	currentVertex = vertex;
 	while (currentVertex != NULL)
 	{
