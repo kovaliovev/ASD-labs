@@ -17,6 +17,7 @@
 #define WINDOW_HEIGHT 760
 #define GRAPH_MARGIN 350
 #define VERTEX_RADIUS 32
+#define VERTEX_DIAMETER 64
 #define TEXT_MARGIN 5
 #define ARROW_LENGTH 16
 
@@ -75,23 +76,23 @@ void drawArrowedEdge(HPEN edgePen, Vertex *startVertex, int endVertexNum, HDC hd
 	drawArrow(edgePen, atan2((startY - endY), (startX - endX)), arrowX, arrowY, hdc);
 }
 
-void drawReflectEdge(HPEN edgePen, Vertex *vertex, int vertexNum, HDC hdc)
+void drawReflectEdge(HPEN edgePen, Vertex *vertex, HDC hdc)
 {
-	if (vertexNum <= (VERTICES_COUNT + 1) / 4)
+	if (vertex->num <= (VERTICES_COUNT / 4))
 	{
-		Ellipse(hdc, vertex->x - 65, vertex->y - 65, vertex->x, vertex->y);
+		Ellipse(hdc, vertex->x - VERTEX_DIAMETER, vertex->y + VERTEX_DIAMETER, vertex->x, vertex->y);
 	}
-	else if (vertexNum <= (VERTICES_COUNT + 1) / 2)
+	else if (vertex->num <= (VERTICES_COUNT / 4) * 2)
 	{
-		Ellipse(hdc, vertex->x + 65, vertex->y - 65, vertex->x, vertex->y);
+		Ellipse(hdc, vertex->x - VERTEX_DIAMETER, vertex->y - VERTEX_DIAMETER, vertex->x, vertex->y);
 	}
-	else if (vertexNum <= (VERTICES_COUNT + 1) * 3 / 4)
+	else if (vertex->num <= (VERTICES_COUNT / 4) * 3)
 	{
-		Ellipse(hdc, vertex->x + 65, vertex->y + 65, vertex->x, vertex->y);
+		Ellipse(hdc, vertex->x + VERTEX_DIAMETER, vertex->y - VERTEX_DIAMETER, vertex->x, vertex->y);
 	}
 	else
 	{
-		Ellipse(hdc, vertex->x - 65, vertex->y + 65, vertex->x, vertex->y);
+		Ellipse(hdc, vertex->x + VERTEX_DIAMETER, vertex->y + VERTEX_DIAMETER, vertex->x, vertex->y);
 	}
 }
 
@@ -118,7 +119,7 @@ void drawWindow(HWND hWnd, HDC hdc)
 			{
 				if (row == col)
 				{
-					drawReflectEdge(edgePen, currentVertex, col + 1, hdc);
+					drawReflectEdge(edgePen, currentVertex, hdc);
 				}
 				else
 				{
