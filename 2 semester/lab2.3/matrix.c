@@ -40,8 +40,7 @@ double **getRandomMatrix(int size)
 {
 	srand(SEED);
 	double **matrix = createMatrix(size);
-	int i;
-	int j;
+	int i, j;
 	for (i = 0; i < size; i++)
 	{
 		for (j = 0; j < size; j++)
@@ -54,8 +53,7 @@ double **getRandomMatrix(int size)
 
 void multMatrix(double** matrix, int size){
 	double coefficient = 1.0 - N3 * 0.02 - N4 * 0.005 - 0.25;
-	int i;
-	int j;
+	int i, j;
 	for (i = 0; i < size; i++)
 	{
 		for (j = 0; j < size; j++)
@@ -67,8 +65,7 @@ void multMatrix(double** matrix, int size){
 
 void printMatrix(double **matrix, int size)
 {
-	int i;
-	int j;
+	int i, j;
 	for (i = 0; i < size; i++)
 	{
 		for (j = 0; j < size; j++)

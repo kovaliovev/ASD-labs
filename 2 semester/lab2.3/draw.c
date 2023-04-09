@@ -82,22 +82,22 @@ void drawArrowedReflectEdge(HPEN edgePen, Vertex *vertex, HDC hdc)
 
 	if (vertex->num <= (VERTICES_COUNT / 4)) // 3 чверть
 	{
-		rotateAngle = 165.0 * PI / 180.0;
+		rotateAngle = toRadians(165.0);
 		arrowX -= 32;
 	}
 	else if (vertex->num <= (VERTICES_COUNT / 4) * 2) // 2 чверть
 	{
-		rotateAngle = 195.0 * PI / 180.0;
+		rotateAngle = toRadians(195.0);
 		arrowX -= 32;
 	}
 	else if (vertex->num <= (VERTICES_COUNT / 4) * 3) // 1 чверть
 	{
-		rotateAngle = 345.0 * PI / 180.0;
+		rotateAngle = toRadians(345.0);
 		arrowX += 32;
 	}
 	else // 4 чверть
 	{
-		rotateAngle = 15.0 * PI / 180.0;
+		rotateAngle = toRadians(15.0);
 		arrowX += 32;
 	}
 	drawArrow(edgePen, rotateAngle, arrowX, arrowY, VERTEX_RADIUS / 2, hdc);

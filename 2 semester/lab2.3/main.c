@@ -10,10 +10,11 @@
 // Розміщення вершин: коло
 
 #define WINDOW_RIGHT_TOP_CORNER_X 420
-#define WINDOW_RIGHT_TOP_CORNER_Y 50
+#define WINDOW_RIGHT_TOP_CORNER_Y 5
 #define WINDOW_WIDTH 760
-#define WINDOW_HEIGHT 760
+#define WINDOW_HEIGHT 820
 #define GRAPH_MARGIN 350
+#define ANGLE_BETWEEN_VERTICES (360.0 / VERTICES_COUNT)
 
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип функції потоку вікна
 
@@ -31,8 +32,7 @@ void drawWindow(HWND hWnd, HDC hdc)
 	Vertex *vertex = create_vertices(VERTICES_COUNT, GRAPH_MARGIN);
 
 	Vertex *currentVertex = vertex;
-	int row;
-	int col;
+	int row, col;
 	SelectObject(hdc, edgePen);
 	for (row = 0; row < VERTICES_COUNT; row++)
 	{
@@ -43,10 +43,10 @@ void drawWindow(HWND hWnd, HDC hdc)
 				double startX = currentVertex->x;
 				double startY = currentVertex->y;
 
-				double endX = calcX(360.0 / VERTICES_COUNT, col, GRAPH_MARGIN);
-				double endY = calcY(360.0 / VERTICES_COUNT, col, GRAPH_MARGIN);
+				double endX = calcX(ANGLE_BETWEEN_VERTICES, col, GRAPH_MARGIN);
+				double endY = calcY(ANGLE_BETWEEN_VERTICES, col, GRAPH_MARGIN);
 
-				if (row > col && matrix[col][row])
+				if (matrix[col][row] && row > col)
 				{
 					drawArrowedCurveEdge(edgePen, startX, startY, endX, endY, hdc);
 				}

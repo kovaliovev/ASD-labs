@@ -21,13 +21,17 @@ void check_mem_error(Vertex *new_elem)
 	}
 }
 
+double toRadians(double degrees){
+	return degrees * PI / 180.0;
+}
+
 double calcX(double rotateAngle, int i, int margin){
-	double x = -cos((rotateAngle * PI / 180) * i) * 300 + margin;
+	double x = -cos(toRadians(rotateAngle * i)) * 300 + margin;
 	return x;
 }
 
 double calcY(double rotateAngle, int i, int margin){
-	double y = -sin((rotateAngle * PI / 180) * i) * 300 + margin;
+	double y = -sin(toRadians(rotateAngle * i)) * 300 + margin;
 	return y;
 }
 
