@@ -55,21 +55,18 @@ void drawArrow(HPEN arrowPen, double fi, double arrowX, double arrowY, double ar
 	LineTo(hdc, rx, ry);
 }
 
-void drawEdge(HPEN edgePen, Vertex *startVertex, double endX, double endY, HDC hdc)
+void drawEdge(HPEN edgePen, double startX, double startY, double endX, double endY, HDC hdc)
 {
-	MoveToEx(hdc, startVertex->x, startVertex->y, NULL);
+	MoveToEx(hdc, startX, startY, NULL);
 	LineTo(hdc, endX, endY);
 }
 
-void drawArrowedEdge(HPEN edgePen, Vertex *startVertex, double endX, double endY, HDC hdc)
+void drawArrowedEdge(HPEN edgePen, double startX, double startY, double endX, double endY, HDC hdc)
 {
-	double startX = startVertex->x;
-	double startY = startVertex->y;
-
 	double arrowX = endX + VERTEX_RADIUS * cos(atan2(startY - endY, startX - endX));
 	double arrowY = endY + VERTEX_RADIUS * sin(atan2(startY - endY, startX - endX));
 
-	drawEdge(edgePen, startVertex, endX, endY, hdc);
+	drawEdge(edgePen, startX, startY, endX, endY, hdc);
 	drawArrow(edgePen, atan2((startY - endY), (startX - endX)), arrowX, arrowY, VERTEX_RADIUS, hdc);
 }
 
@@ -151,9 +148,11 @@ void drawWindow(HWND hWnd, HDC hdc)
 				}
 				else
 				{
+					double startX = currentVertex->x;
+					double startY = currentVertex->y;
 					double endX = calcX(360.0 / VERTICES_COUNT, col, GRAPH_MARGIN);
 					double endY = calcY(360.0 / VERTICES_COUNT, col, GRAPH_MARGIN);
-					drawArrowedEdge(edgePen, currentVertex, endX, endY, hdc);
+					drawArrowedEdge(edgePen, startX, startY, endX, endY, hdc);
 				}
 			}
 		}
