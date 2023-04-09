@@ -17,7 +17,7 @@
 #define WINDOW_HEIGHT 760
 #define GRAPH_MARGIN 350
 #define VERTEX_RADIUS 32
-#define VERTEX_DIAMETER 64
+#define VERTEX_DIAMETER 2 * VERTEX_RADIUS
 #define TEXT_MARGIN 5
 #define ARROW_LENGTH 16
 
@@ -35,21 +35,21 @@ void drawVertex(HPEN vertexPen, Vertex *vertex, HDC hdc)
 	// написання номеру вершини
 	if (vertex->num <= 9)
 	{
-		TextOut(hdc, vertex->x - TEXT_MARGIN, vertex->y - VERTEX_RADIUS / 2 + 8, vertexName, 1);
+		TextOut(hdc, vertex->x - TEXT_MARGIN, vertex->y - VERTEX_RADIUS / 4, vertexName, 1);
 	}
 	else
 	{
-		TextOut(hdc, vertex->x - TEXT_MARGIN - 4, vertex->y - VERTEX_RADIUS / 2 + 8, vertexName, 2);
+		TextOut(hdc, vertex->x - TEXT_MARGIN - 4, vertex->y - VERTEX_RADIUS / 4, vertexName, 2);
 	}
 }
 
-void drawArrow(HPEN arrowPen, double fi, double arrowX, double arrowY, double arrowLength, HDC hdc)
+void drawArrow(HPEN arrowPen, double rotateAngle, double arrowX, double arrowY, double arrowLength, HDC hdc)
 {
 	double lx, ly, rx, ry;
-	lx = arrowX + arrowLength * cos(fi + 0.3);
-	rx = arrowX + arrowLength * cos(fi - 0.3);
-	ly = arrowY + arrowLength * sin(fi + 0.3);
-	ry = arrowY + arrowLength * sin(fi - 0.3);
+	lx = arrowX + arrowLength * cos(rotateAngle + 0.3);
+	rx = arrowX + arrowLength * cos(rotateAngle - 0.3);
+	ly = arrowY + arrowLength * sin(rotateAngle + 0.3);
+	ry = arrowY + arrowLength * sin(rotateAngle - 0.3);
 	MoveToEx(hdc, lx, ly, NULL);
 	LineTo(hdc, arrowX, arrowY);
 	LineTo(hdc, rx, ry);
@@ -63,28 +63,29 @@ void drawEdge(HPEN edgePen, double startX, double startY, double endX, double en
 
 void drawArrowedEdge(HPEN edgePen, double startX, double startY, double endX, double endY, HDC hdc)
 {
-	double arrowX = endX + VERTEX_RADIUS * cos(atan2(startY - endY, startX - endX));
-	double arrowY = endY + VERTEX_RADIUS * sin(atan2(startY - endY, startX - endX));
+	double rotateAngle = atan2(startY - endY, startX - endX);
+	double arrowX = endX + VERTEX_RADIUS * cos(rotateAngle);
+	double arrowY = endY + VERTEX_RADIUS * sin(rotateAngle);
 
 	drawEdge(edgePen, startX, startY, endX, endY, hdc);
-	drawArrow(edgePen, atan2((startY - endY), (startX - endX)), arrowX, arrowY, VERTEX_RADIUS, hdc);
+	drawArrow(edgePen, rotateAngle, arrowX, arrowY, VERTEX_RADIUS, hdc);
 }
 
 void drawReflectEdge(HPEN edgePen, Vertex *vertex, HDC hdc)
 {
-	if (vertex->num <= (VERTICES_COUNT / 4))
+	if (vertex->num <= (VERTICES_COUNT / 4)) // 3 чверть
 	{
 		Ellipse(hdc, vertex->x - VERTEX_DIAMETER, vertex->y + VERTEX_DIAMETER, vertex->x, vertex->y);
 	}
-	else if (vertex->num <= (VERTICES_COUNT / 4) * 2)
+	else if (vertex->num <= (VERTICES_COUNT / 4) * 2) // 2 чверть
 	{
 		Ellipse(hdc, vertex->x - VERTEX_DIAMETER, vertex->y - VERTEX_DIAMETER, vertex->x, vertex->y);
 	}
-	else if (vertex->num <= (VERTICES_COUNT / 4) * 3)
+	else if (vertex->num <= (VERTICES_COUNT / 4) * 3) // 1 чверть
 	{
 		Ellipse(hdc, vertex->x + VERTEX_DIAMETER, vertex->y - VERTEX_DIAMETER, vertex->x, vertex->y);
 	}
-	else
+	else // 4 чверть
 	{
 		Ellipse(hdc, vertex->x + VERTEX_DIAMETER, vertex->y + VERTEX_DIAMETER, vertex->x, vertex->y);
 	}
@@ -98,22 +99,22 @@ void drawArrowedReflectEdge(HPEN edgePen, Vertex *vertex, HDC hdc)
 	double arrowX = vertex->x;
 	double arrowY = vertex->y;
 
-	if (vertex->num <= (VERTICES_COUNT / 4))
+	if (vertex->num <= (VERTICES_COUNT / 4)) // 3 чверть
 	{
 		rotateAngle = 165.0 * M_PI / 180.0;
 		arrowX -= 32;
 	}
-	else if (vertex->num <= (VERTICES_COUNT / 4) * 2)
+	else if (vertex->num <= (VERTICES_COUNT / 4) * 2) // 2 чверть
 	{
 		rotateAngle = 195.0 * M_PI / 180.0;
 		arrowX -= 32;
 	}
-	else if (vertex->num <= (VERTICES_COUNT / 4) * 3)
+	else if (vertex->num <= (VERTICES_COUNT / 4) * 3) // 1 чверть
 	{
 		rotateAngle = 345.0 * M_PI / 180.0;
 		arrowX += 32;
 	}
-	else
+	else // 4 чверть
 	{
 		rotateAngle = 15.0 * M_PI / 180.0;
 		arrowX += 32;
@@ -150,12 +151,14 @@ void drawWindow(HWND hWnd, HDC hdc)
 		{
 			if (matrix[row][col])
 			{
+				double startX = currentVertex->x;
+				double startY = currentVertex->y;
+
+				double endX = calcX(360.0 / VERTICES_COUNT, col, GRAPH_MARGIN);
+				double endY = calcY(360.0 / VERTICES_COUNT, col, GRAPH_MARGIN);
+
 				if (row > col && matrix[col][row])
 				{
-					double startX = currentVertex->x;
-					double startY = currentVertex->y;
-					double endX = calcX(360.0 / VERTICES_COUNT, col, GRAPH_MARGIN);
-					double endY = calcY(360.0 / VERTICES_COUNT, col, GRAPH_MARGIN);
 					drawArrowedCurveEdge(edgePen, startX, startY, endX, endY, hdc);
 				}
 				else if (row == col)
@@ -164,10 +167,6 @@ void drawWindow(HWND hWnd, HDC hdc)
 				}
 				else
 				{
-					double startX = currentVertex->x;
-					double startY = currentVertex->y;
-					double endX = calcX(360.0 / VERTICES_COUNT, col, GRAPH_MARGIN);
-					double endY = calcY(360.0 / VERTICES_COUNT, col, GRAPH_MARGIN);
 					drawArrowedEdge(edgePen, startX, startY, endX, endY, hdc);
 				}
 			}
