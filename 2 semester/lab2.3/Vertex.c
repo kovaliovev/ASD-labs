@@ -21,17 +21,17 @@ void check_mem_error(Vertex *new_elem)
 	}
 }
 
-double toRadians(double degrees){
+double to_radians(double degrees){
 	return degrees * PI / 180.0;
 }
 
-double calcX(double rotateAngle, int i, int margin){
-	double x = -cos(toRadians(rotateAngle * i)) * 300 + margin;
+double calc_x(double rotate_angle, int i, int margin){
+	double x = -cos(to_radians(rotate_angle * i)) * 300 + margin;
 	return x;
 }
 
-double calcY(double rotateAngle, int i, int margin){
-	double y = -sin(toRadians(rotateAngle * i)) * 300 + margin;
+double calc_y(double rotate_angle, int i, int margin){
+	double y = -sin(to_radians(rotate_angle * i)) * 300 + margin;
 	return y;
 }
 
@@ -47,12 +47,12 @@ Vertex *create_vertices(double count, int margin)
 	check_mem_error(p_head);
 
 	double i;
-	double rotateAngle = 360 / count;
+	double rotate_angle = 360 / count;
 	Vertex* current = p_head;
 	for (i = 0; i < count; i++) {
 		current->num = i + 1;
-		current->x = calcX(rotateAngle, i, margin);
-		current->y = calcY(rotateAngle, i, margin);
+		current->x = calc_x(rotate_angle, i, margin);
+		current->y = calc_y(rotate_angle, i, margin);
 
 		if (i + 1 == count) {
 			current->p_next = NULL;

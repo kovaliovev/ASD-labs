@@ -6,53 +6,54 @@
 #define VERTEX_DIAMETER (2 * VERTEX_RADIUS)
 #define TEXT_MARGIN 5
 
-void drawVertex(HPEN vertexPen, Vertex *vertex, HDC hdc)
+void draw_vertex(HPEN vertex_pen, Vertex *vertex, HDC hdc)
 {
 	// малювання вершини
-	SelectObject(hdc, vertexPen);
+	SelectObject(hdc, vertex_pen);
 	Ellipse(hdc, vertex->x - VERTEX_RADIUS, vertex->y - VERTEX_RADIUS, vertex->x + VERTEX_RADIUS, vertex->y + VERTEX_RADIUS);
-	char vertexName[3];
-	sprintf(vertexName, "%d", vertex->num);
+
+	char vertex_name[3];
+	sprintf(vertex_name, "%d", vertex->num);
 	// написання номеру вершини
 	if (vertex->num <= 9)
 	{
-		TextOut(hdc, vertex->x - TEXT_MARGIN, vertex->y - VERTEX_RADIUS / 4, vertexName, 1);
+		TextOut(hdc, vertex->x - TEXT_MARGIN, vertex->y - VERTEX_RADIUS / 4, vertex_name, 1);
 	}
 	else
 	{
-		TextOut(hdc, vertex->x - TEXT_MARGIN - 4, vertex->y - VERTEX_RADIUS / 4, vertexName, 2);
+		TextOut(hdc, vertex->x - TEXT_MARGIN - 4, vertex->y - VERTEX_RADIUS / 4, vertex_name, 2);
 	}
 }
 
-void drawArrow(HPEN arrowPen, double rotateAngle, double arrowX, double arrowY, double arrowLength, HDC hdc)
+void draw_arrow(HPEN arrow_pen, double rotate_angle, double arrow_x, double arrow_y, double arrow_length, HDC hdc)
 {
 	double lx, ly, rx, ry;
-	lx = arrowX + arrowLength * cos(rotateAngle + 0.3);
-	rx = arrowX + arrowLength * cos(rotateAngle - 0.3);
-	ly = arrowY + arrowLength * sin(rotateAngle + 0.3);
-	ry = arrowY + arrowLength * sin(rotateAngle - 0.3);
+	lx = arrow_x + arrow_length * cos(rotate_angle + 0.3);
+	rx = arrow_x + arrow_length * cos(rotate_angle - 0.3);
+	ly = arrow_y + arrow_length * sin(rotate_angle + 0.3);
+	ry = arrow_y + arrow_length * sin(rotate_angle - 0.3);
 	MoveToEx(hdc, lx, ly, NULL);
-	LineTo(hdc, arrowX, arrowY);
+	LineTo(hdc, arrow_x, arrow_y);
 	LineTo(hdc, rx, ry);
 }
 
-void drawEdge(HPEN edgePen, double startX, double startY, double endX, double endY, HDC hdc)
+void draw_edge(HPEN edge_pen, double start_x, double start_y, double end_x, double end_y, HDC hdc)
 {
-	MoveToEx(hdc, startX, startY, NULL);
-	LineTo(hdc, endX, endY);
+	MoveToEx(hdc, start_x, start_y, NULL);
+	LineTo(hdc, end_x, end_y);
 }
 
-void drawArrowedEdge(HPEN edgePen, double startX, double startY, double endX, double endY, HDC hdc)
+void draw_arrowed_edge(HPEN edge_pen, double start_x, double start_y, double end_x, double end_y, HDC hdc)
 {
-	double rotateAngle = atan2(startY - endY, startX - endX);
-	double arrowX = endX + VERTEX_RADIUS * cos(rotateAngle);
-	double arrowY = endY + VERTEX_RADIUS * sin(rotateAngle);
+	double rotate_angle = atan2(start_y - end_y, start_x - end_x);
+	double arrow_x = end_x + VERTEX_RADIUS * cos(rotate_angle);
+	double arrow_y = end_y + VERTEX_RADIUS * sin(rotate_angle);
 
-	drawEdge(edgePen, startX, startY, endX, endY, hdc);
-	drawArrow(edgePen, rotateAngle, arrowX, arrowY, VERTEX_RADIUS, hdc);
+	draw_edge(edge_pen, start_x, start_y, end_x, end_y, hdc);
+	draw_arrow(edge_pen, rotate_angle, arrow_x, arrow_y, VERTEX_RADIUS, hdc);
 }
 
-void drawReflectEdge(HPEN edgePen, Vertex *vertex, HDC hdc)
+void draw_reflect_edge(HPEN edge_pen, Vertex *vertex, HDC hdc)
 {
 	if (vertex->num <= (VERTICES_COUNT / 4)) // 3 чверть
 	{
@@ -72,41 +73,41 @@ void drawReflectEdge(HPEN edgePen, Vertex *vertex, HDC hdc)
 	}
 }
 
-void drawArrowedReflectEdge(HPEN edgePen, Vertex *vertex, HDC hdc)
+void draw_arrowed_reflect_edge(HPEN edge_pen, Vertex *vertex, HDC hdc)
 {
-	drawReflectEdge(edgePen, vertex, hdc);
+	draw_reflect_edge(edge_pen, vertex, hdc);
 
-	double rotateAngle;
-	double arrowX = vertex->x;
-	double arrowY = vertex->y;
+	double rotate_angle;
+	double arrow_x = vertex->x;
+	double arrow_y = vertex->y;
 
 	if (vertex->num <= (VERTICES_COUNT / 4)) // 3 чверть
 	{
-		rotateAngle = toRadians(165.0);
-		arrowX -= 32;
+		rotate_angle = to_radians(165.0);
+		arrow_x -= 32;
 	}
 	else if (vertex->num <= (VERTICES_COUNT / 4) * 2) // 2 чверть
 	{
-		rotateAngle = toRadians(195.0);
-		arrowX -= 32;
+		rotate_angle = to_radians(195.0);
+		arrow_x -= 32;
 	}
 	else if (vertex->num <= (VERTICES_COUNT / 4) * 3) // 1 чверть
 	{
-		rotateAngle = toRadians(345.0);
-		arrowX += 32;
+		rotate_angle = to_radians(345.0);
+		arrow_x += 32;
 	}
 	else // 4 чверть
 	{
-		rotateAngle = toRadians(15.0);
-		arrowX += 32;
+		rotate_angle = to_radians(15.0);
+		arrow_x += 32;
 	}
-	drawArrow(edgePen, rotateAngle, arrowX, arrowY, VERTEX_RADIUS / 2, hdc);
+	draw_arrow(edge_pen, rotate_angle, arrow_x, arrow_y, VERTEX_RADIUS / 2, hdc);
 }
 
-void drawArrowedCurveEdge(HPEN edgePen, double startX, double startY, double endX, double endY, HDC hdc)
+void draw_arrowed_curve_edge(HPEN edge_pen, double start_x, double start_y, double end_x, double end_y, HDC hdc)
 {
-	double centerX = (startX + endX) / 2 - 32;
-	double centerY = (startY + endY) / 2 - 32;
-	drawEdge(edgePen, startX, startY, centerX, centerY, hdc);
-	drawArrowedEdge(edgePen, centerX, centerY, endX, endY, hdc);
+	double center_x = (start_x + end_x) / 2 - 32;
+	double center_y = (start_y + end_y) / 2 - 32;
+	draw_edge(edge_pen, start_x, start_y, center_x, center_y, hdc);
+	draw_arrowed_edge(edge_pen, center_x, center_y, end_x, end_y, hdc);
 }

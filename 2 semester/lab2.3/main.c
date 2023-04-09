@@ -18,59 +18,59 @@
 
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип функції потоку вікна
 
-char ProgName[] = "Lab #3"; // ім'я програми
+char prog_name[] = "Lab #3"; // ім'я програми
 
-void drawWindow(HWND hWnd, HDC hdc)
+void draw_window(HWND hWnd, HDC hdc)
 {
-	HPEN vertexPen = CreatePen(PS_SOLID, 2, RGB(50, 0, 255)); // стиль = неперервний; товщина = 2; колір = синій
-	HPEN edgePen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));		// стиль = неперервний; товщина = 1; колір = чорний
+	HPEN vertex_pen = CreatePen(PS_SOLID, 2, RGB(50, 0, 255)); // стиль = неперервний; товщина = 2; колір = синій
+	HPEN edge_pen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));		// стиль = неперервний; товщина = 1; колір = чорний
 
-	double **matrix = getRandomMatrix(MATRIX_SIZE);
-	multMatrix(matrix, MATRIX_SIZE);
-	printMatrix(matrix, MATRIX_SIZE);
+	double **matrix = get_rand_matrix(MATRIX_SIZE);
+	mult_matrix(matrix, MATRIX_SIZE);
+	print_matrix(matrix, MATRIX_SIZE);
 
 	Vertex *vertex = create_vertices(VERTICES_COUNT, GRAPH_MARGIN);
 
-	Vertex *currentVertex = vertex;
+	Vertex *current_vertex = vertex;
 	int row, col;
-	SelectObject(hdc, edgePen);
+	SelectObject(hdc, edge_pen);
 	for (row = 0; row < VERTICES_COUNT; row++)
 	{
 		for (col = 0; col < VERTICES_COUNT; col++)
 		{
 			if (matrix[row][col])
 			{
-				double startX = currentVertex->x;
-				double startY = currentVertex->y;
+				double start_x = current_vertex->x;
+				double start_y = current_vertex->y;
 
-				double endX = calcX(ANGLE_BETWEEN_VERTICES, col, GRAPH_MARGIN);
-				double endY = calcY(ANGLE_BETWEEN_VERTICES, col, GRAPH_MARGIN);
+				double end_x = calc_x(ANGLE_BETWEEN_VERTICES, col, GRAPH_MARGIN);
+				double end_y = calc_y(ANGLE_BETWEEN_VERTICES, col, GRAPH_MARGIN);
 
 				if (matrix[col][row] && row > col)
 				{
-					drawArrowedCurveEdge(edgePen, startX, startY, endX, endY, hdc);
+					draw_arrowed_curve_edge(edge_pen, start_x, start_y, end_x, end_y, hdc);
 				}
 				else if (row == col)
 				{
-					drawArrowedReflectEdge(edgePen, currentVertex, hdc);
+					draw_arrowed_reflect_edge(edge_pen, current_vertex, hdc);
 				}
 				else
 				{
-					drawArrowedEdge(edgePen, startX, startY, endX, endY, hdc);
+					draw_arrowed_edge(edge_pen, start_x, start_y, end_x, end_y, hdc);
 				}
 			}
 		}
-		currentVertex = currentVertex->p_next;
+		current_vertex = current_vertex->p_next;
 	}
 
-	currentVertex = vertex;
-	while (currentVertex != NULL)
+	current_vertex = vertex;
+	while (current_vertex != NULL)
 	{
-		drawVertex(vertexPen, currentVertex, hdc);
-		currentVertex = currentVertex->p_next;
+		draw_vertex(vertex_pen, current_vertex, hdc);
+		current_vertex = current_vertex->p_next;
 	}
 	// очищення пам'яті
-	deleteMatrix(matrix, MATRIX_SIZE);
+	delete_matrix(matrix, MATRIX_SIZE);
 	delete_vertices(&vertex);
 }
 
@@ -98,7 +98,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 	HWND hWnd;
 	MSG lpMsg;
 
-	hWnd = CreateWindow(ProgName,														 // ім'я програми
+	hWnd = CreateWindow(prog_name,														 // ім'я програми
 											"Lab #3 by Evgheniy Kovaliov IM-21", // заголовок
 											WS_OVERLAPPEDWINDOW,								 // стиль вікна: комплексний
 											WINDOW_RIGHT_TOP_CORNER_X,					 // положення верхнього лівого кута вікна на екрані по x
@@ -128,7 +128,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-		drawWindow(hWnd, hdc);
+		draw_window(hWnd, hdc);
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_DESTROY:
