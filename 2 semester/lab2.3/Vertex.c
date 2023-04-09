@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define _USE_MATH_DEFINES
 #include <math.h>
+
+#define PI 3.1416
 
 typedef struct vertices_list
 {
@@ -21,12 +22,12 @@ void check_mem_error(Vertex *new_elem)
 }
 
 double calcX(double rotateAngle, int i, int margin){
-	double x = -cos((rotateAngle * M_PI / 180) * i) * 300 + margin;
+	double x = -cos((rotateAngle * PI / 180) * i) * 300 + margin;
 	return x;
 }
 
 double calcY(double rotateAngle, int i, int margin){
-	double y = -sin((rotateAngle * M_PI / 180) * i) * 300 + margin;
+	double y = -sin((rotateAngle * PI / 180) * i) * 300 + margin;
 	return y;
 }
 
