@@ -1,5 +1,6 @@
 #include "matrix.c"
 #include "draw.c"
+#include <stdbool.h> // норм купа пыдключень?
 
 // n1 = 2
 // n2 = 1
@@ -20,10 +21,12 @@ LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип ф�
 
 char prog_name[] = "Lab #3"; // ім'я програми
 
-void draw_window(HWND hWnd, HDC hdc)
+void draw_window(HWND hWnd, HDC hdc, bool is_directed)
 {
+	Rectangle(hdc, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+
 	HPEN vertex_pen = CreatePen(PS_SOLID, 3, RGB(50, 0, 255)); // стиль = неперервний; товщина = 2; колір = синій
-	HPEN edge_pen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));		// стиль = неперервний; товщина = 1; колір = чорний
+	HPEN edge_pen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));		 // стиль = неперервний; товщина = 1; колір = чорний
 
 	double **matrix = get_rand_matrix(MATRIX_SIZE);
 	mult_matrix(matrix, MATRIX_SIZE);
@@ -48,15 +51,32 @@ void draw_window(HWND hWnd, HDC hdc)
 
 				if (matrix[col][row] && row > col)
 				{
-					draw_arrowed_curve_edge(edge_pen, start_x, start_y, end_x, end_y, hdc);
+					if (is_directed)
+					{
+						draw_arrowed_curve_edge(edge_pen, start_x, start_y, end_x, end_y, hdc);
+					}
 				}
 				else if (row == col)
 				{
-					draw_arrowed_reflect_edge(edge_pen, current_vertex, hdc);
+					if (is_directed)
+					{
+						draw_arrowed_reflect_edge(edge_pen, current_vertex, hdc);
+					}
+					else
+					{
+						draw_reflect_edge(edge_pen, current_vertex, hdc);
+					}
 				}
 				else
 				{
-					draw_arrowed_edge(edge_pen, start_x, start_y, end_x, end_y, hdc);
+					if (is_directed)
+					{
+						draw_arrowed_edge(edge_pen, start_x, start_y, end_x, end_y, hdc);
+					}
+					else
+					{
+						draw_edge(edge_pen, start_x, start_y, end_x, end_y, hdc);
+					}
 				}
 			}
 		}
@@ -98,7 +118,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 	HWND hWnd;
 	MSG lpMsg;
 
-	hWnd = CreateWindow(prog_name,														 // ім'я програми
+	hWnd = CreateWindow(prog_name,													 // ім'я програми
 											"Lab #3 by Evgheniy Kovaliov IM-21", // заголовок
 											WS_OVERLAPPEDWINDOW,								 // стиль вікна: комплексний
 											WINDOW_RIGHT_TOP_CORNER_X,					 // положення верхнього лівого кута вікна на екрані по x
@@ -111,6 +131,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 											(HINSTANCE)NULL);										 // додаткові параметри(відсутні)
 
 	ShowWindow(hWnd, nCmdShow);
+
+	HWND change_orientation_button;
+	change_orientation_button = CreateWindow("button", "Change graph orientation", WS_VISIBLE | WS_CHILD | WS_BORDER, 284, 720, 196, 32, hWnd, NULL, NULL, NULL);
+
 	while (GetMessage(&lpMsg, hWnd, 0, 0))
 	{
 		TranslateMessage(&lpMsg); // перетворення повідомлення
@@ -119,7 +143,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 
 	return (lpMsg.wParam);
 }
-
+bool is_directed = false; // КРІНЖОВА ГЛОБАЛЬНА ЗМІННА
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam)
 {
 	HDC hdc;
@@ -128,9 +152,13 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-		draw_window(hWnd, hdc);
+		draw_window(hWnd, hdc, is_directed);
 		EndPaint(hWnd, &ps);
 		break;
+	case WM_COMMAND:
+		is_directed = !is_directed;
+		InvalidateRect(hWnd, NULL, TRUE); // норм оновлення вікна?
+		UpdateWindow(hWnd);
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
