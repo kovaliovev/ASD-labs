@@ -43,13 +43,13 @@ void drawVertex(HPEN vertexPen, Vertex *vertex, HDC hdc)
 	}
 }
 
-void drawArrow(HPEN arrowPen, double fi, int arrowX, int arrowY, HDC hdc)
+void drawArrow(HPEN arrowPen, double fi, double arrowX, double arrowY, double arrowLength, HDC hdc)
 {
-	int lx, ly, rx, ry;
-	lx = arrowX + VERTEX_RADIUS * cos(fi + 0.3);
-	rx = arrowX + VERTEX_RADIUS * cos(fi - 0.3);
-	ly = arrowY + VERTEX_RADIUS * sin(fi + 0.3);
-	ry = arrowY + VERTEX_RADIUS * sin(fi - 0.3);
+	double lx, ly, rx, ry;
+	lx = arrowX + arrowLength * cos(fi + 0.3);
+	rx = arrowX + arrowLength * cos(fi - 0.3);
+	ly = arrowY + arrowLength * sin(fi + 0.3);
+	ry = arrowY + arrowLength * sin(fi - 0.3);
 	MoveToEx(hdc, lx, ly, NULL);
 	LineTo(hdc, arrowX, arrowY);
 	LineTo(hdc, rx, ry);
@@ -73,7 +73,7 @@ void drawArrowedEdge(HPEN edgePen, Vertex *startVertex, int endVertexNum, HDC hd
 	double arrowY = endY + VERTEX_RADIUS * sin(atan2(startY - endY, startX - endX));
 
 	drawEdge(edgePen, startVertex, endX, endY, hdc);
-	drawArrow(edgePen, atan2((startY - endY), (startX - endX)), arrowX, arrowY, hdc);
+	drawArrow(edgePen, atan2((startY - endY), (startX - endX)), arrowX, arrowY, VERTEX_RADIUS, hdc);
 }
 
 void drawReflectEdge(HPEN edgePen, Vertex *vertex, HDC hdc)
@@ -94,6 +94,37 @@ void drawReflectEdge(HPEN edgePen, Vertex *vertex, HDC hdc)
 	{
 		Ellipse(hdc, vertex->x + VERTEX_DIAMETER, vertex->y + VERTEX_DIAMETER, vertex->x, vertex->y);
 	}
+}
+
+void drawArrowedReflectEdge(HPEN edgePen, Vertex *vertex, HDC hdc)
+{
+	drawReflectEdge(edgePen, vertex, hdc);
+
+	double rotateAngle;
+	double arrowX = vertex->x;
+	double arrowY = vertex->y;
+
+	if (vertex->num <= (VERTICES_COUNT / 4))
+	{
+		rotateAngle = 165.0 * M_PI / 180.0;
+		arrowX -= 32;
+	}
+	else if (vertex->num <= (VERTICES_COUNT / 4) * 2)
+	{
+		rotateAngle = 195.0 * M_PI / 180.0;
+		arrowX -= 32;
+	}
+	else if (vertex->num <= (VERTICES_COUNT / 4) * 3)
+	{
+		rotateAngle = 345.0 * M_PI / 180.0;
+		arrowX += 32;
+	}
+	else
+	{
+		rotateAngle = 15.0 * M_PI / 180.0;
+		arrowX += 32;
+	}
+	drawArrow(edgePen, rotateAngle, arrowX, arrowY, VERTEX_RADIUS / 2, hdc);
 }
 
 void drawWindow(HWND hWnd, HDC hdc)
@@ -119,7 +150,7 @@ void drawWindow(HWND hWnd, HDC hdc)
 			{
 				if (row == col)
 				{
-					drawReflectEdge(edgePen, currentVertex, hdc);
+					drawArrowedReflectEdge(edgePen, currentVertex, hdc);
 				}
 				else
 				{
