@@ -22,7 +22,7 @@ char prog_name[] = "Lab #3"; // ім'я програми
 
 void draw_window(HWND hWnd, HDC hdc)
 {
-	HPEN vertex_pen = CreatePen(PS_SOLID, 2, RGB(50, 0, 255)); // стиль = неперервний; товщина = 2; колір = синій
+	HPEN vertex_pen = CreatePen(PS_SOLID, 3, RGB(50, 0, 255)); // стиль = неперервний; товщина = 2; колір = синій
 	HPEN edge_pen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));		// стиль = неперервний; товщина = 1; колір = чорний
 
 	double **matrix = get_rand_matrix(MATRIX_SIZE);
