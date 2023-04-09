@@ -121,6 +121,14 @@ void drawArrowedReflectEdge(HPEN edgePen, Vertex *vertex, HDC hdc)
 	drawArrow(edgePen, rotateAngle, arrowX, arrowY, VERTEX_RADIUS / 2, hdc);
 }
 
+void drawArrowedCurveEdge(HPEN edgePen, double startX, double startY, double endX, double endY, HDC hdc)
+{
+	double centerX = (startX + endX) / 2 - 32;
+	double centerY = (startY + endY) / 2 - 32;
+	drawEdge(edgePen, startX, startY, centerX, centerY, hdc);
+	drawArrowedEdge(edgePen, centerX, centerY, endX, endY, hdc);
+}
+
 void drawWindow(HWND hWnd, HDC hdc)
 {
 	HPEN vertexPen = CreatePen(PS_SOLID, 2, RGB(50, 0, 255)); // стиль = неперервний; товщина = 2; колір = синій
@@ -142,7 +150,15 @@ void drawWindow(HWND hWnd, HDC hdc)
 		{
 			if (matrix[row][col])
 			{
-				if (row == col)
+				if (row > col && matrix[col][row])
+				{
+					double startX = currentVertex->x;
+					double startY = currentVertex->y;
+					double endX = calcX(360.0 / VERTICES_COUNT, col, GRAPH_MARGIN);
+					double endY = calcY(360.0 / VERTICES_COUNT, col, GRAPH_MARGIN);
+					drawArrowedCurveEdge(edgePen, startX, startY, endX, endY, hdc);
+				}
+				else if (row == col)
 				{
 					drawArrowedReflectEdge(edgePen, currentVertex, hdc);
 				}
