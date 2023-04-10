@@ -1,6 +1,8 @@
 #include <windows.h>
 #include "Vertex.c"
-
+/*
+	Файл описує усі функції, необхідні для малювання напрямнелого/ненапрямленого графа.
+*/
 #define VERTICES_COUNT 11
 #define VERTEX_RADIUS 32
 #define VERTEX_DIAMETER (2 * VERTEX_RADIUS)

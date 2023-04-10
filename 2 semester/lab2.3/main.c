@@ -1,7 +1,9 @@
 #include "matrix.c"
 #include "draw.c"
 #include <stdbool.h>
-
+/*
+	Головний файл проекту, описує створення вікна та взаємодію з ним.
+*/
 #define WINDOW_RIGHT_TOP_CORNER_X 420
 #define WINDOW_RIGHT_TOP_CORNER_Y 5
 #define WINDOW_WIDTH 760
