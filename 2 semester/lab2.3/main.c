@@ -33,7 +33,6 @@ void draw_window(HWND hWnd, HDC hdc, bool is_directed)
 
 	double **matrix = get_rand_matrix(MATRIX_SIZE);
 	mult_matrix(matrix, MATRIX_SIZE);
-	print_matrix(matrix, MATRIX_SIZE);
 
 	Vertex *vertex = create_vertices(VERTICES_COUNT, GRAPH_MARGIN);
 
@@ -92,6 +91,12 @@ void draw_window(HWND hWnd, HDC hdc, bool is_directed)
 		draw_vertex(vertex_pen, current_vertex, hdc);
 		current_vertex = current_vertex->p_next;
 	}
+	// вивід матриці
+	if (!is_directed) // якщо граф ненапрямлений, матриця приводиться до симетричного вигляду
+	{
+		get_symmetric_matrix(matrix, MATRIX_SIZE);
+	}
+	print_matrix(matrix, MATRIX_SIZE);
 	// очищення пам'яті
 	delete_matrix(matrix, MATRIX_SIZE);
 	delete_vertices(&vertex);
