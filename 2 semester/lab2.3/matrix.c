@@ -82,6 +82,7 @@ void mult_matrix(double **matrix, int size)
 void print_matrix(double **matrix, int size)
 {
 	int i, j;
+	printf("\nAdjacency matrix of the depicted graph:\n\n");
 	for (i = 0; i < size; i++)
 	{
 		for (j = 0; j < size; j++)
@@ -90,4 +91,5 @@ void print_matrix(double **matrix, int size)
 		}
 		printf("\n");
 	}
+	printf("\n");
 }
