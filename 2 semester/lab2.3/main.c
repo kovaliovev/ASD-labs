@@ -1,6 +1,13 @@
 #include "matrix.c"
 #include "draw.c"
-#include <stdbool.h> // норм купа пыдключень?
+#include <stdbool.h>
+
+#define WINDOW_RIGHT_TOP_CORNER_X 420
+#define WINDOW_RIGHT_TOP_CORNER_Y 5
+#define WINDOW_WIDTH 760
+#define WINDOW_HEIGHT 820
+#define GRAPH_MARGIN 350
+#define ANGLE_BETWEEN_VERTICES (360.0 / VERTICES_COUNT)
 
 // n1 = 2
 // n2 = 1
@@ -10,22 +17,18 @@
 // Число вершин: 11
 // Розміщення вершин: коло
 
-#define WINDOW_RIGHT_TOP_CORNER_X 420
-#define WINDOW_RIGHT_TOP_CORNER_Y 5
-#define WINDOW_WIDTH 760
-#define WINDOW_HEIGHT 820
-#define GRAPH_MARGIN 350
-#define ANGLE_BETWEEN_VERTICES (360.0 / VERTICES_COUNT)
-
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип функції потоку вікна
 
 char prog_name[] = "Lab #3"; // ім'я програми
 
 void draw_window(HWND hWnd, HDC hdc, bool is_directed)
 {
-	Rectangle(hdc, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+	if (!is_directed) // якщо граф ненапрямлений, потрібно замалювати напрямлений, що був намальований до цього
+	{
+		Rectangle(hdc, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+	}
 
-	HPEN vertex_pen = CreatePen(PS_SOLID, 3, RGB(50, 0, 255)); // стиль = неперервний; товщина = 2; колір = синій
+	HPEN vertex_pen = CreatePen(PS_SOLID, 3, RGB(50, 0, 255)); // стиль = неперервний; товщина = 3; колір = синій
 	HPEN edge_pen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));		 // стиль = неперервний; товщина = 1; колір = чорний
 
 	double **matrix = get_rand_matrix(MATRIX_SIZE);
@@ -143,11 +146,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 
 	return (lpMsg.wParam);
 }
-bool is_directed = false; // КРІНЖОВА ГЛОБАЛЬНА ЗМІННА
+
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam)
 {
 	HDC hdc;
 	PAINTSTRUCT ps;
+
+	static bool is_directed = true;
+
 	switch (messg)
 	{
 	case WM_PAINT:
@@ -157,8 +163,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_COMMAND:
 		is_directed = !is_directed;
-		InvalidateRect(hWnd, NULL, TRUE); // норм оновлення вікна?
-		UpdateWindow(hWnd);
+		RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
