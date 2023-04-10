@@ -19,8 +19,6 @@
 
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип функції потоку вікна
 
-char prog_name[] = "Lab #3"; // ім'я програми
-
 void draw_window(HWND hWnd, HDC hdc, bool is_directed)
 {
 	if (!is_directed) // якщо граф ненапрямлений, потрібно замалювати напрямлений, що був намальований до цього
@@ -126,7 +124,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 	HWND hWnd;
 	MSG lpMsg;
 
-	hWnd = CreateWindow(prog_name,													 // ім'я програми
+	hWnd = CreateWindow("Lab #3",														 // ім'я програми
 											"Lab #3 by Evgheniy Kovaliov IM-21", // заголовок
 											WS_OVERLAPPEDWINDOW,								 // стиль вікна: комплексний
 											WINDOW_RIGHT_TOP_CORNER_X,					 // положення верхнього лівого кута вікна на екрані по x
