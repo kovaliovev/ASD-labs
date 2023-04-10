@@ -6,8 +6,6 @@
 	графа, що зображується; а також функції для роботи з цим масивом.
 */
 #define MATRIX_SIZE 11
-#define N3 1
-#define N4 0
 #define SEED 2110
 
 double **create_matrix(int size)
@@ -69,9 +67,8 @@ double **get_symmetric_matrix(double **matrix, int size)
 	}
 }
 
-void mult_matrix(double **matrix, int size)
+void mult_matrix(double **matrix, int size, double coefficient)
 {
-	double coefficient = 1.0 - N3 * 0.02 - N4 * 0.005 - 0.25;
 	int i, j;
 	for (i = 0; i < size; i++)
 	{

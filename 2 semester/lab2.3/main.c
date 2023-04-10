@@ -10,6 +10,8 @@
 #define WINDOW_HEIGHT 820
 #define GRAPH_MARGIN 350
 #define ANGLE_BETWEEN_VERTICES (360.0 / VERTICES_COUNT)
+#define N3 1
+#define N4 0
 
 // n1 = 2
 // n2 = 1
@@ -32,7 +34,7 @@ void draw_window(HWND hWnd, HDC hdc, bool is_directed)
 	HPEN edge_pen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));		 // стиль = неперервний; товщина = 1; колір = чорний
 
 	double **matrix = get_rand_matrix(MATRIX_SIZE);
-	mult_matrix(matrix, MATRIX_SIZE);
+	mult_matrix(matrix, MATRIX_SIZE, (1.0 - N3 * 0.02 - N4 * 0.005 - 0.25));
 
 	Vertex *vertex = create_vertices(VERTICES_COUNT, GRAPH_MARGIN);
 
