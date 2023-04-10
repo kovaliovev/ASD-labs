@@ -51,7 +51,23 @@ double **get_rand_matrix(int size)
 	return matrix;
 }
 
-void mult_matrix(double** matrix, int size){
+double **get_symmetric_matrix(double **matrix, int size)
+{
+	int i, j;
+	for (i = 0; i < size; i++)
+	{
+		for (j = 0; j < size; j++)
+		{
+			if (matrix[i][j])
+			{
+				matrix[j][i] = 1;
+			}
+		}
+	}
+}
+
+void mult_matrix(double **matrix, int size)
+{
 	double coefficient = 1.0 - N3 * 0.02 - N4 * 0.005 - 0.25;
 	int i, j;
 	for (i = 0; i < size; i++)
