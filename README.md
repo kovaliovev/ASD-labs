@@ -1,5 +1,5 @@
 # ASD-labs
-Labs from Algorithms and Data Structures course
+⚒️ Labs from Algorithms and Data Structures course 📖
 
 # I семестр
 
