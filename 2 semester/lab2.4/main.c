@@ -3,9 +3,9 @@
 /*
 	Головний файл проекту, описує створення вікна та взаємодію з ним.
 */
-#define WINDOW_RIGHT_TOP_CORNER_X 180
+#define WINDOW_RIGHT_TOP_CORNER_X 150
 #define WINDOW_RIGHT_TOP_CORNER_Y 5
-#define WINDOW_WIDTH 1200
+#define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 820
 #define GRAPH_MARGIN 350
 #define ANGLE_BETWEEN_VERTICES (360.0 / VERTICES_COUNT)
@@ -95,9 +95,9 @@ void draw_window(HWND hWnd, HDC hdc, bool is_directed)
 		draw_vertex(vertex_pen, current_vertex, hdc);
 		current_vertex = current_vertex->p_next;
 	}
-	show_degrees(vertex, hdc, 800, 50, is_directed);
-	show_isolated_vertices(vertex, hdc, 1000, 50);
-	
+	show_degrees(vertex, hdc, 720, 50, is_directed);
+	show_isolated_vertices(vertex, hdc, 920, 50);
+
 	// вивід матриці
 	if (!is_directed) // якщо граф ненапрямлений, матриця приводиться до симетричного вигляду
 	{
