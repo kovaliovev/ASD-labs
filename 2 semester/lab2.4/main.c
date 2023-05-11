@@ -4,9 +4,9 @@
 /*
 	Головний файл проекту, описує створення вікна та взаємодію з ним.
 */
-#define WINDOW_RIGHT_TOP_CORNER_X 420
+#define WINDOW_RIGHT_TOP_CORNER_X 180
 #define WINDOW_RIGHT_TOP_CORNER_Y 5
-#define WINDOW_WIDTH 760
+#define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 820
 #define GRAPH_MARGIN 350
 #define ANGLE_BETWEEN_VERTICES (360.0 / VERTICES_COUNT)
@@ -34,7 +34,7 @@ void draw_window(HWND hWnd, HDC hdc, bool is_directed)
 	HPEN edge_pen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));		 // стиль = неперервний; товщина = 1; колір = чорний
 
 	double **matrix = get_rand_matrix(MATRIX_SIZE);
-	mult_matrix(matrix, MATRIX_SIZE, (1.0 - N3 * 0.02 - N4 * 0.005 - 0.25));
+	mult_matrix(matrix, MATRIX_SIZE, (1.0 - N3 * 0.01 - N4 * 0.01 - 0.3)); // третій аргумент - формула для перетворення матриці
 
 	Vertex *vertex = create_vertices(VERTICES_COUNT, GRAPH_MARGIN);
 
@@ -108,7 +108,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 {
 	WNDCLASS window;
 
-	window.lpszClassName = "Lab #3";							// ім'я програми
+	window.lpszClassName = "Lab #4";							// ім'я програми
 	window.hInstance = hInstance;									// ідентифікатор застосунку
 	window.lpfnWndProc = WindowProc;							// вказівник на функцію вікна
 	window.hCursor = LoadCursor(NULL, IDC_ARROW); // завантажений курсор
@@ -128,8 +128,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 	HWND hWnd;
 	MSG lpMsg;
 
-	hWnd = CreateWindow("Lab #3",														 // ім'я програми
-											"Lab #3 by Evgheniy Kovaliov IM-21", // заголовок
+	hWnd = CreateWindow("Lab #4",														 // ім'я програми
+											"Lab #4 by Evgheniy Kovaliov IM-21", // заголовок
 											WS_OVERLAPPEDWINDOW,								 // стиль вікна: комплексний
 											WINDOW_RIGHT_TOP_CORNER_X,					 // положення верхнього лівого кута вікна на екрані по x
 											WINDOW_RIGHT_TOP_CORNER_Y,					 // положення верхнього лівого кута вікна на екрані по y
