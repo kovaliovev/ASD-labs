@@ -47,6 +47,8 @@ void draw_window(HWND hWnd, HDC hdc, bool is_directed)
 		{
 			if (matrix[row][col])
 			{
+				current_vertex->deg_out++;
+
 				double start_x = current_vertex->x;
 				double start_y = current_vertex->y;
 
@@ -82,6 +84,10 @@ void draw_window(HWND hWnd, HDC hdc, bool is_directed)
 						draw_edge(edge_pen, start_x, start_y, end_x, end_y, hdc);
 					}
 				}
+			}
+			if (matrix[col][row])
+			{
+				current_vertex->deg_in++;
 			}
 		}
 		current_vertex = current_vertex->p_next;
