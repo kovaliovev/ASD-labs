@@ -96,7 +96,8 @@ void draw_window(HWND hWnd, HDC hdc, bool is_directed)
 		current_vertex = current_vertex->p_next;
 	}
 	show_degrees(vertex, hdc, 720, 50, is_directed);
-	show_isolated_vertices(vertex, hdc, 920, 50);
+	show_isolated_vertices(vertex, hdc, 920, 100);
+	show_pendant_vertices(vertex, hdc, 1100, 100);
 
 	// вивід матриці
 	if (!is_directed) // якщо граф ненапрямлений, матриця приводиться до симетричного вигляду
