@@ -180,3 +180,20 @@ void show_degrees(Vertex *start_vertex, HDC hdc, int startX, int startY, bool is
 		}
 	}
 }
+
+void show_isolated_vertices(Vertex *start_vertex, HDC hdc, int startX, int startY)
+{
+	Vertex *current_vertex = start_vertex;
+	while (current_vertex != NULL)
+	{
+		int degree = current_vertex->deg_in + current_vertex->deg_out;
+		if (degree == 0)
+		{
+			char message[23];
+			sprintf(message, "Vertex #%d is isolated!", current_vertex->num);
+			TextOut(hdc, startX, startY, message, 23);
+			startY += 20;
+		}
+		current_vertex = current_vertex->p_next;
+	}
+}
