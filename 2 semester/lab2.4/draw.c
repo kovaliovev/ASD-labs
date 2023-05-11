@@ -181,36 +181,30 @@ void show_degrees(Vertex *start_vertex, HDC hdc, int startX, int startY, bool is
 	}
 }
 
-void show_isolated_vertices(Vertex *start_vertex, HDC hdc, int startX, int startY)
+void show_specific_vertices(Vertex *start_vertex, HDC hdc, int startX, int startY)
 {
+	int text_x = startX;
+	int text_y = startY;
 	Vertex *current_vertex = start_vertex;
 	while (current_vertex != NULL)
 	{
+		int num = current_vertex->num;
 		int degree = current_vertex->deg_in + current_vertex->deg_out;
+
 		if (degree == 0)
 		{
 			char message[23];
-			sprintf(message, "Vertex #%d is isolated!", current_vertex->num);
-			TextOut(hdc, startX, startY, message, 23);
-			startY += 21;
+			sprintf(message, "Vertex #%d is isolated!", num);
+			TextOut(hdc, text_x, text_y, message, 23);
 		}
+		else if (degree == 1)
+		{
+			char message[22];
+			sprintf(message, "Vertex #%d is pendant!", num);
+			TextOut(hdc, text_x, text_y, message, 22);
+		}
+
+		text_y += 21;
 		current_vertex = current_vertex->p_next;
 	}
-}
-
-void show_pendant_vertices(Vertex *start_vertex, HDC hdc, int startX, int startY)
-{
-  Vertex *current_vertex = start_vertex;
-  while (current_vertex != NULL)
-  {
-    int degree = current_vertex->deg_in + current_vertex->deg_out;
-    if (degree == 1)
-    {
-      char message[22];
-      sprintf(message, "Vertex #%d is pendant!", current_vertex->num);
-      TextOut(hdc, startX, startY, message, 22);
-      startY += 21;
-    }
-    current_vertex = current_vertex->p_next;
-  }
 }
