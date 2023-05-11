@@ -97,6 +97,14 @@ void draw_window(HWND hWnd, HDC hdc, bool is_directed)
 	while (current_vertex != NULL)
 	{
 		draw_vertex(vertex_pen, current_vertex, hdc);
+		if (is_directed)
+		{
+			show_degrees_directed(current_vertex, hdc, 800, 25);
+		}
+		else
+		{
+			show_degrees_undirected(current_vertex, hdc, 800, 25);
+		}
 		current_vertex = current_vertex->p_next;
 	}
 	// вивід матриці

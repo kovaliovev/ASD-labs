@@ -113,3 +113,32 @@ void draw_arrowed_curve_edge(HPEN edge_pen, double start_x, double start_y, doub
 	draw_edge(edge_pen, start_x, start_y, center_x, center_y, hdc);
 	draw_arrowed_edge(edge_pen, center_x, center_y, end_x, end_y, hdc);
 }
+
+void show_degrees_directed(Vertex *vertex, HDC hdc, int startX, int startY)
+{
+	int num = vertex->num;
+	if(num == 1){
+		TextOut(hdc, startX, startY, "Degrees of graph's vertices:", 29);
+		TextOut(hdc, startX, startY + 30, "VERTEX | INPUT | OUTPUT", 24);
+	}
+	int text_x = startX;
+	int text_y = startY + 30 + num * 21;
+	char message[29];
+	sprintf(message, "Vertex #%d | %d deg- | %d deg+", vertex->num, vertex->deg_in, vertex->deg_out);
+	TextOut(hdc, text_x, text_y, message, 28);
+}
+
+void show_degrees_undirected(Vertex *vertex, HDC hdc, int startX, int startY)
+{
+	int num = vertex->num;
+	if(num == 1){
+		TextOut(hdc, startX, startY, "Degrees of graph's vertices:", 29);
+		TextOut(hdc, startX, startY + 30, "VERTEX | DEGREE", 16);
+	}
+	int degree = vertex->deg_in + vertex->deg_out;
+	int text_x = startX;
+	int text_y = startY + 30 + num * 21;
+	char message[20];
+	sprintf(message, "Vertex #%d | %d deg", vertex->num, degree);
+	TextOut(hdc, text_x, text_y, message, 18);
+}
