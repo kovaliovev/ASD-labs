@@ -1,6 +1,5 @@
 #include "matrix.c"
 #include "draw.c"
-#include <stdbool.h>
 /*
 	Головний файл проекту, описує створення вікна та взаємодію з ним.
 */
@@ -25,10 +24,7 @@ LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип ф�
 
 void draw_window(HWND hWnd, HDC hdc, bool is_directed)
 {
-	if (!is_directed) // якщо граф ненапрямлений, потрібно замалювати напрямлений, що був намальований до цього
-	{
-		Rectangle(hdc, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-	}
+	Rectangle(hdc, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	HPEN vertex_pen = CreatePen(PS_SOLID, 3, RGB(50, 0, 255)); // стиль = неперервний; товщина = 3; колір = синій
 	HPEN edge_pen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));		 // стиль = неперервний; товщина = 1; колір = чорний
@@ -97,16 +93,9 @@ void draw_window(HWND hWnd, HDC hdc, bool is_directed)
 	while (current_vertex != NULL)
 	{
 		draw_vertex(vertex_pen, current_vertex, hdc);
-		if (is_directed)
-		{
-			show_degrees_directed(current_vertex, hdc, 800, 25);
-		}
-		else
-		{
-			show_degrees_undirected(current_vertex, hdc, 800, 25);
-		}
 		current_vertex = current_vertex->p_next;
 	}
+	show_degrees(vertex, hdc, 800, 50, is_directed);
 	// вивід матриці
 	if (!is_directed) // якщо граф ненапрямлений, матриця приводиться до симетричного вигляду
 	{

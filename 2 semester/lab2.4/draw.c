@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <stdbool.h>
 #include "Vertex.c"
 /*
 	Файл описує усі функції, необхідні для малювання напрямнелого/ненапрямленого графа.
@@ -114,31 +115,66 @@ void draw_arrowed_curve_edge(HPEN edge_pen, double start_x, double start_y, doub
 	draw_arrowed_edge(edge_pen, center_x, center_y, end_x, end_y, hdc);
 }
 
-void show_degrees_directed(Vertex *vertex, HDC hdc, int startX, int startY)
+void show_degree_directed(Vertex *vertex, HDC hdc, int startX, int startY)
 {
 	int num = vertex->num;
-	if(num == 1){
+	if (num == 1)
+	{
 		TextOut(hdc, startX, startY, "Degrees of graph's vertices:", 29);
 		TextOut(hdc, startX, startY + 30, "VERTEX | INPUT | OUTPUT", 24);
 	}
 	int text_x = startX;
 	int text_y = startY + 30 + num * 21;
 	char message[29];
-	sprintf(message, "Vertex #%d | %d deg- | %d deg+", vertex->num, vertex->deg_in, vertex->deg_out);
+	sprintf(message, "Vertex #%d | %d deg- | %d deg+", num, vertex->deg_in, vertex->deg_out);
 	TextOut(hdc, text_x, text_y, message, 28);
 }
 
-void show_degrees_undirected(Vertex *vertex, HDC hdc, int startX, int startY)
+void show_degree_undirected(int num, int degree, HDC hdc, int startX, int startY)
 {
-	int num = vertex->num;
-	if(num == 1){
+	if (num == 1)
+	{
 		TextOut(hdc, startX, startY, "Degrees of graph's vertices:", 29);
 		TextOut(hdc, startX, startY + 30, "VERTEX | DEGREE", 16);
 	}
-	int degree = vertex->deg_in + vertex->deg_out;
 	int text_x = startX;
 	int text_y = startY + 30 + num * 21;
 	char message[20];
-	sprintf(message, "Vertex #%d | %d deg", vertex->num, degree);
+	sprintf(message, "Vertex #%d | %d deg", num, degree);
 	TextOut(hdc, text_x, text_y, message, 18);
+}
+
+void show_degrees(Vertex *start_vertex, HDC hdc, int startX, int startY, bool is_directed)
+{
+	Vertex *current_vertex = start_vertex;
+	bool is_homogeneous = true;
+	int degree, last_degree;
+	while (current_vertex != NULL)
+	{
+		if (is_directed)
+		{
+			show_degree_directed(current_vertex, hdc, startX, startY);
+		}
+		else
+		{
+			last_degree = degree;
+			degree = current_vertex->deg_in + current_vertex->deg_out;
+			if (degree != last_degree)
+				is_homogeneous = false;
+
+			show_degree_undirected(current_vertex->num, degree, hdc, startX, startY);
+		}
+		current_vertex = current_vertex->p_next;
+	}
+	if (!is_directed)
+	{
+		if (is_homogeneous)
+		{
+			TextOut(hdc, startX, startY - 30, "Wow! Graph is homogeneous!", 26);
+		}
+		else
+		{
+			TextOut(hdc, startX, startY - 30, "Graph is not homogeneous!", 26);
+		}
+	}
 }
