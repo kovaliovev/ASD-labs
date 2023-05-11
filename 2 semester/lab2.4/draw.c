@@ -170,7 +170,9 @@ void show_degrees(Vertex *start_vertex, HDC hdc, int startX, int startY, bool is
 	{
 		if (is_homogeneous)
 		{
-			TextOut(hdc, startX, startY - 30, "Wow! Graph is homogeneous!", 26);
+			char message[42];
+			sprintf(message, "Wow! Graph is homogeneous! It's degree: %d", degree);
+			TextOut(hdc, startX, startY - 30, message, 42);
 		}
 		else
 		{
