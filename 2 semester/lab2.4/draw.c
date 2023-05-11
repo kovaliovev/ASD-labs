@@ -115,45 +115,30 @@ void draw_arrowed_curve_edge(HPEN edge_pen, double start_x, double start_y, doub
 	draw_arrowed_edge(edge_pen, center_x, center_y, end_x, end_y, hdc);
 }
 
-void show_degree_directed(Vertex *vertex, HDC hdc, int startX, int startY)
-{
-	int num = vertex->num;
-	if (num == 1)
-	{
-		TextOut(hdc, startX, startY, "Degrees of graph's vertices:", 29);
-		TextOut(hdc, startX, startY + 30, "VERTEX | INPUT | OUTPUT", 24);
-	}
-	int text_x = startX;
-	int text_y = startY + 30 + num * 21;
-	char message[29];
-	sprintf(message, "Vertex #%d | %d deg- | %d deg+", num, vertex->deg_in, vertex->deg_out);
-	TextOut(hdc, text_x, text_y, message, 28);
-}
-
-void show_degree_undirected(int num, int degree, HDC hdc, int startX, int startY)
-{
-	if (num == 1)
-	{
-		TextOut(hdc, startX, startY, "Degrees of graph's vertices:", 29);
-		TextOut(hdc, startX, startY + 30, "VERTEX | DEGREE", 16);
-	}
-	int text_x = startX;
-	int text_y = startY + 30 + num * 21;
-	char message[20];
-	sprintf(message, "Vertex #%d | %d deg", num, degree);
-	TextOut(hdc, text_x, text_y, message, 18);
-}
-
 void show_degrees(Vertex *start_vertex, HDC hdc, int startX, int startY, bool is_directed)
 {
 	Vertex *current_vertex = start_vertex;
+	int text_x = startX;
+	int text_y = startY;
+
+	TextOut(hdc, text_x, text_y, "Degrees of graph's vertices:", 29);
+	text_y += 30;
+
 	bool is_homogeneous = true;
 	int degree, last_degree;
 	while (current_vertex != NULL)
 	{
+		int num = current_vertex->num;
 		if (is_directed)
 		{
-			show_degree_directed(current_vertex, hdc, startX, startY);
+			if (num == 1)
+			{
+				TextOut(hdc, text_x, text_y, "VERTEX | INPUT | OUTPUT", 24);
+			}
+			text_y += 21;
+			char message[29];
+			sprintf(message, "Vertex #%d | %d deg- | %d deg+", num, current_vertex->deg_in, current_vertex->deg_out);
+			TextOut(hdc, text_x, text_y, message, 28);
 		}
 		else
 		{
@@ -162,7 +147,14 @@ void show_degrees(Vertex *start_vertex, HDC hdc, int startX, int startY, bool is
 			if (degree != last_degree)
 				is_homogeneous = false;
 
-			show_degree_undirected(current_vertex->num, degree, hdc, startX, startY);
+			if (num == 1)
+			{
+				TextOut(hdc, text_x, text_y, "VERTEX | DEGREE", 16);
+			}
+			text_y += 21;
+			char message[20];
+			sprintf(message, "Vertex #%d | %d deg", num, degree);
+			TextOut(hdc, text_x, text_y, message, 18);
 		}
 		current_vertex = current_vertex->p_next;
 	}
