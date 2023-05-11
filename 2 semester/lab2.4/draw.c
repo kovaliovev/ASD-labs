@@ -115,11 +115,11 @@ void draw_arrowed_curve_edge(HPEN edge_pen, double start_x, double start_y, doub
 	draw_arrowed_edge(edge_pen, center_x, center_y, end_x, end_y, hdc);
 }
 
-void show_degrees(Vertex *start_vertex, HDC hdc, int startX, int startY, bool is_directed)
+void show_degrees(Vertex *start_vertex, HDC hdc, int start_x, int start_y, bool is_directed)
 {
 	Vertex *current_vertex = start_vertex;
-	int text_x = startX;
-	int text_y = startY;
+	int text_x = start_x;
+	int text_y = start_y;
 
 	TextOut(hdc, text_x, text_y, "Degrees of graph's vertices:", 29);
 	text_y += 30;
@@ -164,19 +164,19 @@ void show_degrees(Vertex *start_vertex, HDC hdc, int startX, int startY, bool is
 		{
 			char message[42];
 			sprintf(message, "Wow! Graph is homogeneous! It's degree: %d", degree);
-			TextOut(hdc, startX, startY - 30, message, 42);
+			TextOut(hdc, start_x, start_y - 30, message, 42);
 		}
 		else
 		{
-			TextOut(hdc, startX, startY - 30, "Graph is not homogeneous!", 26);
+			TextOut(hdc, start_x, start_y - 30, "Graph is not homogeneous!", 26);
 		}
 	}
 }
 
-void show_specific_vertices(Vertex *start_vertex, HDC hdc, int startX, int startY)
+void show_specific_vertices(Vertex *start_vertex, HDC hdc, int start_x, int start_y)
 {
-	int text_x = startX;
-	int text_y = startY;
+	int text_x = start_x;
+	int text_y = start_y;
 	Vertex *current_vertex = start_vertex;
 	while (current_vertex != NULL)
 	{
