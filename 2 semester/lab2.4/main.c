@@ -3,9 +3,9 @@
 /*
 	Головний файл проекту, описує створення вікна та взаємодію з ним.
 */
-#define WINDOW_RIGHT_TOP_CORNER_X 240
+#define WINDOW_RIGHT_TOP_CORNER_X 120
 #define WINDOW_RIGHT_TOP_CORNER_Y 5
-#define WINDOW_WIDTH 1100
+#define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 820
 #define GRAPH_MARGIN 350
 #define ANGLE_BETWEEN_VERTICES (360.0 / VERTICES_COUNT)
