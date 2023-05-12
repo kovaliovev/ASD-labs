@@ -115,7 +115,7 @@ void draw_arrowed_curve_edge(HPEN edge_pen, double start_x, double start_y, doub
 	draw_arrowed_edge(edge_pen, center_x, center_y, end_x, end_y, hdc);
 }
 
-void show_degrees(Vertex *start_vertex, HDC hdc, int start_x, int start_y, bool is_directed)
+void show_degrees(Vertex *start_vertex, HDC hdc, int start_x, int start_y, bool is_directed, bool is_modified)
 {
 	Vertex *current_vertex = start_vertex;
 	int text_x = start_x;
@@ -125,10 +125,25 @@ void show_degrees(Vertex *start_vertex, HDC hdc, int start_x, int start_y, bool 
 	text_y += 30;
 
 	bool is_homogeneous = true;
-	int degree, last_degree;
+	int degree = current_vertex->deg_in + current_vertex->deg_out;
+	if (!is_directed)
+	{
+		degree /= 2;
+	}
+	int last_degree;
 	while (current_vertex != NULL)
 	{
 		int num = current_vertex->num;
+
+		last_degree = degree;
+		degree = current_vertex->deg_in + current_vertex->deg_out;
+		if (!is_directed)
+		{
+			degree /= 2;
+		}
+		if (degree != last_degree)
+			is_homogeneous = false;
+
 		if (is_directed)
 		{
 			if (num == 1)
@@ -142,11 +157,6 @@ void show_degrees(Vertex *start_vertex, HDC hdc, int start_x, int start_y, bool 
 		}
 		else
 		{
-			last_degree = degree;
-			degree = current_vertex->deg_in + current_vertex->deg_out;
-			if (degree != last_degree)
-				is_homogeneous = false;
-
 			if (num == 1)
 			{
 				TextOut(hdc, text_x, text_y, "VERTEX | DEGREE", 16);
@@ -158,7 +168,7 @@ void show_degrees(Vertex *start_vertex, HDC hdc, int start_x, int start_y, bool 
 		}
 		current_vertex = current_vertex->p_next;
 	}
-	if (!is_directed)
+	if (!is_modified)
 	{
 		if (is_homogeneous)
 		{
@@ -207,11 +217,11 @@ void show_specific_vertices(Vertex *start_vertex, HDC hdc, int start_x, int star
 	}
 	if (!isolated)
 	{
-		TextOut(hdc, start_x, start_y, "Graph has not isolated vertices!", 33);
-		start_y += 21;
+		TextOut(hdc, start_x, start_y - 90, "Graph has not isolated vertices!", 33);
+		start_y += 18;
 	}
 	if (!pendant)
 	{
-		TextOut(hdc, start_x, start_y, "Graph has not pendant vertices!", 32);
+		TextOut(hdc, start_x, start_y - 90, "Graph has not pendant vertices!", 32);
 	}
 }

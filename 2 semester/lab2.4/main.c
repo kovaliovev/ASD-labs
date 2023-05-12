@@ -20,18 +20,32 @@
 // Число вершин: 11
 // Розміщення вершин: коло
 
+HWND change_orientation_button;													 // прототип кнопки зміни орієнтованості графу
+HWND show_modified_button;															 // прототип кнопки зміни показу модифікованого графу
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип функції потоку вікна
 
-void draw_window(HWND hWnd, HDC hdc, bool is_directed)
+void draw_window(HWND hWnd, HDC hdc, bool is_directed, bool is_modified)
 {
 	Rectangle(hdc, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-
+	
 	HPEN vertex_pen = CreatePen(PS_SOLID, 3, RGB(50, 0, 255)); // стиль = неперервний; товщина = 3; колір = синій
 	HPEN edge_pen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));		 // стиль = неперервний; товщина = 1; колір = чорний
 
 	double **matrix = get_rand_matrix(MATRIX_SIZE);
-	mult_matrix(matrix, MATRIX_SIZE, (1.0 - N3 * 0.01 - N4 * 0.01 - 0.3)); // третій аргумент - формула для перетворення матриці
-
+	double multiplier;
+	if (is_modified)
+	{
+		multiplier = 1.0 - N3 * 0.005 - N4 * 0.005 - 0.27;
+	}
+	else
+	{
+		multiplier = 1.0 - N3 * 0.01 - N4 * 0.01 - 0.3;
+	}
+	mult_matrix(matrix, MATRIX_SIZE, multiplier);
+	if (!is_directed) // якщо граф ненапрямлений, матриця приводиться до симетричного вигляду
+	{
+		get_symmetric_matrix(matrix, MATRIX_SIZE);
+	}
 	Vertex *vertex = create_vertices(VERTICES_COUNT, GRAPH_MARGIN);
 
 	Vertex *current_vertex = vertex;
@@ -95,14 +109,12 @@ void draw_window(HWND hWnd, HDC hdc, bool is_directed)
 		draw_vertex(vertex_pen, current_vertex, hdc);
 		current_vertex = current_vertex->p_next;
 	}
-	show_degrees(vertex, hdc, 720, 50, is_directed);
-	show_specific_vertices(vertex, hdc, 920, 100);
-
-	// вивід матриці
-	if (!is_directed) // якщо граф ненапрямлений, матриця приводиться до симетричного вигляду
+	show_degrees(vertex, hdc, 720, 50, is_directed, is_modified);
+	if (!is_modified)
 	{
-		get_symmetric_matrix(matrix, MATRIX_SIZE);
+		show_specific_vertices(vertex, hdc, 920, 100);
 	}
+	// вивід матриці
 	print_matrix(matrix, MATRIX_SIZE);
 	// очищення пам'яті
 	delete_matrix(matrix, MATRIX_SIZE);
@@ -147,8 +159,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 
 	ShowWindow(hWnd, nCmdShow);
 
-	HWND change_orientation_button;
 	change_orientation_button = CreateWindow("button", "Change graph orientation", WS_VISIBLE | WS_CHILD | WS_BORDER, 284, 720, 196, 32, hWnd, NULL, NULL, NULL);
+	show_modified_button = CreateWindow("button", "Show modified graph", WS_VISIBLE | WS_CHILD | WS_BORDER, 860, 360, 196, 32, hWnd, NULL, NULL, NULL);
 
 	while (GetMessage(&lpMsg, hWnd, 0, 0))
 	{
@@ -165,17 +177,28 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT ps;
 
 	static bool is_directed = true;
+	static bool is_modified = false;
 
 	switch (messg)
 	{
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-		draw_window(hWnd, hdc, is_directed);
+		draw_window(hWnd, hdc, is_directed, is_modified);
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_COMMAND:
-		is_directed = !is_directed;
-		RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
+		if (lParam == change_orientation_button)
+		{
+			is_modified = false;
+			is_directed = !is_directed;
+			RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
+		}
+		else if (lParam == show_modified_button)
+		{
+			is_directed = true;
+			is_modified = true;
+			RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
+		}
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
