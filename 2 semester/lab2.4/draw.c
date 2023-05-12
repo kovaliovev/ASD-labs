@@ -177,6 +177,10 @@ void show_specific_vertices(Vertex *start_vertex, HDC hdc, int start_x, int star
 {
 	int text_x = start_x;
 	int text_y = start_y;
+
+	int isolated = 0;
+	int pendant = 0;
+
 	Vertex *current_vertex = start_vertex;
 	while (current_vertex != NULL)
 	{
@@ -188,15 +192,26 @@ void show_specific_vertices(Vertex *start_vertex, HDC hdc, int start_x, int star
 			char message[23];
 			sprintf(message, "Vertex #%d is isolated!", num);
 			TextOut(hdc, text_x, text_y, message, 23);
+			isolated++;
 		}
 		else if (degree == 1)
 		{
 			char message[22];
 			sprintf(message, "Vertex #%d is pendant!", num);
 			TextOut(hdc, text_x, text_y, message, 22);
+			pendant++;
 		}
 
 		text_y += 21;
 		current_vertex = current_vertex->p_next;
+	}
+	if (!isolated)
+	{
+		TextOut(hdc, start_x, start_y, "Graph has not isolated vertices!", 33);
+		start_y += 21;
+	}
+	if (!pendant)
+	{
+		TextOut(hdc, start_x, start_y, "Graph has not pendant vertices!", 32);
 	}
 }
