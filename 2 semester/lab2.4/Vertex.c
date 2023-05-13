@@ -26,21 +26,24 @@ void check_mem_error(Vertex *new_elem)
 	}
 }
 
-double to_radians(double degrees){
+double to_radians(double degrees)
+{
 	return degrees * PI / 180.0;
 }
 
-double calc_x(double rotate_angle, int i, int margin){
-	double x = -cos(to_radians(rotate_angle * i)) * 300 + margin;
+double calc_x(double rotate_angle, int i, int margin, int coefficient)
+{
+	double x = -cos(to_radians(rotate_angle * i)) * coefficient + margin;
 	return x;
 }
 
-double calc_y(double rotate_angle, int i, int margin){
-	double y = -sin(to_radians(rotate_angle * i)) * 300 + margin;
+double calc_y(double rotate_angle, int i, int margin, int coefficient)
+{
+	double y = -sin(to_radians(rotate_angle * i)) * coefficient + margin;
 	return y;
 }
 
-Vertex *create_vertices(double count, int margin)
+Vertex *create_vertices(double count, int x_margin, int y_margin, int coefficient)
 {
 	if (count < 1)
 	{
@@ -53,19 +56,21 @@ Vertex *create_vertices(double count, int margin)
 
 	double i;
 	double rotate_angle = 360 / count;
-	Vertex* current = p_head;
-	for (i = 0; i < count; i++) {
+	Vertex *current = p_head;
+	for (i = 0; i < count; i++)
+	{
 		current->num = i + 1;
 		current->deg_in = 0;
 		current->deg_out = 0;
-		current->x = calc_x(rotate_angle, i, margin);
-		current->y = calc_y(rotate_angle, i, margin);
+		current->x = calc_x(rotate_angle, i, x_margin, coefficient);
+		current->y = calc_y(rotate_angle, i, y_margin, coefficient);
 
-		if (i + 1 == count) {
+		if (i + 1 == count)
+		{
 			current->p_next = NULL;
 			break;
 		}
-		Vertex * new_elem = (Vertex*)malloc(sizeof(Vertex));
+		Vertex *new_elem = (Vertex *)malloc(sizeof(Vertex));
 		check_mem_error(new_elem);
 		current->p_next = new_elem;
 		current = current->p_next;

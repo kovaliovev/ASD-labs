@@ -23,19 +23,19 @@ void draw_window(HWND hWnd, HDC hdc, bool is_directed, bool is_modified)
 	HPEN edge_pen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));		 // стиль = неперервний; товщина = 1; колір = чорний
 
 	double **matrix = get_rand_matrix(MATRIX_SIZE);
-	Vertex *vertex = create_vertices(VERTICES_COUNT, GRAPH_MARGIN);
+	Vertex *vertex = create_vertices(VERTICES_COUNT, STANDART_GRAPH_MARGIN, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
 
 	if (is_modified)
 	{
-		draw_modified_graph(hdc, vertex_pen, edge_pen, matrix, vertex);
+		draw_modified_graph(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT);
 	}
 	else if (is_directed)
 	{
-		draw_directed_graph(hdc, vertex_pen, edge_pen, matrix, vertex);
+		draw_directed_graph(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT);
 	}
 	else if (!is_directed)
 	{
-		draw_undirected_graph(hdc, vertex_pen, edge_pen, matrix, vertex);
+		draw_undirected_graph(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT);
 	}
 	// вивід матриці суміжності
 	printf("\nAdjacency matrix of the depicted graph:\n\n");

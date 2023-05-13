@@ -13,8 +13,11 @@
 #define WINDOW_RIGHT_TOP_CORNER_Y 5
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 820
-#define GRAPH_MARGIN 350
-#define ANGLE_BETWEEN_VERTICES (360.0 / VERTICES_COUNT)
+#define STANDART_GRAPH_MARGIN 350
+#define CONDENSAT_GRAPH_X_MARGIN 960
+#define CONDENSAT_GRAPH_Y_MARGIN 600
+#define STANDART_GRAPH_COEF 300
+#define CONDENSAT_GRAPH_COEF 150
 #define N3 1
 #define N4 0
 
@@ -255,7 +258,7 @@ void show_components_of_graph(double **strong_connectivity_matrix, int *componen
 	}
 }
 
-void draw_directed_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex)
+void draw_directed_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count)
 {
 	double multiplier = 1.0 - N3 * 0.01 - N4 * 0.01 - 0.3;
 	mult_matrix(matrix, MATRIX_SIZE, multiplier);
@@ -264,9 +267,9 @@ void draw_directed_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 
 	Vertex *current_vertex = vertex;
 	int row, col;
-	for (row = 0; row < VERTICES_COUNT; row++)
+	for (row = 0; row < vertices_count; row++)
 	{
-		for (col = 0; col < VERTICES_COUNT; col++)
+		for (col = 0; col < vertices_count; col++)
 		{
 			if (matrix[row][col])
 			{
@@ -275,8 +278,8 @@ void draw_directed_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 				double start_x = current_vertex->x;
 				double start_y = current_vertex->y;
 
-				double end_x = calc_x(ANGLE_BETWEEN_VERTICES, col, GRAPH_MARGIN);
-				double end_y = calc_y(ANGLE_BETWEEN_VERTICES, col, GRAPH_MARGIN);
+				double end_x = calc_x(360.0 / vertices_count, col, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
+				double end_y = calc_y(360.0 / vertices_count, col, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
 
 				if (matrix[col][row] && row > col)
 				{
@@ -310,7 +313,7 @@ void draw_directed_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 	show_semidegrees(vertex, hdc, 720, 50);
 }
 
-void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex)
+void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count)
 {
 	double multiplier = 1.0 - N3 * 0.01 - N4 * 0.01 - 0.3;
 	mult_matrix(matrix, MATRIX_SIZE, multiplier);
@@ -320,9 +323,9 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **mat
 
 	Vertex *current_vertex = vertex;
 	int row, col;
-	for (row = 0; row < VERTICES_COUNT; row++)
+	for (row = 0; row < vertices_count; row++)
 	{
-		for (col = 0; col < VERTICES_COUNT; col++)
+		for (col = 0; col < vertices_count; col++)
 		{
 			if (matrix[row][col])
 			{
@@ -331,8 +334,8 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **mat
 				double start_x = current_vertex->x;
 				double start_y = current_vertex->y;
 
-				double end_x = calc_x(ANGLE_BETWEEN_VERTICES, col, GRAPH_MARGIN);
-				double end_y = calc_y(ANGLE_BETWEEN_VERTICES, col, GRAPH_MARGIN);
+				double end_x = calc_x(360.0 / vertices_count, col, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
+				double end_y = calc_y(360.0 / vertices_count, col, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
 
 				if (row == col)
 				{
@@ -370,7 +373,52 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **mat
 	show_specific_vertices(vertex, hdc, 920, 100);
 }
 
-void draw_modified_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex)
+void draw_condensation_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **components_matrix, Vertex *components_vertices, int vertices_count)
+{
+	SelectObject(hdc, edge_pen);
+
+	Vertex *current_vertex = components_vertices;
+	int row, col;
+	for (row = 0; row < vertices_count; row++)
+	{
+		for (col = 0; col < vertices_count; col++)
+		{
+			if (components_matrix[row][col])
+			{
+				double start_x = current_vertex->x;
+				double start_y = current_vertex->y;
+
+				double end_x = calc_x(360.0 / vertices_count, col, CONDENSAT_GRAPH_X_MARGIN, CONDENSAT_GRAPH_COEF);
+				double end_y = calc_y(360.0 / vertices_count, col, CONDENSAT_GRAPH_Y_MARGIN, CONDENSAT_GRAPH_COEF);
+
+				if (components_matrix[col][row] && row > col)
+				{
+					draw_arrowed_curve_edge(edge_pen, start_x, start_y, end_x, end_y, hdc);
+				}
+				else if (row == col)
+				{
+
+					draw_arrowed_reflect_edge(edge_pen, current_vertex, hdc);
+				}
+				else
+				{
+
+					draw_arrowed_edge(edge_pen, start_x, start_y, end_x, end_y, hdc);
+				}
+			}
+		}
+		current_vertex = current_vertex->p_next;
+	}
+
+	current_vertex = components_vertices;
+	while (current_vertex != NULL)
+	{
+		draw_vertex(vertex_pen, current_vertex, hdc);
+		current_vertex = current_vertex->p_next;
+	}
+}
+
+void draw_modified_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count)
 {
 	double multiplier = 1.0 - N3 * 0.005 - N4 * 0.005 - 0.27;
 	mult_matrix(matrix, MATRIX_SIZE, multiplier);
@@ -379,9 +427,9 @@ void draw_modified_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 
 	Vertex *current_vertex = vertex;
 	int row, col;
-	for (row = 0; row < VERTICES_COUNT; row++)
+	for (row = 0; row < vertices_count; row++)
 	{
-		for (col = 0; col < VERTICES_COUNT; col++)
+		for (col = 0; col < vertices_count; col++)
 		{
 			if (matrix[row][col])
 			{
@@ -390,8 +438,8 @@ void draw_modified_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 				double start_x = current_vertex->x;
 				double start_y = current_vertex->y;
 
-				double end_x = calc_x(ANGLE_BETWEEN_VERTICES, col, GRAPH_MARGIN);
-				double end_y = calc_y(ANGLE_BETWEEN_VERTICES, col, GRAPH_MARGIN);
+				double end_x = calc_x(360.0 / vertices_count, col, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
+				double end_y = calc_y(360.0 / vertices_count, col, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
 
 				if (matrix[col][row] && row > col)
 				{
@@ -443,10 +491,15 @@ void draw_modified_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 	int components_count = get_components_count(components, VERTICES_COUNT);
 	show_components_of_graph(strong_connectivity_matrix, components, components_count, VERTICES_COUNT, 920, 100, hdc);
 
-	// вивід матриці компонентів сильної зв'язності
+	// вивід графу конденсації
 	double **components_matrix = get_components_matrix(reachability_matrix, components, components_count, VERTICES_COUNT);
-	printf("\nComponents matrix of the depicted graph:\n\n");
-	print_matrix(components_matrix, components_count);
+	Vertex *components_vertices = create_vertices(components_count, CONDENSAT_GRAPH_X_MARGIN, CONDENSAT_GRAPH_Y_MARGIN, CONDENSAT_GRAPH_COEF);
+
+	HPEN condensation_vertex_pen = CreatePen(PS_SOLID, 3, RGB(18, 179, 45)); // стиль = неперервний; товщина = 3; колір = зелений
+	HPEN condensation_edge_pen = CreatePen(PS_DASH, 1, RGB(20, 20, 5));			 // стиль = неперервний; товщина = 1; колір = чорний
+
+	TextOut(hdc, 850, 420, "Condensation of modified graph:", 32);
+	draw_condensation_graph(hdc, condensation_vertex_pen, condensation_edge_pen, components_matrix, components_vertices, components_count);
 
 	//  очищення пам'яті
 	printf("Array of components have been deleted from memory!\n");
@@ -455,4 +508,5 @@ void draw_modified_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 	delete_matrix(transponed_reachability_matrix, VERTICES_COUNT);
 	delete_matrix(strong_connectivity_matrix, VERTICES_COUNT);
 	delete_matrix(components_matrix, components_count);
+	delete_vertices(&components_vertices);
 }
