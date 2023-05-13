@@ -1,4 +1,3 @@
-#include "matrix.c"
 #include "draw.c"
 /*
 	Головний файл проекту, описує створення вікна та взаємодію з ним.
@@ -27,7 +26,7 @@ LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип ф�
 void draw_window(HWND hWnd, HDC hdc, bool is_directed, bool is_modified)
 {
 	Rectangle(hdc, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-	
+
 	HPEN vertex_pen = CreatePen(PS_SOLID, 3, RGB(50, 0, 255)); // стиль = неперервний; товщина = 3; колір = синій
 	HPEN edge_pen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));		 // стиль = неперервний; товщина = 1; колір = чорний
 
@@ -36,12 +35,14 @@ void draw_window(HWND hWnd, HDC hdc, bool is_directed, bool is_modified)
 	if (is_modified)
 	{
 		multiplier = 1.0 - N3 * 0.005 - N4 * 0.005 - 0.27;
+		mult_matrix(matrix, MATRIX_SIZE, multiplier);
 	}
 	else
 	{
 		multiplier = 1.0 - N3 * 0.01 - N4 * 0.01 - 0.3;
+		mult_matrix(matrix, MATRIX_SIZE, multiplier);
 	}
-	mult_matrix(matrix, MATRIX_SIZE, multiplier);
+
 	if (!is_directed) // якщо граф ненапрямлений, матриця приводиться до симетричного вигляду
 	{
 		get_symmetric_matrix(matrix, MATRIX_SIZE);
@@ -110,11 +111,46 @@ void draw_window(HWND hWnd, HDC hdc, bool is_directed, bool is_modified)
 		current_vertex = current_vertex->p_next;
 	}
 	show_degrees(vertex, hdc, 720, 50, is_directed, is_modified);
-	if (!is_modified)
+	if (is_modified)
+	{
+		double **powered_matrix = create_matrix(VERTICES_COUNT);
+		double **temp_matrix = create_matrix(VERTICES_COUNT);
+		double **reachability_matrix = create_matrix(VERTICES_COUNT);
+
+		get_copy_of_matrix(powered_matrix, matrix, VERTICES_COUNT);
+		int i;
+		for (i = 2; i < VERTICES_COUNT + 1; i++)
+		{
+			get_logical_or(reachability_matrix, reachability_matrix, powered_matrix, VERTICES_COUNT);
+			get_copy_of_matrix(temp_matrix, powered_matrix, VERTICES_COUNT);
+			get_product_of_matrices(powered_matrix, temp_matrix, matrix, VERTICES_COUNT);
+			if (i == 2)
+			{
+				printf("\nMatrix of pathes with length 2:\n");
+				print_matrix(powered_matrix, VERTICES_COUNT);
+				print_pathes_2(powered_matrix, matrix, VERTICES_COUNT);
+			}
+			else if (i == 3)
+			{
+				printf("\nMatrix of pathes with length 3:\n");
+				print_matrix(powered_matrix, VERTICES_COUNT);
+				print_pathes_3(powered_matrix, matrix, VERTICES_COUNT);
+			}
+		}
+
+		printf("\nReachability matrix of the depicted graph:\n\n");
+		print_matrix(reachability_matrix, VERTICES_COUNT);
+		// очищення пам'яті
+		delete_matrix(powered_matrix, VERTICES_COUNT);
+		delete_matrix(temp_matrix, VERTICES_COUNT);
+		delete_matrix(reachability_matrix, VERTICES_COUNT);
+	}
+	else
 	{
 		show_specific_vertices(vertex, hdc, 920, 100);
 	}
-	// вивід матриці
+	// вивід матриці суміжності
+	printf("\nAdjacency matrix of the depicted graph:\n\n");
 	print_matrix(matrix, MATRIX_SIZE);
 	// очищення пам'яті
 	delete_matrix(matrix, MATRIX_SIZE);

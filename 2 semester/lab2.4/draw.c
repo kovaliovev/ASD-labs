@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <stdbool.h>
 #include "Vertex.c"
+#include "matrix.c"
 /*
 	Файл описує усі функції, необхідні для малювання напрямнелого/ненапрямленого графа.
 */
@@ -223,5 +224,52 @@ void show_specific_vertices(Vertex *start_vertex, HDC hdc, int start_x, int star
 	if (!pendant)
 	{
 		TextOut(hdc, start_x, start_y - 90, "Graph has not pendant vertices!", 32);
+	}
+}
+
+void print_pathes_2(double **matrix_pathes_2, double **matrix, int size)
+{
+	printf("\n\nAll pathes with length 2:\n");
+	int i, j, k;
+	for (i = 0; i < size; i++)
+	{
+		for (j = 0; j < size; j++)
+		{
+			if (matrix_pathes_2)
+			{
+				for (k = 0; k < size; k++)
+				{
+					if (matrix[i][k] && matrix[k][j])
+					{
+						printf("Vertex #%d -> Vertex #%d -> Vertex #%d\n", i + 1, k + 1, j + 1);
+					}
+				}
+			}
+		}
+	}
+}
+
+void print_pathes_3(double **matrix_pathes_3, double **matrix, int size)
+{
+	printf("\n\nAll pathes with length 3:\n");
+	int i, j, k, m;
+	for (i = 0; i < size; i++)
+	{
+		for (j = 0; j < size; j++)
+		{
+			if (matrix_pathes_3)
+			{
+				for (k = 0; k < size; k++)
+				{
+					for (m = 0; m < size; m++)
+					{
+						if (matrix[i][k] && matrix[k][m] && matrix[m][j])
+						{
+							printf("Vertex #%d -> Vertex #%d -> Vertex #%d -> Vertex #%d\n", i + 1, k + 1, m + 1, j + 1);
+						}
+					}
+				}
+			}
+		}
 	}
 }
