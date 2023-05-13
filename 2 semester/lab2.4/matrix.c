@@ -60,7 +60,7 @@ double **get_rand_matrix(int size)
 	return matrix;
 }
 
-void get_symmetric_matrix(double **matrix, int size)
+void make_matrix_symmetric(double **matrix, int size)
 {
 	int i, j;
 	for (i = 0; i < size; i++)
