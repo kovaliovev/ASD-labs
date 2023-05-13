@@ -124,7 +124,7 @@ void draw_arrowed_curve_edge(HPEN edge_pen, double start_x, double start_y, doub
 	draw_arrowed_edge(edge_pen, center_x, center_y, end_x, end_y, hdc);
 }
 
-void show_degrees(Vertex *start_vertex, HDC hdc, int start_x, int start_y, bool* is_homogeneous)
+void show_degrees(Vertex *start_vertex, HDC hdc, int start_x, int start_y, bool *is_homogeneous)
 {
 	Vertex *current_vertex = start_vertex;
 	int text_x = start_x;
@@ -401,6 +401,17 @@ void draw_modified_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 	printf("\nReachability matrix of the depicted graph:\n\n");
 	print_matrix(reachability_matrix, VERTICES_COUNT);
 
+	double **transponed_reachability_matrix = create_matrix(VERTICES_COUNT);
+	get_transponed_matrix(transponed_reachability_matrix, reachability_matrix, VERTICES_COUNT);
+
+	double **strong_connectivity_matrix = create_matrix(VERTICES_COUNT);
+	get_logical_and(strong_connectivity_matrix, reachability_matrix, transponed_reachability_matrix, VERTICES_COUNT);
+
+	// вивід матриці сильної зв'язності
+	printf("\nStrong connectivity matrix of the depicted graph:\n\n");
+	print_matrix(strong_connectivity_matrix, VERTICES_COUNT);
+
 	// очищення пам'яті
 	delete_matrix(reachability_matrix, VERTICES_COUNT);
+	delete_matrix(strong_connectivity_matrix, VERTICES_COUNT);
 }

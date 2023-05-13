@@ -130,6 +130,18 @@ void get_logical_or(double **result_matrix, double **first_matrix, double **seco
 	}
 }
 
+void get_logical_and(double **result_matrix, double **first_matrix, double **second_matrix, int size)
+{
+	int i, j;
+	for (i = 0; i < size; i++)
+	{
+		for (j = 0; j < size; j++)
+		{
+			result_matrix[i][j] = first_matrix[i][j] && second_matrix[i][j];
+		}
+	}
+}
+
 void get_copy_of_matrix(double **result_matrix, double **original_matrix, int size)
 {
 	int i, j;
@@ -214,4 +226,17 @@ double **get_reachability_matrix(double **matrix, int size)
 	delete_matrix(powered_matrix, size);
 	delete_matrix(temp_matrix, size);
 	return reachability_matrix;
+}
+
+void get_transponed_matrix(double **result_matrix, double **original_matrix, int size){
+	{
+	int i, j;
+	for (i = 0; i < size; i++)
+	{
+		for (j = 0; j < size; j++)
+		{
+			result_matrix[i][j] = original_matrix[j][i];
+		}
+	}
+}
 }
