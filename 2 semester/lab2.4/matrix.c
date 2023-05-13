@@ -228,15 +228,66 @@ double **get_reachability_matrix(double **matrix, int size)
 	return reachability_matrix;
 }
 
-void get_transponed_matrix(double **result_matrix, double **original_matrix, int size){
+void get_transponed_matrix(double **result_matrix, double **original_matrix, int size)
+{
 	{
-	int i, j;
-	for (i = 0; i < size; i++)
-	{
-		for (j = 0; j < size; j++)
+		int i, j;
+		for (i = 0; i < size; i++)
 		{
-			result_matrix[i][j] = original_matrix[j][i];
+			for (j = 0; j < size; j++)
+			{
+				result_matrix[i][j] = original_matrix[j][i];
+			}
 		}
 	}
 }
+
+void get_components(double **matrix, int *checked, int *components, int index, int component_num, int size)
+{
+	checked[index] = 1;								 // позначаємо, що ця вершина була проглянута
+	components[index] = component_num; // позначаємо, що ця вершина відноситься до певного компонента
+	int i;
+	for (i = 0; i < size; i++)
+	{
+		if (!checked[i] && matrix[index][i])
+		{
+			get_components(matrix, checked, components, i, component_num, size);
+		}
+	}
+}
+
+int *get_connectivity_components(double **strong_connectivity_matrix, int size) // отримання компонентів зв'язку, до яких належить кожна з вершин
+{
+	int component_num = 1;
+
+	int *checked = (int *)malloc(size * sizeof(int));
+	for (int i = 0; i < size; i++)
+	{
+		checked[i] = 0;
+	}
+
+	int *components = (int *)malloc(size * sizeof(int));
+
+	for (int i = 0; i < size; i++)
+	{
+		if (!checked[i])
+		{
+			get_components(strong_connectivity_matrix, checked, components, i, component_num, size);
+			component_num++;
+		}
+	}
+
+	free(checked);
+	return components;
+}
+
+int get_components_count(int *components, int size)
+{
+	int result = 0;
+	int i;
+	for (i = 0; i < size; i++)
+	{
+		result = components[i] > result ? components[i] : result;
+	}
+	return result;
 }

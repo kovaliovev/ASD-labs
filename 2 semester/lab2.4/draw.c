@@ -228,6 +228,39 @@ void show_specific_vertices(Vertex *start_vertex, HDC hdc, int start_x, int star
 	}
 }
 
+void show_components_of_graph(double **strong_connectivity_matrix, int size, int start_x, int start_y, HDC hdc)
+{
+	int *components = get_connectivity_components(strong_connectivity_matrix, size);
+	int components_count = get_components_count(components, size);
+
+	int text_x = start_x;
+	int text_y;
+
+	int i, j;
+	for (i = 1; i < components_count + 1; i++)
+	{
+		text_y = start_y;
+		char message[16];
+		sprintf(message, "Component #%d:\n", i);
+		TextOut(hdc, text_x, text_y - 20, message, 16);
+
+		for (j = 0; j < VERTICES_COUNT; j++)
+		{
+			if (components[j] == i)
+			{
+				char message[10];
+				sprintf(message, "Vertex #%d", j + 1);
+				TextOut(hdc, text_x, text_y, message, 10);
+				text_y += 21;
+			}
+		}
+		text_x += 110;
+	}
+
+	printf("Array of components have been deleted from memory!\n");
+	free(components);
+}
+
 void draw_directed_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex)
 {
 	double multiplier = 1.0 - N3 * 0.01 - N4 * 0.01 - 0.3;
@@ -411,7 +444,11 @@ void draw_modified_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 	printf("\nStrong connectivity matrix of the depicted graph:\n\n");
 	print_matrix(strong_connectivity_matrix, VERTICES_COUNT);
 
+	// вивід компонентів сильної зв'язності
+	show_components_of_graph(strong_connectivity_matrix, VERTICES_COUNT, 920, 100, hdc);
+
 	// очищення пам'яті
 	delete_matrix(reachability_matrix, VERTICES_COUNT);
+	delete_matrix(transponed_reachability_matrix, VERTICES_COUNT);
 	delete_matrix(strong_connectivity_matrix, VERTICES_COUNT);
 }
