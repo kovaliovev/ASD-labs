@@ -291,3 +291,34 @@ int get_components_count(int *components, int size)
 	}
 	return result;
 }
+
+double **get_components_matrix(double **reachability_matrix, int *components, int components_count, int size)
+{
+	double **components_matrix = create_matrix(components_count);
+
+	int i, j, k;
+	for (i = 0; i < components_count; i++)
+	{
+		for (j = 0; j < size; j++)
+		{
+			if (components[j] == i + 1)
+			{
+				for (k = 0; k < size; k++)
+				{
+					if (components[k] != i + 1)
+					{
+						if (reachability_matrix[j][k])
+						{
+							components_matrix[i][components[k] - 1] = 1;
+						}
+						else if (reachability_matrix[k][j])
+						{
+							components_matrix[components[k] - 1][i] = 1;
+						}
+					}
+				}
+			}
+		}
+	}
+	return components_matrix;
+}

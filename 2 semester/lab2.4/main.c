@@ -43,6 +43,7 @@ void draw_window(HWND hWnd, HDC hdc, bool is_directed, bool is_modified)
 	// очищення пам'яті
 	delete_matrix(matrix, MATRIX_SIZE);
 	delete_vertices(&vertex);
+	printf("=========================================================\n");
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int nCmdShow)

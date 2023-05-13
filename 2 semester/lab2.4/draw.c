@@ -228,11 +228,8 @@ void show_specific_vertices(Vertex *start_vertex, HDC hdc, int start_x, int star
 	}
 }
 
-void show_components_of_graph(double **strong_connectivity_matrix, int size, int start_x, int start_y, HDC hdc)
+void show_components_of_graph(double **strong_connectivity_matrix, int *components, int components_count, int size, int start_x, int start_y, HDC hdc)
 {
-	int *components = get_connectivity_components(strong_connectivity_matrix, size);
-	int components_count = get_components_count(components, size);
-
 	int text_x = start_x;
 	int text_y;
 
@@ -256,9 +253,6 @@ void show_components_of_graph(double **strong_connectivity_matrix, int size, int
 		}
 		text_x += 110;
 	}
-
-	printf("Array of components have been deleted from memory!\n");
-	free(components);
 }
 
 void draw_directed_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex)
@@ -445,10 +439,20 @@ void draw_modified_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 	print_matrix(strong_connectivity_matrix, VERTICES_COUNT);
 
 	// вивід компонентів сильної зв'язності
-	show_components_of_graph(strong_connectivity_matrix, VERTICES_COUNT, 920, 100, hdc);
+	int *components = get_connectivity_components(strong_connectivity_matrix, VERTICES_COUNT);
+	int components_count = get_components_count(components, VERTICES_COUNT);
+	show_components_of_graph(strong_connectivity_matrix, components, components_count, VERTICES_COUNT, 920, 100, hdc);
 
-	// очищення пам'яті
+	// вивід матриці компонентів сильної зв'язності
+	double **components_matrix = get_components_matrix(reachability_matrix, components, components_count, VERTICES_COUNT);
+	printf("\nComponents matrix of the depicted graph:\n\n");
+	print_matrix(components_matrix, components_count);
+
+	//  очищення пам'яті
+	printf("Array of components have been deleted from memory!\n");
+	free(components);
 	delete_matrix(reachability_matrix, VERTICES_COUNT);
 	delete_matrix(transponed_reachability_matrix, VERTICES_COUNT);
 	delete_matrix(strong_connectivity_matrix, VERTICES_COUNT);
+	delete_matrix(components_matrix, components_count);
 }
