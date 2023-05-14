@@ -313,6 +313,28 @@ void show_components_of_graph(double **strong_connectivity_matrix, int *componen
 	}
 }
 
+bool is_directed_homogeneous(Vertex *start_vertex)
+{
+	bool is_homogeneous = true;
+	Vertex *current_vertex = start_vertex;
+	int deg_in = current_vertex->deg_in;
+	int deg_out = current_vertex->deg_out;
+	int last_deg_in, last_deg_out;
+	while (is_homogeneous && current_vertex != NULL)
+	{
+		last_deg_in = deg_in;
+		last_deg_out = deg_out;
+		deg_in = current_vertex->deg_in;
+		deg_out = current_vertex->deg_out;
+		if (deg_in != last_deg_in || deg_out != last_deg_out)
+		{
+			is_homogeneous = false;
+		}
+		current_vertex = current_vertex->p_next;
+	}
+	return is_homogeneous;
+}
+
 void draw_directed_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count)
 {
 	double multiplier = 1.0 - N3 * 0.01 - N4 * 0.01 - 0.3;
@@ -366,6 +388,16 @@ void draw_directed_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 		current_vertex = current_vertex->p_next;
 	}
 	show_semidegrees(vertex, hdc, 720, 50);
+	if (is_directed_homogeneous(vertex))
+	{
+		char message[42];
+		sprintf(message, "Wow! Graph is homogeneous! It's degree: %d", (vertex->deg_in + vertex->deg_out));
+		TextOut(hdc, 720, 20, message, 42);
+	}
+	else
+	{
+		TextOut(hdc, 720, 20, "Graph is not homogeneous!", 26);
+	}
 	show_directed_specific_vertices(vertex, hdc, 920, 100);
 }
 
