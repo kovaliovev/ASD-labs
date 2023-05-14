@@ -188,7 +188,62 @@ void show_semidegrees(Vertex *start_vertex, HDC hdc, int start_x, int start_y)
 	}
 }
 
-void show_specific_vertices(Vertex *start_vertex, HDC hdc, int start_x, int start_y)
+void show_directed_specific_vertices(Vertex *start_vertex, HDC hdc, int start_x, int start_y)
+{
+	int text_x = start_x;
+	int text_y = start_y;
+
+	int isolated = 0;
+	int source = 0;
+	int sink = 0;
+
+	Vertex *current_vertex = start_vertex;
+	while (current_vertex != NULL)
+	{
+		int num = current_vertex->num;
+
+		if (current_vertex->deg_in + current_vertex->deg_out == 0)
+		{
+			char message[23];
+			sprintf(message, "Vertex #%d is isolated!", num);
+			TextOut(hdc, text_x, text_y, message, 23);
+			isolated++;
+		}
+		else if (current_vertex->deg_in == 0)
+		{
+			char message[22];
+			sprintf(message, "Vertex #%d is a source!", num);
+			TextOut(hdc, text_x, text_y, message, 21);
+			source++;
+		}
+		else if (current_vertex->deg_out == 0)
+		{
+			char message[22];
+			sprintf(message, "Vertex #%d is a sink!", num);
+			TextOut(hdc, text_x, text_y, message, 19);
+			sink++;
+		}
+
+		text_y += 21;
+		current_vertex = current_vertex->p_next;
+	}
+	if (!isolated)
+	{
+		TextOut(hdc, start_x, start_y - 55, "Graph has not isolated vertices!", 33);
+		start_y += 20;
+	}
+	if (!source)
+	{
+		TextOut(hdc, start_x, start_y - 55, "Graph has not source vertices!", 31);
+		start_y += 20;
+	}
+	if (!sink)
+	{
+		TextOut(hdc, start_x, start_y - 55, "Graph has not sink vertices!", 29);
+	}
+}
+
+void show_undirected_specific_vertices(Vertex *start_vertex, HDC hdc, int start_x, int start_y)
 {
 	int text_x = start_x;
 	int text_y = start_y;
@@ -311,6 +366,7 @@ void draw_directed_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 		current_vertex = current_vertex->p_next;
 	}
 	show_semidegrees(vertex, hdc, 720, 50);
+	show_directed_specific_vertices(vertex, hdc, 920, 100);
 }
 
 void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count)
@@ -370,7 +426,7 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **mat
 		TextOut(hdc, 720, 20, "Graph is not homogeneous!", 26);
 	}
 
-	show_specific_vertices(vertex, hdc, 920, 100);
+	show_undirected_specific_vertices(vertex, hdc, 920, 100);
 }
 
 void draw_condensation_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **components_matrix, Vertex *components_vertices, int vertices_count)
@@ -473,7 +529,7 @@ void draw_modified_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 
 	// вивід матриці досяжності + шляхів довжиною 2 та 3
 	double **reachability_matrix = get_reachability_matrix(matrix, VERTICES_COUNT);
-	printf("\nReachability matrix of the depicted graph:\n\n");
+	printf("\nReachability matrix of modified graph:\n\n");
 	print_matrix(reachability_matrix, VERTICES_COUNT);
 
 	double **transponed_reachability_matrix = create_matrix(VERTICES_COUNT);
@@ -483,7 +539,7 @@ void draw_modified_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 	get_logical_and(strong_connectivity_matrix, reachability_matrix, transponed_reachability_matrix, VERTICES_COUNT);
 
 	// вивід матриці сильної зв'язності
-	printf("\nStrong connectivity matrix of the depicted graph:\n\n");
+	printf("\nStrong connectivity matrix of modified graph:\n\n");
 	print_matrix(strong_connectivity_matrix, VERTICES_COUNT);
 
 	// вивід компонентів сильної зв'язності
