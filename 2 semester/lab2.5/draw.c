@@ -588,7 +588,7 @@ void draw_modified_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 	Vertex *components_vertices = create_vertices(components_count, CONDENSAT_GRAPH_X_MARGIN, CONDENSAT_GRAPH_Y_MARGIN, CONDENSAT_GRAPH_COEF);
 
 	HPEN condensation_vertex_pen = CreatePen(PS_SOLID, 3, RGB(18, 179, 45)); // стиль = неперервний; товщина = 3; колір = зелений
-	HPEN condensation_edge_pen = CreatePen(PS_DASH, 1, RGB(20, 20, 5));			 // стиль = неперервний; товщина = 1; колір = чорний
+	HPEN condensation_edge_pen = CreatePen(PS_DASH, 1, RGB(20, 20, 5));			 // стиль = пунктирний; товщина = 1; колір = чорний
 
 	TextOut(hdc, 850, 420, "Condensation of modified graph:", 32);
 	draw_condensation_graph(hdc, condensation_vertex_pen, condensation_edge_pen, components_matrix, components_vertices, components_count);
