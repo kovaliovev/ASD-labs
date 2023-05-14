@@ -67,21 +67,21 @@ void draw_arrowed_edge(HPEN edge_pen, double start_x, double start_y, double end
 
 void draw_reflect_edge(HPEN edge_pen, Vertex *vertex, HDC hdc)
 {
-	if (vertex->num <= (VERTICES_COUNT / 4)) // 3 чверть
-	{
-		Ellipse(hdc, vertex->x - VERTEX_DIAMETER, vertex->y + VERTEX_DIAMETER, vertex->x, vertex->y);
-	}
-	else if (vertex->num <= (VERTICES_COUNT / 4) * 2) // 2 чверть
+	if (vertex->num <= ceil(VERTICES_COUNT / 4.0)) // 2 чверть
 	{
 		Ellipse(hdc, vertex->x - VERTEX_DIAMETER, vertex->y - VERTEX_DIAMETER, vertex->x, vertex->y);
 	}
-	else if (vertex->num <= (VERTICES_COUNT / 4) * 3) // 1 чверть
+	else if (vertex->num <= ceil(VERTICES_COUNT / 4.0 * 2)) // 1 чверть
 	{
 		Ellipse(hdc, vertex->x + VERTEX_DIAMETER, vertex->y - VERTEX_DIAMETER, vertex->x, vertex->y);
 	}
-	else // 4 чверть
+	else if (vertex->num <= ceil(VERTICES_COUNT / 4.0 * 3)) // 4 чверть
 	{
 		Ellipse(hdc, vertex->x + VERTEX_DIAMETER, vertex->y + VERTEX_DIAMETER, vertex->x, vertex->y);
+	}
+	else // 3 чверть
+	{
+		Ellipse(hdc, vertex->x - VERTEX_DIAMETER, vertex->y + VERTEX_DIAMETER, vertex->x, vertex->y);
 	}
 }
 
@@ -93,25 +93,25 @@ void draw_arrowed_reflect_edge(HPEN edge_pen, Vertex *vertex, HDC hdc)
 	double arrow_x = vertex->x;
 	double arrow_y = vertex->y;
 
-	if (vertex->num <= (VERTICES_COUNT / 4)) // 3 чверть
-	{
-		rotate_angle = to_radians(165.0);
-		arrow_x -= 32;
-	}
-	else if (vertex->num <= (VERTICES_COUNT / 4) * 2) // 2 чверть
+	if (vertex->num <= ceil(VERTICES_COUNT / 4.0)) // 2 чверть
 	{
 		rotate_angle = to_radians(195.0);
 		arrow_x -= 32;
 	}
-	else if (vertex->num <= (VERTICES_COUNT / 4) * 3) // 1 чверть
+	else if (vertex->num <= ceil(VERTICES_COUNT / 4.0) * 2) // 1 чверть
 	{
 		rotate_angle = to_radians(345.0);
 		arrow_x += 32;
 	}
-	else // 4 чверть
+	else if (vertex->num <= ceil(VERTICES_COUNT / 4.0) * 3) // 4 чверть
 	{
 		rotate_angle = to_radians(15.0);
 		arrow_x += 32;
+	}
+	else // 3 чверть
+	{
+		rotate_angle = to_radians(165.0);
+		arrow_x -= 32;
 	}
 	draw_arrow(edge_pen, rotate_angle, arrow_x, arrow_y, VERTEX_RADIUS / 2, hdc);
 }
