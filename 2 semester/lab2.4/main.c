@@ -2,7 +2,9 @@
 /*
 	Головний файл проекту, описує створення вікна та взаємодію з ним.
 */
-
+#define DRAW_DIRECTED_CODE 7763
+#define DRAW_UNDIRECTED_CODE 8812
+#define DRAW_MODIFIED_CODE 9909
 // n1 = 2
 // n2 = 1
 // n3 = 1
@@ -11,11 +13,12 @@
 // Число вершин: 11
 // Розміщення вершин: коло
 
-HWND change_orientation_button;													 // прототип кнопки зміни орієнтованості графу
-HWND show_modified_button;															 // прототип кнопки зміни показу модифікованого графу
+HWND show_directed_button;															 // прототип кнопки показу напрямленого графу
+HWND show_undirected_button;														 // прототип кнопки показу ненапрямленого графу
+HWND show_modified_button;															 // прототип кнопки показу модифікованого графу
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип функції потоку вікна
 
-void draw_window(HWND hWnd, HDC hdc, bool is_directed, bool is_modified)
+void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 {
 	Rectangle(hdc, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -25,18 +28,21 @@ void draw_window(HWND hWnd, HDC hdc, bool is_directed, bool is_modified)
 	double **matrix = get_rand_matrix(MATRIX_SIZE);
 	Vertex *vertex = create_vertices(VERTICES_COUNT, STANDART_GRAPH_MARGIN, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
 
-	if (is_modified)
+	switch (drawing_flag)
 	{
-		draw_modified_graph(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT);
-	}
-	else if (is_directed)
-	{
+	case DRAW_DIRECTED_CODE:
 		draw_directed_graph(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT);
-	}
-	else if (!is_directed)
-	{
+		break;
+	case DRAW_UNDIRECTED_CODE:
 		draw_undirected_graph(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT);
+		break;
+	case DRAW_MODIFIED_CODE:
+		draw_modified_graph(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT);
+		break;
+	default:
+		printf("ERROR! Value of drawing flag is not equal to any drawing code!\n");
 	}
+
 	// вивід матриці суміжності
 	printf("\nAdjacency matrix of the depicted graph:\n\n");
 	print_matrix(matrix, MATRIX_SIZE);
@@ -84,7 +90,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 
 	ShowWindow(hWnd, nCmdShow);
 
-	change_orientation_button = CreateWindow("button", "Change graph orientation", WS_VISIBLE | WS_CHILD | WS_BORDER, 284, 720, 196, 32, hWnd, NULL, NULL, NULL);
+	show_directed_button = CreateWindow("button", "Show directed graph", WS_VISIBLE | WS_CHILD | WS_BORDER, 180, 720, 196, 32, hWnd, NULL, NULL, NULL);
+	show_undirected_button = CreateWindow("button", "Show undirected graph", WS_VISIBLE | WS_CHILD | WS_BORDER, 388, 720, 196, 32, hWnd, NULL, NULL, NULL);
 	show_modified_button = CreateWindow("button", "Show modified graph", WS_VISIBLE | WS_CHILD | WS_BORDER, 860, 360, 196, 32, hWnd, NULL, NULL, NULL);
 
 	while (GetMessage(&lpMsg, hWnd, 0, 0))
@@ -101,29 +108,29 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam)
 	HDC hdc;
 	PAINTSTRUCT ps;
 
-	static bool is_directed = true;
-	static bool is_modified = false;
+	static int drawing_flag = DRAW_DIRECTED_CODE;
 
 	switch (messg)
 	{
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-		draw_window(hWnd, hdc, is_directed, is_modified);
+		draw_window(hWnd, hdc, drawing_flag);
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_COMMAND:
-		if (lParam == change_orientation_button)
+		if (lParam == show_directed_button)
 		{
-			is_modified = false;
-			is_directed = !is_directed;
-			RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
+			drawing_flag = DRAW_DIRECTED_CODE;
+		}
+		else if (lParam == show_undirected_button)
+		{
+			drawing_flag = DRAW_UNDIRECTED_CODE;
 		}
 		else if (lParam == show_modified_button)
 		{
-			is_directed = true;
-			is_modified = true;
-			RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
+			drawing_flag = DRAW_MODIFIED_CODE;
 		}
+		RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
