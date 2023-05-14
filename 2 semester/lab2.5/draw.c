@@ -118,15 +118,26 @@ void draw_arrowed_reflect_edge(HPEN edge_pen, Vertex *vertex, HDC hdc)
 
 void draw_arrowed_curve_edge(HPEN edge_pen, double start_x, double start_y, double end_x, double end_y, HDC hdc)
 {
-	double center_x = (start_x + end_x) / 2 - 32;
-	double center_y = (start_y + end_y) / 2 - 32;
+	int diff_x = abs(start_x - end_x);
+	int diff_y = abs(start_y - end_y);
+	double center_x, center_y;
+	if (diff_x > diff_y)
+	{
+		center_x = (start_x + end_x) / 2;
+		center_y = (start_y + end_y) / 2 - 50;
+	}
+	else
+	{
+		center_x = (start_x + end_x) / 2 - 50;
+		center_y = (start_y + end_y) / 2;
+	}
 	draw_edge(edge_pen, start_x, start_y, center_x, center_y, hdc);
 	draw_arrowed_edge(edge_pen, center_x, center_y, end_x, end_y, hdc);
 }
 
 void draw_directed_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count)
 {
-	double multiplier = 1.0 - N3 * 0.01 - N4 * 0.01 - 0.3;
+	double multiplier = 1.0 - N3 * 0.01 - N4 * 0.005 - 0.15;
 	mult_matrix(matrix, MATRIX_SIZE, multiplier);
 
 	SelectObject(hdc, edge_pen);
