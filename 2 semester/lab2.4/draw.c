@@ -579,8 +579,12 @@ void draw_modified_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 	int components_count = get_components_count(components, VERTICES_COUNT);
 	show_components_of_graph(strong_connectivity_matrix, components, components_count, VERTICES_COUNT, 920, 100, hdc);
 
-	// вивід графу конденсації
+	// вивід матриці суміжності конденсації графа
 	double **components_matrix = get_components_matrix(reachability_matrix, components, components_count, VERTICES_COUNT);
+	printf("\nCondensation matrix of modified graph:\n\n");
+	print_matrix(components_matrix, components_count);
+
+	// вивід графу конденсації
 	Vertex *components_vertices = create_vertices(components_count, CONDENSAT_GRAPH_X_MARGIN, CONDENSAT_GRAPH_Y_MARGIN, CONDENSAT_GRAPH_COEF);
 
 	HPEN condensation_vertex_pen = CreatePen(PS_SOLID, 3, RGB(18, 179, 45)); // стиль = неперервний; товщина = 3; колір = зелений
