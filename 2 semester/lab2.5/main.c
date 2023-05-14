@@ -46,7 +46,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 {
 	WNDCLASS window;
 
-	window.lpszClassName = "Lab #4";							// ім'я програми
+	window.lpszClassName = "Lab #5";							// ім'я програми
 	window.hInstance = hInstance;									// ідентифікатор застосунку
 	window.lpfnWndProc = WindowProc;							// вказівник на функцію вікна
 	window.hCursor = LoadCursor(NULL, IDC_ARROW); // завантажений курсор
@@ -66,8 +66,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 	HWND hWnd;
 	MSG lpMsg;
 
-	hWnd = CreateWindow("Lab #4",														 // ім'я програми
-											"Lab #4 by Evgheniy Kovaliov IM-21", // заголовок
+	hWnd = CreateWindow("Lab #5",														 // ім'я програми
+											"Lab #5 by Evgheniy Kovaliov IM-21", // заголовок
 											WS_OVERLAPPEDWINDOW,								 // стиль вікна: комплексний
 											WINDOW_RIGHT_TOP_CORNER_X,					 // положення верхнього лівого кута вікна на екрані по x
 											WINDOW_RIGHT_TOP_CORNER_Y,					 // положення верхнього лівого кута вікна на екрані по y
