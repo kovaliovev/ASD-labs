@@ -3,8 +3,7 @@
 	Головний файл проекту, описує створення вікна та взаємодію з ним.
 */
 #define DRAW_DIRECTED_CODE 7763
-#define DRAW_UNDIRECTED_CODE 8812
-#define DRAW_MODIFIED_CODE 9909
+
 // n1 = 2
 // n2 = 1
 // n3 = 1
@@ -13,9 +12,6 @@
 // Число вершин: 11
 // Розміщення вершин: коло
 
-HWND show_directed_button;															 // прототип кнопки показу напрямленого графу
-HWND show_undirected_button;														 // прототип кнопки показу ненапрямленого графу
-HWND show_modified_button;															 // прототип кнопки показу модифікованого графу
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип функції потоку вікна
 
 void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
@@ -32,12 +28,6 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	{
 	case DRAW_DIRECTED_CODE:
 		draw_directed_graph(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT);
-		break;
-	case DRAW_UNDIRECTED_CODE:
-		draw_undirected_graph(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT);
-		break;
-	case DRAW_MODIFIED_CODE:
-		draw_modified_graph(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT);
 		break;
 	default:
 		printf("ERROR! Value of drawing flag is not equal to any drawing code!\n");
@@ -90,10 +80,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 
 	ShowWindow(hWnd, nCmdShow);
 
-	show_directed_button = CreateWindow("button", "Show directed graph", WS_VISIBLE | WS_CHILD | WS_BORDER, 180, 720, 196, 32, hWnd, NULL, NULL, NULL);
-	show_undirected_button = CreateWindow("button", "Show undirected graph", WS_VISIBLE | WS_CHILD | WS_BORDER, 388, 720, 196, 32, hWnd, NULL, NULL, NULL);
-	show_modified_button = CreateWindow("button", "Show modified graph", WS_VISIBLE | WS_CHILD | WS_BORDER, 860, 360, 196, 32, hWnd, NULL, NULL, NULL);
-
 	while (GetMessage(&lpMsg, hWnd, 0, 0))
 	{
 		TranslateMessage(&lpMsg); // перетворення повідомлення
@@ -118,19 +104,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam)
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_COMMAND:
-		if (lParam == show_directed_button)
-		{
-			drawing_flag = DRAW_DIRECTED_CODE;
-		}
-		else if (lParam == show_undirected_button)
-		{
-			drawing_flag = DRAW_UNDIRECTED_CODE;
-		}
-		else if (lParam == show_modified_button)
-		{
-			drawing_flag = DRAW_MODIFIED_CODE;
-		}
 		RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
+		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;

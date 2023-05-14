@@ -10,8 +10,6 @@
 typedef struct vertices_list
 {
 	int num;
-	int deg_in;
-	int deg_out;
 	double x;
 	double y;
 	struct vertices_list *p_next;
@@ -60,8 +58,6 @@ Vertex *create_vertices(double count, int x_margin, int y_margin, int coefficien
 	for (i = 0; i < count; i++)
 	{
 		current->num = i + 1;
-		current->deg_in = 0;
-		current->deg_out = 0;
 		current->x = calc_x(rotate_angle, i, x_margin, coefficient);
 		current->y = calc_y(rotate_angle, i, y_margin, coefficient);
 
