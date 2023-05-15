@@ -223,6 +223,11 @@ double **get_reachability_matrix(double **matrix, int size)
 			print_pathes_3(powered_matrix, matrix, size);
 		}
 	}
+	int j;
+	for (j = 0; j < size; j++)
+	{
+		reachability_matrix[j][j] = 1;
+	}
 	delete_matrix(powered_matrix, size);
 	delete_matrix(temp_matrix, size);
 	return reachability_matrix;
