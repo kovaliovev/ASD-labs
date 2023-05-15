@@ -261,7 +261,7 @@ void get_components(double **matrix, int *checked, int *components, int index, i
 	}
 }
 
-int *get_connectivity_components(double **strong_connectivity_matrix, int size) // отримання компонентів зв'язку, до яких належить кожна з вершин
+int *get_connectivity_components(double **strong_connectivity_matrix, int size)
 {
 	int component_num = 1;
 
