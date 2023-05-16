@@ -59,3 +59,30 @@ void shift(List **pp_head)
 	printf("\nElement was deleted from the begin of list.\n");
 	free(current);
 }
+
+void print_list(List *p_head)
+{
+	List *current = p_head;
+
+	printf("Now list is: ");
+	while (current->p_next != NULL)
+	{
+		printf("%d => ", current->data);
+		current = current->p_next;
+	}
+	printf("%d\n\n", current->data);
+}
+
+void delete_list(List **pp_head)
+{
+	List *current = *pp_head;
+	while (current != NULL)
+	{
+		List *previous = current;
+		current = current->p_next;
+		free(previous);
+		printf("Memory was freed! :)\n");
+	}
+	(*pp_head) = NULL;
+	printf("The list no longer exists!\n\n");
+}
