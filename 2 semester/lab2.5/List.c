@@ -31,33 +31,36 @@ void unshift(List **pp_head, int data)
 	check_mem_error(new_elem);
 
 	new_elem->p_next = *pp_head;
+	new_elem->data = data;
 
 	(*pp_head) = new_elem;
 }
 
-void pop(List **pp_head)
+void push(List **pp_head, int data)
 {
 	List *current = (*pp_head);
-	if (current->p_next == NULL)
-	{
-		(*pp_head) = NULL;
-	}
+
 	while (current->p_next != NULL)
 	{
 		current = current->p_next;
 	}
-	printf("\nElement was deleted from the end of list.\n");
-	free(current);
-	printf("Memory was freed! :)\n\n");
+	List *new_elem = (List *)malloc(sizeof(List));
+	check_mem_error(new_elem);
+
+	current->p_next = new_elem;
+	new_elem->data = data;
+	new_elem->p_next = NULL;
 }
 
-void shift(List **pp_head)
+int shift(List **pp_head)
 {
 	List *current = (*pp_head);
+	int data = current->data;
 
 	(*pp_head) = current->p_next;
 	printf("\nElement was deleted from the begin of list.\n");
 	free(current);
+	return data;
 }
 
 void print_list(List *p_head)

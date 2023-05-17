@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "List.c"
 /*
 	Файл описує структуру даних, яка використовується для розрахунку та збережння координат вершин;
 	а також функції потрібні для роботи з цією структурою.
@@ -58,6 +59,8 @@ Vertex *create_vertices(double count, int x_margin, int y_margin, int coefficien
 	for (i = 0; i < count; i++)
 	{
 		current->num = i + 1;
+		current->is_in_bfs_tree = 0;
+		current->is_in_dfs_tree = 0;
 		current->x = calc_x(rotate_angle, i, x_margin, coefficient);
 		current->y = calc_y(rotate_angle, i, y_margin, coefficient);
 
