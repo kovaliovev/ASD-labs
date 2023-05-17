@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "List.c"
 /*
 	Файл описує динамічний двовимірний масив, який використовується як матриця суміжності
 	графа, що зображується; а також функції для роботи з цим масивом.
@@ -84,4 +85,30 @@ void print_matrix(double **matrix, int size)
 		printf("\n");
 	}
 	printf("\n");
+}
+
+void bfs(int vertices_count, double **adjacency_matrix, int *visited, double **bfs_matrix)
+{
+	List *queue = create_list(0);
+	int order = 1;
+	visited[0] = order++;
+	push(&queue, 0);
+	printf("Vertex %d was visited!\n", 1);
+	while (queue != NULL)
+	{
+		int active = shift(&queue);
+		int i;
+		for (i = 0; i < vertices_count; i++)
+		{
+			if (adjacency_matrix[active][i] && !visited[i])
+			{
+				visited[i] = order++;
+				push(&queue, i);
+				bfs_matrix[active][i] = 1;
+				printf("Vertex %d was visited!\n", i + 1);
+			}
+		}
+	}
+	printf("All vertices were visited!\n");
+	delete_list(&queue);
 }

@@ -36,7 +36,15 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	// вивід матриці суміжності
 	printf("\nAdjacency matrix of the depicted graph:\n\n");
 	print_matrix(matrix, MATRIX_SIZE);
+
+	int visited[VERTICES_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+	double **bfs_matrix = create_matrix(VERTICES_COUNT);
+
+	bfs(VERTICES_COUNT, matrix, visited, bfs_matrix);
+
 	// очищення пам'яті
+	delete_matrix(bfs_matrix, VERTICES_COUNT);
 	delete_matrix(matrix, MATRIX_SIZE);
 	delete_vertices(&vertex);
 	printf("=========================================================\n");
