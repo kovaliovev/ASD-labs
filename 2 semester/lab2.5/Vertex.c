@@ -59,8 +59,6 @@ Vertex *create_vertices(double count, int x_margin, int y_margin, int coefficien
 	for (i = 0; i < count; i++)
 	{
 		current->num = i + 1;
-		current->is_in_bfs_tree = 0;
-		current->is_in_dfs_tree = 0;
 		current->x = calc_x(rotate_angle, i, x_margin, coefficient);
 		current->y = calc_y(rotate_angle, i, y_margin, coefficient);
 
