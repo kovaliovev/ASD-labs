@@ -188,7 +188,7 @@ draw_bfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *verte
 	HPEN active_pen = CreatePen(PS_SOLID, 4, RGB(34, 139, 34));
 	HPEN new_pen = CreatePen(PS_SOLID, 4, RGB(57,255,20));
 	HPEN closed_pen = CreatePen(PS_SOLID, 4, RGB(255, 165, 0));
-	HPEN bfs_edge_pen = CreatePen(PS_SOLID, 3, RGB(57,255,20));
+	HPEN bfs_edge_pen = CreatePen(PS_SOLID, 3, RGB(118,255,122));
 
 	bfs(VERTICES_COUNT, matrix, bfs_visited, bfs_matrix, bfs_n);
 	printf("\nBFS matrix:\n");
