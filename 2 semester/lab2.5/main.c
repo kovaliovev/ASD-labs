@@ -12,6 +12,9 @@
 // Число вершин: 11
 // Розміщення вершин: коло
 
+int bfs_n = 0;
+int dfs_n = 0;
+
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип функції потоку вікна
 
 void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
@@ -37,11 +40,12 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	printf("\nAdjacency matrix of the depicted graph:\n\n");
 	print_matrix(matrix, MATRIX_SIZE);
 
-	int visited[VERTICES_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	int bfs_visited[VERTICES_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 	double **bfs_matrix = create_matrix(VERTICES_COUNT);
 
-	bfs(VERTICES_COUNT, matrix, visited, bfs_matrix);
+	bfs(VERTICES_COUNT, matrix, bfs_visited, bfs_matrix);
+	print_matrix(bfs_matrix, VERTICES_COUNT);
 
 	// очищення пам'яті
 	delete_matrix(bfs_matrix, VERTICES_COUNT);
