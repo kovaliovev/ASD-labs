@@ -15,6 +15,8 @@
 int bfs_n = 0;
 int dfs_n = 0;
 
+HWND bfs_button;
+HWND dfs_button;
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип функції потоку вікна
 
 void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
@@ -91,6 +93,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 											(HINSTANCE)NULL);										 // додаткові параметри(відсутні)
 
 	ShowWindow(hWnd, nCmdShow);
+
+	bfs_button = CreateWindow("button", "BFS STEP", WS_VISIBLE | WS_CHILD | WS_BORDER, 720, 680, 196, 32, hWnd, NULL, NULL, NULL);
+	dfs_button = CreateWindow("button", "DFS STEP", WS_VISIBLE | WS_CHILD | WS_BORDER, 988, 680, 196, 32, hWnd, NULL, NULL, NULL);
 
 	while (GetMessage(&lpMsg, hWnd, 0, 0))
 	{
