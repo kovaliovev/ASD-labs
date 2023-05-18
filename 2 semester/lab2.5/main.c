@@ -42,15 +42,9 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	printf("\nAdjacency matrix of the depicted graph:\n\n");
 	print_matrix(matrix, MATRIX_SIZE);
 
-	int bfs_visited[VERTICES_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
-	double **bfs_matrix = create_matrix(VERTICES_COUNT);
-
-	bfs(VERTICES_COUNT, matrix, bfs_visited, bfs_matrix);
-	print_matrix(bfs_matrix, VERTICES_COUNT);
-
+	draw_bfs(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT, bfs_n);
+	
 	// очищення пам'яті
-	delete_matrix(bfs_matrix, VERTICES_COUNT);
 	delete_matrix(matrix, MATRIX_SIZE);
 	delete_vertices(&vertex);
 	printf("=========================================================\n");
@@ -94,8 +88,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 
 	ShowWindow(hWnd, nCmdShow);
 
-	bfs_button = CreateWindow("button", "BFS STEP", WS_VISIBLE | WS_CHILD | WS_BORDER, 720, 680, 196, 32, hWnd, NULL, NULL, NULL);
-	dfs_button = CreateWindow("button", "DFS STEP", WS_VISIBLE | WS_CHILD | WS_BORDER, 988, 680, 196, 32, hWnd, NULL, NULL, NULL);
+	bfs_button = CreateWindow("button", "BFS STEP", WS_VISIBLE | WS_CHILD | WS_BORDER, 854, 610, 196, 32, hWnd, NULL, NULL, NULL);
+	dfs_button = CreateWindow("button", "DFS STEP", WS_VISIBLE | WS_CHILD | WS_BORDER, 854, 650, 196, 32, hWnd, NULL, NULL, NULL);
 
 	while (GetMessage(&lpMsg, hWnd, 0, 0))
 	{
@@ -121,6 +115,14 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam)
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_COMMAND:
+		if (lParam == bfs_button)
+		{
+			bfs_n++;
+		}
+		else if (lParam == dfs_button)
+		{
+			dfs_n++;
+		}
 		RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
 		break;
 	case WM_DESTROY:

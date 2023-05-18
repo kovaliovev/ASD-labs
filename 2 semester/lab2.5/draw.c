@@ -182,3 +182,49 @@ void draw_directed_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 		current_vertex = current_vertex->p_next;
 	}
 }
+
+draw_bfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count, int bfs_n)
+{
+	int bfs_visited[VERTICES_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	double **bfs_matrix = create_matrix(VERTICES_COUNT);
+
+	HPEN bfs_vertex_pen = CreatePen(PS_SOLID, 4, RGB(144, 238, 144)); // стиль = неперервний; товщина = 3; колір = синій
+	HPEN bfs_edge_pen = CreatePen(PS_SOLID, 3, RGB(34, 139, 34));			// стиль = неперервний; товщина = 1; колір = чорний
+
+	bfs(VERTICES_COUNT, matrix, bfs_visited, bfs_matrix, bfs_n);
+	printf("\nBFS matrix:\n");
+	print_matrix(bfs_matrix, VERTICES_COUNT);
+
+	SelectObject(hdc, bfs_edge_pen);
+
+	Vertex *current_vertex = vertex;
+	int row, col;
+	for (row = 0; row < vertices_count; row++)
+	{
+		for (col = 0; col < vertices_count; col++)
+		{
+			if (bfs_matrix[row][col])
+			{
+				double start_x = current_vertex->x;
+				double start_y = current_vertex->y;
+
+				double end_x = calc_x(360.0 / vertices_count, col, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
+				double end_y = calc_y(360.0 / vertices_count, col, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
+
+				draw_arrowed_edge(edge_pen, start_x, start_y, end_x, end_y, hdc);
+			}
+		}
+		current_vertex = current_vertex->p_next;
+	}
+
+	current_vertex = vertex;
+	while (current_vertex != NULL)
+	{
+		if (bfs_visited[current_vertex->num - 1])
+		{
+			draw_vertex(bfs_vertex_pen, current_vertex, hdc);
+		}
+		current_vertex = current_vertex->p_next;
+	}
+	delete_matrix(bfs_matrix, VERTICES_COUNT);
+}
