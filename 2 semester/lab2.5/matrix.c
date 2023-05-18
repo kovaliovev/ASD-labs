@@ -8,6 +8,9 @@
 */
 #define MATRIX_SIZE 11
 #define SEED 2110
+#define ACTIVE_VERTEX_CODE 5590
+#define NEW_VERTEX_CODE 6691
+#define CLOSED_VERTEX_CODE 7792
 
 double **create_matrix(int size)
 {
@@ -94,7 +97,7 @@ void bfs(int vertices_count, double **adjacency_matrix, int *visited, double **b
 	while (queue != NULL && bfs_n > 0)
 	{
 		int active = queue->data;
-		visited[active] = 1;
+		visited[active] = ACTIVE_VERTEX_CODE;
 		bfs_n--;
 		if (bfs_n < 1)
 			break;
@@ -105,7 +108,7 @@ void bfs(int vertices_count, double **adjacency_matrix, int *visited, double **b
 			{
 				if (!visited[i])
 				{
-					visited[i] = 2;
+					visited[i] = NEW_VERTEX_CODE;
 					push(&queue, i);
 					bfs_matrix[active][i] = 1;
 					printf("Vertex %d was visited!\n", i + 1);
@@ -118,7 +121,7 @@ void bfs(int vertices_count, double **adjacency_matrix, int *visited, double **b
 		if (i == vertices_count)
 		{
 			shift(&queue);
-			visited[active] = 3;
+			visited[active] = CLOSED_VERTEX_CODE;
 			bfs_n--;
 		}
 	}

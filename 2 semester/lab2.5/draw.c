@@ -186,9 +186,9 @@ draw_bfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *verte
 	double **bfs_matrix = create_matrix(VERTICES_COUNT);
 
 	HPEN active_pen = CreatePen(PS_SOLID, 4, RGB(34, 139, 34));
-	HPEN new_pen = CreatePen(PS_SOLID, 4, RGB(57,255,20));
+	HPEN new_pen = CreatePen(PS_SOLID, 4, RGB(57, 255, 20));
 	HPEN closed_pen = CreatePen(PS_SOLID, 4, RGB(255, 165, 0));
-	HPEN bfs_edge_pen = CreatePen(PS_SOLID, 3, RGB(118,255,122));
+	HPEN bfs_edge_pen = CreatePen(PS_SOLID, 3, RGB(118, 255, 122));
 
 	bfs(VERTICES_COUNT, matrix, bfs_visited, bfs_matrix, bfs_n);
 	printf("\nBFS matrix:\n");
@@ -219,18 +219,19 @@ draw_bfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *verte
 	current_vertex = vertex;
 	while (current_vertex != NULL)
 	{
-		if (bfs_visited[current_vertex->num - 1] == 1)
+		switch (bfs_visited[current_vertex->num - 1])
 		{
+		case ACTIVE_VERTEX_CODE:
 			draw_vertex(active_pen, current_vertex, hdc);
-		}
-		if (bfs_visited[current_vertex->num - 1] == 2)
-		{
+			break;
+		case NEW_VERTEX_CODE:
 			draw_vertex(new_pen, current_vertex, hdc);
-		}
-		else if (bfs_visited[current_vertex->num - 1] == 3)
-		{
+			break;
+		case CLOSED_VERTEX_CODE:
 			draw_vertex(closed_pen, current_vertex, hdc);
+			break;
 		}
+
 		current_vertex = current_vertex->p_next;
 	}
 	delete_matrix(bfs_matrix, VERTICES_COUNT);
