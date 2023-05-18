@@ -90,16 +90,18 @@ void print_matrix(double **matrix, int size)
 	printf("\n");
 }
 
-void bfs(int vertices_count, double **adjacency_matrix, int *visited, double **bfs_matrix, int bfs_n)
+void bfs(int vertices_count, double **adjacency_matrix, int *visited, double **bfs_matrix, int bfs_step, int *bfs_order)
 {
+	int order = 0;
 	List *queue = create_list(0);
 	printf("Vertex %d was visited!\n", 1);
-	while (queue != NULL && bfs_n > 0)
+	while (queue != NULL && bfs_step > 0)
 	{
 		int active = queue->data;
 		visited[active] = ACTIVE_VERTEX_CODE;
-		bfs_n--;
-		if (bfs_n < 1)
+		bfs_order[order++] = active;
+		bfs_step--;
+		if (bfs_step < 1)
 			break;
 		int i;
 		for (i = 0; i < vertices_count; i++)
@@ -112,8 +114,8 @@ void bfs(int vertices_count, double **adjacency_matrix, int *visited, double **b
 					push(&queue, i);
 					bfs_matrix[active][i] = 1;
 					printf("Vertex %d was visited!\n", i + 1);
-					bfs_n--;
-					if (bfs_n < 1)
+					bfs_step--;
+					if (bfs_step < 1)
 						break;
 				}
 			}
@@ -122,7 +124,7 @@ void bfs(int vertices_count, double **adjacency_matrix, int *visited, double **b
 		{
 			shift(&queue);
 			visited[active] = CLOSED_VERTEX_CODE;
-			bfs_n--;
+			bfs_step--;
 		}
 	}
 	printf("BFS STOPED!\n");

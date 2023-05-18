@@ -180,9 +180,10 @@ void draw_directed_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 	}
 }
 
-draw_bfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count, int bfs_n)
+void draw_bfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count, int bfs_step)
 {
 	int bfs_visited[VERTICES_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	int bfs_order[VERTICES_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 	double **bfs_matrix = create_matrix(VERTICES_COUNT);
 
 	HPEN active_pen = CreatePen(PS_SOLID, 4, RGB(34, 139, 34));
@@ -190,7 +191,7 @@ draw_bfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *verte
 	HPEN closed_pen = CreatePen(PS_SOLID, 4, RGB(255, 165, 0));
 	HPEN bfs_edge_pen = CreatePen(PS_SOLID, 3, RGB(118, 255, 122));
 
-	bfs(VERTICES_COUNT, matrix, bfs_visited, bfs_matrix, bfs_n);
+	bfs(VERTICES_COUNT, matrix, bfs_visited, bfs_matrix, bfs_step, bfs_order);
 	printf("\nBFS matrix:\n");
 	print_matrix(bfs_matrix, VERTICES_COUNT);
 

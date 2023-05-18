@@ -41,7 +41,7 @@ double calc_y(double rotate_angle, int i, int margin, int coefficient)
 	return y;
 }
 
-Vertex *create_vertices(double count, int x_margin, int y_margin, int coefficient)
+Vertex *create_vertices(int count, int x_margin, int y_margin, int coefficient)
 {
 	if (count < 1)
 	{

@@ -12,8 +12,8 @@
 // Число вершин: 11
 // Розміщення вершин: коло
 
-int bfs_n = 0;
-int dfs_n = 0;
+int bfs_step = 0;
+int dfs_step = 0;
 
 HWND bfs_button;
 HWND dfs_button;
@@ -32,7 +32,7 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	switch (drawing_flag)
 	{
 	case DRAW_DIRECTED_CODE:
-		if (!bfs_n && !dfs_n)
+		if (!bfs_step && !dfs_step)
 		{
 			draw_directed_graph(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT);
 		}
@@ -45,7 +45,7 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	printf("\nAdjacency matrix of the depicted graph:\n\n");
 	print_matrix(matrix, MATRIX_SIZE);
 
-	draw_bfs(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT, bfs_n);
+	draw_bfs(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT, bfs_step);
 
 	// очищення пам'яті
 	delete_matrix(matrix, MATRIX_SIZE);
@@ -120,11 +120,11 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
 		if (lParam == bfs_button)
 		{
-			bfs_n++;
+			bfs_step++;
 		}
 		else if (lParam == dfs_button)
 		{
-			dfs_n++;
+			dfs_step++;
 		}
 		RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
 		break;
