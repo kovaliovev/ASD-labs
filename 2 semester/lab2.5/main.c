@@ -21,18 +21,21 @@ LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип ф�
 
 void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 {
-	Rectangle(hdc, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-
 	HPEN vertex_pen = CreatePen(PS_SOLID, 3, RGB(50, 0, 255)); // стиль = неперервний; товщина = 3; колір = синій
 	HPEN edge_pen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));		 // стиль = неперервний; товщина = 1; колір = чорний
 
 	double **matrix = get_rand_matrix(MATRIX_SIZE);
+	double multiplier = 1.0 - N3 * 0.01 - N4 * 0.005 - 0.15;
+	mult_matrix(matrix, MATRIX_SIZE, multiplier);
 	Vertex *vertex = create_vertices(VERTICES_COUNT, STANDART_GRAPH_MARGIN, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
 
 	switch (drawing_flag)
 	{
 	case DRAW_DIRECTED_CODE:
-		draw_directed_graph(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT);
+		if (!bfs_n && !dfs_n)
+		{
+			draw_directed_graph(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT);
+		}
 		break;
 	default:
 		printf("ERROR! Value of drawing flag is not equal to any drawing code!\n");
@@ -43,7 +46,7 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	print_matrix(matrix, MATRIX_SIZE);
 
 	draw_bfs(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT, bfs_n);
-	
+
 	// очищення пам'яті
 	delete_matrix(matrix, MATRIX_SIZE);
 	delete_vertices(&vertex);

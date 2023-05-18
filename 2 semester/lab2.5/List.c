@@ -55,14 +55,12 @@ void push(List **pp_head, int data)
 	current->p_next = new_elem;
 }
 
-int shift(List **pp_head)
+void shift(List **pp_head)
 {
 	List *current = (*pp_head);
-	int data = current->data;
 
 	(*pp_head) = current->p_next;
 	free(current);
-	return data;
 }
 
 void print_list(List *p_head)
