@@ -100,8 +100,7 @@ void bfs(int vertices_count, double **adjacency_matrix, int *visited, double **b
 		int active = queue->data;
 		visited[active] = ACTIVE_VERTEX_CODE;
 		bfs_order[order++] = active;
-		bfs_step--;
-		if (bfs_step < 1)
+		if (--bfs_step < 1)
 			break;
 		int i;
 		for (i = 0; i < vertices_count; i++)
@@ -114,8 +113,7 @@ void bfs(int vertices_count, double **adjacency_matrix, int *visited, double **b
 					push(&queue, i);
 					bfs_matrix[active][i] = 1;
 					printf("Vertex %d was visited!\n", i + 1);
-					bfs_step--;
-					if (bfs_step < 1)
+					if (--bfs_step < 1)
 						break;
 				}
 			}
