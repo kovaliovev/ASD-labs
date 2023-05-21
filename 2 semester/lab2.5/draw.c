@@ -182,8 +182,14 @@ void draw_directed_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 
 void draw_bfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count, int bfs_step)
 {
-	int bfs_visited[VERTICES_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-	int bfs_order[VERTICES_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	int bfs_visited[VERTICES_COUNT];
+	int bfs_order[VERTICES_COUNT];
+	int i;
+	for (i = 0; i < VERTICES_COUNT; i++)
+	{
+		bfs_visited[i] = 0;
+		bfs_order[i] = 0;
+	}
 	double **bfs_matrix = create_matrix(VERTICES_COUNT);
 
 	HPEN active_pen = CreatePen(PS_SOLID, 4, RGB(34, 139, 34));
@@ -240,8 +246,14 @@ void draw_bfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *
 
 void draw_dfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count, int dfs_step)
 {
-	int dfs_visited[VERTICES_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-	int dfs_order[VERTICES_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	int dfs_visited[VERTICES_COUNT];
+	int dfs_order[VERTICES_COUNT];
+	int i;
+	for (i = 0; i < VERTICES_COUNT; i++)
+	{
+		dfs_visited[i] = 0;
+		dfs_order[i] = 0;
+	}
 	double **dfs_matrix = create_matrix(VERTICES_COUNT);
 
 	HPEN active_pen = CreatePen(PS_SOLID, 4, RGB(34, 139, 34));

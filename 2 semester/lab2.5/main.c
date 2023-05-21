@@ -44,10 +44,16 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	// вивід матриці суміжності
 	printf("\nAdjacency matrix of the depicted graph:\n\n");
 	print_matrix(matrix, MATRIX_SIZE);
-	
-	draw_dfs(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT, dfs_step);
-	draw_bfs(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT, bfs_step);
-	
+
+	if (bfs_step && !dfs_step)
+	{
+		draw_bfs(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT, bfs_step);
+	}
+	else if (dfs_step && !bfs_step)
+	{
+		draw_dfs(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT, dfs_step);
+	}
+
 	// очищення пам'яті
 	delete_matrix(matrix, MATRIX_SIZE);
 	delete_vertices(&vertex);
