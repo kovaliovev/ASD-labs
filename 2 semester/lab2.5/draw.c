@@ -237,3 +237,61 @@ void draw_bfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *
 	}
 	delete_matrix(bfs_matrix, VERTICES_COUNT);
 }
+
+void draw_dfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count, int dfs_step)
+{
+	int dfs_visited[VERTICES_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	int dfs_order[VERTICES_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	double **dfs_matrix = create_matrix(VERTICES_COUNT);
+
+	HPEN active_pen = CreatePen(PS_SOLID, 4, RGB(34, 139, 34));
+	HPEN new_pen = CreatePen(PS_SOLID, 4, RGB(57, 255, 20));
+	HPEN closed_pen = CreatePen(PS_SOLID, 4, RGB(255, 165, 0));
+	HPEN bfs_edge_pen = CreatePen(PS_SOLID, 3, RGB(118, 255, 122));
+
+	dfs(VERTICES_COUNT, matrix, dfs_visited, dfs_matrix, dfs_step, dfs_order);
+	printf("\nDFS matrix:\n");
+	print_matrix(dfs_matrix, VERTICES_COUNT);
+
+	SelectObject(hdc, bfs_edge_pen);
+
+	Vertex *current_vertex = vertex;
+	int row, col;
+	for (row = 0; row < vertices_count; row++)
+	{
+		for (col = 0; col < vertices_count; col++)
+		{
+			if (dfs_matrix[row][col])
+			{
+				double start_x = current_vertex->x;
+				double start_y = current_vertex->y;
+
+				double end_x = calc_x(360.0 / vertices_count, col, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
+				double end_y = calc_y(360.0 / vertices_count, col, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
+
+				draw_arrowed_edge(edge_pen, start_x, start_y, end_x, end_y, hdc);
+			}
+		}
+		current_vertex = current_vertex->p_next;
+	}
+
+	current_vertex = vertex;
+	while (current_vertex != NULL)
+	{
+		switch (dfs_visited[current_vertex->num - 1])
+		{
+		case ACTIVE_VERTEX_CODE:
+			draw_vertex(active_pen, current_vertex, hdc);
+			break;
+		case NEW_VERTEX_CODE:
+			draw_vertex(new_pen, current_vertex, hdc);
+			break;
+		case CLOSED_VERTEX_CODE:
+			draw_vertex(closed_pen, current_vertex, hdc);
+			break;
+		}
+
+		current_vertex = current_vertex->p_next;
+	}
+	delete_matrix(dfs_matrix, VERTICES_COUNT);
+}
