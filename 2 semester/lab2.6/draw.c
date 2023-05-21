@@ -65,10 +65,8 @@ void draw_reflect_edge(HPEN edge_pen, Vertex *vertex, HDC hdc)
 
 void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count)
 {
-	double multiplier = 1.0 - N3 * 0.01 - N4 * 0.005 - 0.05;
-	mult_matrix(matrix, MATRIX_SIZE, multiplier);
 	make_matrix_symmetric(matrix, MATRIX_SIZE);
-
+	
 	SelectObject(hdc, edge_pen);
 
 	Vertex *current_vertex = vertex;

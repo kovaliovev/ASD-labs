@@ -60,6 +60,48 @@ double **get_rand_matrix(int size)
 	return matrix;
 }
 
+double **get_matrix_B(double **matrix_Wt, int size)
+{
+	double **matrix_B = create_matrix(size);
+	int i, j;
+	for (i = 0; i < size; i++)
+	{
+		for (j = 0; j < size; j++)
+		{
+			matrix_B[i][j] = matrix_Wt[i][j] == 0.0 ? 0.0 : 1.0;
+		}
+	}
+	return matrix_B;
+}
+
+double **get_matrix_C(double **matrix_B, int size)
+{
+	double **matrix_C = create_matrix(size);
+	int i, j;
+	for (i = 0; i < size; i++)
+	{
+		for (j = 0; j < size; j++)
+		{
+			matrix_C[i][j] = matrix_B[i][j] != matrix_B[j][i] ? 1.0 : 0.0;
+		}
+	}
+	return matrix_C;
+}
+
+double **get_matrix_D(double **matrix_B, int size)
+{
+	double **matrix_D = create_matrix(size);
+	int i, j;
+	for (i = 0; i < size; i++)
+	{
+		for (j = 0; j < size; j++)
+		{
+			matrix_D[i][j] = (matrix_B[i][j] == matrix_B[j][i] && matrix_B[i][j]) ? 1.0 : 0.0;
+		}
+	}
+	return matrix_D;
+}
+
 void make_matrix_symmetric(double **matrix, int size)
 {
 	int i, j;
@@ -75,7 +117,19 @@ void make_matrix_symmetric(double **matrix, int size)
 	}
 }
 
-void mult_matrix(double **matrix, int size, double coefficient)
+void make_matrix_rounded(double **matrix, int size)
+{
+	int i, j;
+	for (i = 0; i < size; i++)
+	{
+		for (j = 0; j < size; j++)
+		{
+			matrix[i][j] = round(matrix[i][j]);
+		}
+	}
+}
+
+void mulmr(double **matrix, int size, double coefficient)
 {
 	int i, j;
 	for (i = 0; i < size; i++)
@@ -83,6 +137,30 @@ void mult_matrix(double **matrix, int size, double coefficient)
 		for (j = 0; j < size; j++)
 		{
 			matrix[i][j] = floor(matrix[i][j] * coefficient);
+		}
+	}
+}
+
+void mult_matrix_by_num(double **matrix, int size, double number)
+{
+	int i, j;
+	for (i = 0; i < size; i++)
+	{
+		for (j = 0; j < size; j++)
+		{
+			matrix[i][j] *= number;
+		}
+	}
+}
+
+void mult_matrix_by_matrix(double **result_matrix, int size, double **matrix)
+{
+	int i, j;
+	for (i = 0; i < size; i++)
+	{
+		for (j = 0; j < size; j++)
+		{
+			result_matrix[i][j] *= matrix[i][j];
 		}
 	}
 }
