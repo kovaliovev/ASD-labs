@@ -178,6 +178,8 @@ void draw_directed_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 		draw_vertex(vertex_pen, current_vertex, hdc);
 		current_vertex = current_vertex->p_next;
 	}
+
+	draw_legend(hdc, 820, 100);
 }
 
 void draw_bfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count, int bfs_step)
@@ -306,4 +308,32 @@ void draw_dfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *
 		current_vertex = current_vertex->p_next;
 	}
 	delete_matrix(dfs_matrix, VERTICES_COUNT);
+}
+
+void draw_legend(HDC hdc, int start_x, int start_y)
+{
+	HPEN default_pen = CreatePen(PS_SOLID, 3, RGB(50, 0, 255));
+	HPEN active_pen = CreatePen(PS_SOLID, 4, RGB(34, 139, 34));
+	HPEN new_pen = CreatePen(PS_SOLID, 4, RGB(57, 255, 20));
+	HPEN closed_pen = CreatePen(PS_SOLID, 4, RGB(255, 165, 0));
+
+	SelectObject(hdc, default_pen);
+	Ellipse(hdc, start_x + VERTEX_DIAMETER, start_y + VERTEX_DIAMETER, start_x, start_y);
+	TextOut(hdc, start_x + VERTEX_DIAMETER * 1.5, start_y + VERTEX_RADIUS/ 1.5, "NOT VISITED VERTEX", 19);
+	start_y += 100;
+
+	SelectObject(hdc, active_pen);
+	Ellipse(hdc, start_x + VERTEX_DIAMETER, start_y + VERTEX_DIAMETER, start_x, start_y);
+	TextOut(hdc, start_x + VERTEX_DIAMETER * 1.5, start_y + VERTEX_RADIUS/ 1.5, "ACTIVE VERTEX", 14);
+	start_y += 100;
+
+	SelectObject(hdc, new_pen);
+	Ellipse(hdc, start_x + VERTEX_DIAMETER, start_y + VERTEX_DIAMETER, start_x, start_y);
+	TextOut(hdc, start_x + VERTEX_DIAMETER * 1.5, start_y + VERTEX_RADIUS/ 1.5, "VISITED VERTEX", 15);
+	start_y += 100;
+
+	SelectObject(hdc, closed_pen);
+	Ellipse(hdc, start_x + VERTEX_DIAMETER, start_y + VERTEX_DIAMETER, start_x, start_y);
+	TextOut(hdc, start_x + VERTEX_DIAMETER * 1.5, start_y + VERTEX_RADIUS/ 1.5, "CLOSED VERTEX", 14);
+	start_y += 100;
 }

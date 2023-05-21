@@ -98,8 +98,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 
 	ShowWindow(hWnd, nCmdShow);
 
-	bfs_button = CreateWindow("button", "BFS STEP", WS_VISIBLE | WS_CHILD | WS_BORDER, 854, 610, 196, 32, hWnd, NULL, NULL, NULL);
-	dfs_button = CreateWindow("button", "DFS STEP", WS_VISIBLE | WS_CHILD | WS_BORDER, 854, 650, 196, 32, hWnd, NULL, NULL, NULL);
+	bfs_button = CreateWindow("button", "BFS STEP", WS_VISIBLE | WS_CHILD | WS_BORDER, 854, 550, 196, 32, hWnd, NULL, NULL, NULL);
+	dfs_button = CreateWindow("button", "DFS STEP", WS_VISIBLE | WS_CHILD | WS_BORDER, 854, 590, 196, 32, hWnd, NULL, NULL, NULL);
 
 	while (GetMessage(&lpMsg, hWnd, 0, 0))
 	{
