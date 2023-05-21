@@ -95,6 +95,7 @@ void bfs(int vertices_count, double **adjacency_matrix, int *visited, double **b
 	int order = 0;
 	List *queue = create_list(0);
 	printf("Vertex %d was visited!\n", 1);
+
 	while (queue != NULL && bfs_step > 0)
 	{
 		int active = queue->data;
@@ -103,6 +104,7 @@ void bfs(int vertices_count, double **adjacency_matrix, int *visited, double **b
 		if (--bfs_step < 1)
 			break;
 		int i;
+
 		for (i = 0; i < vertices_count; i++)
 		{
 			if (adjacency_matrix[active][i] && !visited[i])
@@ -122,6 +124,7 @@ void bfs(int vertices_count, double **adjacency_matrix, int *visited, double **b
 			bfs_step--;
 		}
 	}
+
 	printf("BFS STOPED!\n");
 	delete_list(&queue);
 }
@@ -139,6 +142,7 @@ void dfs(int vertices_count, double **adjacency_matrix, int *visited, double **d
 		dfs_order[order++] = active;
 		int i;
 		int is_new_vertex_found = 0;
+
 		for (i = 0; i < vertices_count; i++)
 		{
 			if (adjacency_matrix[active][i] && !visited[i])
@@ -150,29 +154,33 @@ void dfs(int vertices_count, double **adjacency_matrix, int *visited, double **d
 				dfs_matrix[active][i] = 1;
 				printf("Vertex %d was visited!\n", i + 1);
 				active = i;
+
 				if (--dfs_step < 1)
 					break;
 			}
 		}
+
 		if (!is_new_vertex_found)
 		{
 			shift(&stack);
 			if (stack == NULL)
 			{
-				int m;
-				for (m = 0; m < vertices_count; m++)
+				int j;
+				for (j = 0; j < vertices_count; j++)
 				{
-					visited[m] = CLOSED_VERTEX_CODE;
+					visited[j] = CLOSED_VERTEX_CODE;
 				}
 			}
 			else
 			{
-				visited[active] = NEW_VERTEX_CODE;
-				visited[stack->data] = ACTIVE_VERTEX_CODE;
+				visited[active] = CLOSED_VERTEX_CODE;
+				active = stack->data;
+				visited[active] = ACTIVE_VERTEX_CODE;
 				dfs_step--;
 			}
 		}
 	}
+
 	printf("DFS STOPED!\n");
 	delete_list(&stack);
 }
