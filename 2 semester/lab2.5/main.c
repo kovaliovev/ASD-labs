@@ -12,9 +12,14 @@
 // Число вершин: 11
 // Розміщення вершин: коло
 
+int is_bfs_started = 0;
+int is_dfs_started = 0;
+
 int bfs_step = 0;
 int dfs_step = 0;
 
+HWND start_bfs_button;
+HWND start_dfs_button;
 HWND bfs_button;
 HWND dfs_button;
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип функції потоку вікна
@@ -98,6 +103,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 
 	ShowWindow(hWnd, nCmdShow);
 
+	start_bfs_button = CreateWindow("button", "START BFS", WS_VISIBLE | WS_CHILD | WS_BORDER, 964, 560, 196, 32, hWnd, NULL, NULL, NULL);
+	start_dfs_button = CreateWindow("button", "START DFS", WS_VISIBLE | WS_CHILD | WS_BORDER, 744, 560, 196, 32, hWnd, NULL, NULL, NULL);
 	bfs_button = CreateWindow("button", "BFS STEP", WS_VISIBLE | WS_CHILD | WS_BORDER, 964, 600, 196, 32, hWnd, NULL, NULL, NULL);
 	dfs_button = CreateWindow("button", "DFS STEP", WS_VISIBLE | WS_CHILD | WS_BORDER, 744, 600, 196, 32, hWnd, NULL, NULL, NULL);
 
@@ -125,11 +132,25 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam)
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_COMMAND:
-		if (lParam == bfs_button && !dfs_step)
+		if (lParam == start_bfs_button)
+		{
+			is_bfs_started = 1;
+			is_dfs_started = 0;
+			bfs_step = 0;
+			dfs_step = 0;
+		}
+		else if (lParam == start_dfs_button)
+		{
+			is_bfs_started = 0;
+			is_dfs_started = 1;
+			bfs_step = 0;
+			dfs_step = 0;
+		}
+		else if (lParam == bfs_button && is_bfs_started)
 		{
 			bfs_step++;
 		}
-		else if (lParam == dfs_button && !bfs_step)
+		else if (lParam == dfs_button && is_dfs_started)
 		{
 			dfs_step++;
 		}
