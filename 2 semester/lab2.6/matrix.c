@@ -102,6 +102,34 @@ double **get_matrix_D(double **matrix_B, int size)
 	return matrix_D;
 }
 
+double **get_matrix_Tr(int size)
+{
+	double **matrix_Tr = create_matrix(size);
+	int i, j;
+	for (i = 0; i < size; i++)
+	{
+		for (j = 0; j < size; j++)
+		{
+			matrix_Tr[i][j] = i < j ? 1.0 : 0.0;
+		}
+	}
+	return matrix_Tr;
+}
+
+double **get_matrix_W(double **matrix_Wt, int size)
+{
+	double **matrix_W = create_matrix(size);
+	int i, j;
+	for (i = 0; i < size; i++)
+	{
+		for (j = 0; j < size; j++)
+		{
+			matrix_W[i][j] = matrix_Wt[i][j] ? matrix_Wt[i][j] : matrix_Wt[j][i];
+		}
+	}
+	return matrix_W;
+}
+
 void make_matrix_symmetric(double **matrix, int size)
 {
 	int i, j;
@@ -161,6 +189,18 @@ void mult_matrix_by_matrix(double **result_matrix, int size, double **matrix)
 		for (j = 0; j < size; j++)
 		{
 			result_matrix[i][j] *= matrix[i][j];
+		}
+	}
+}
+
+void add_matrix_to_matrix(double **result_matrix, int size, double **matrix)
+{
+	int i, j;
+	for (i = 0; i < size; i++)
+	{
+		for (j = 0; j < size; j++)
+		{
+			result_matrix[i][j] += matrix[i][j];
 		}
 	}
 }

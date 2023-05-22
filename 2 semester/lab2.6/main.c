@@ -43,6 +43,18 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	double **matrix_D = get_matrix_D(matrix_B, VERTICES_COUNT);
 	// print_matrix(matrix_D, MATRIX_SIZE);
 
+	double **matrix_Tr = get_matrix_Tr(VERTICES_COUNT);
+	// print_matrix(matrix_Tr, MATRIX_SIZE);
+
+	mult_matrix_by_matrix(matrix_D, VERTICES_COUNT, matrix_Tr);
+	add_matrix_to_matrix(matrix_C, VERTICES_COUNT, matrix_D);
+	mult_matrix_by_matrix(matrix_Wt, VERTICES_COUNT, matrix_C);
+	//print_matrix(matrix_Wt, MATRIX_SIZE);
+
+	double **matrix_W = get_matrix_W(matrix_Wt, VERTICES_COUNT);
+	printf("Matrix of weights:\n");
+	print_matrix(matrix_W, MATRIX_SIZE);
+
 	switch (drawing_flag)
 	{
 	case DRAW_UNDIRECTED_CODE:
@@ -61,6 +73,8 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	delete_matrix(matrix_B, MATRIX_SIZE);
 	delete_matrix(matrix_C, MATRIX_SIZE);
 	delete_matrix(matrix_D, MATRIX_SIZE);
+	delete_matrix(matrix_Tr, MATRIX_SIZE);
+	delete_matrix(matrix_W, MATRIX_SIZE);
 	delete_vertices(&vertex);
 	printf("=========================================================\n");
 }
