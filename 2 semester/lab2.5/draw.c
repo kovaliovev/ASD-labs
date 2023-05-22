@@ -210,6 +210,30 @@ void draw_directed_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 	draw_legend(hdc, 50, 700);
 }
 
+void draw_visited_vertices(HDC hdc, int *order, int vertices_count, int start_x, int start_y)
+{
+	int is_all_visited = 1;
+	int i;
+	for (i = 0; i < vertices_count; i++)
+	{
+		if (order[i])
+		{
+			char message[29];
+			sprintf(message, "[%d] Vertex #%d was visited!", i + 1, order[i]);
+			TextOut(hdc, start_x, start_y, message, 27);
+			start_y += 32;
+		}
+		else
+		{
+			is_all_visited = 0;
+		}
+	}
+	if (is_all_visited)
+	{
+		TextOut(hdc, start_x, start_y, "All vertices were visited!", 27);
+	}
+}
+
 void draw_bfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count, int bfs_step)
 {
 	int bfs_visited[VERTICES_COUNT];
@@ -272,6 +296,8 @@ void draw_bfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *
 		current_vertex = current_vertex->p_next;
 	}
 	delete_matrix(bfs_matrix, VERTICES_COUNT);
+
+	draw_visited_vertices(hdc, bfs_order, VERTICES_COUNT, 870, 100);
 }
 
 void draw_dfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count, int dfs_step)
@@ -336,4 +362,6 @@ void draw_dfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *
 		current_vertex = current_vertex->p_next;
 	}
 	delete_matrix(dfs_matrix, VERTICES_COUNT);
+
+	draw_visited_vertices(hdc, dfs_order, VERTICES_COUNT, 870, 100);
 }
