@@ -45,11 +45,11 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	printf("\nAdjacency matrix of the depicted graph:\n\n");
 	print_matrix(matrix, MATRIX_SIZE);
 
-	if (bfs_step && !dfs_step)
+	if (bfs_step)
 	{
 		draw_bfs(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT, bfs_step);
 	}
-	else if (dfs_step && !bfs_step)
+	else if (dfs_step)
 	{
 		draw_dfs(hdc, vertex_pen, edge_pen, matrix, vertex, VERTICES_COUNT, dfs_step);
 	}
@@ -125,11 +125,11 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam)
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_COMMAND:
-		if (lParam == bfs_button)
+		if (lParam == bfs_button && !dfs_step)
 		{
 			bfs_step++;
 		}
-		else if (lParam == dfs_button)
+		else if (lParam == dfs_button && !bfs_step)
 		{
 			dfs_step++;
 		}
