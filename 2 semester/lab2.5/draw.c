@@ -13,8 +13,8 @@
 #define WINDOW_RIGHT_TOP_CORNER_Y 5
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 820
-#define STANDART_GRAPH_MARGIN 350
-#define STANDART_GRAPH_COEF 300
+#define STANDART_GRAPH_MARGIN 335
+#define STANDART_GRAPH_COEF 285
 #define N3 1
 #define N4 0
 
@@ -124,11 +124,11 @@ void draw_arrowed_curve_edge(HPEN edge_pen, double start_x, double start_y, doub
 	if (diff_x > diff_y)
 	{
 		center_x = (start_x + end_x) / 2;
-		center_y = (start_y + end_y) / 2 - 50;
+		center_y = (start_y + end_y) / 2 - 45;
 	}
 	else
 	{
-		center_x = (start_x + end_x) / 2 - 50;
+		center_x = (start_x + end_x) / 2 - 45;
 		center_y = (start_y + end_y) / 2;
 	}
 	draw_edge(edge_pen, start_x, start_y, center_x, center_y, hdc);
@@ -179,7 +179,7 @@ void draw_directed_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 		current_vertex = current_vertex->p_next;
 	}
 
-	draw_legend(hdc, 820, 100);
+	draw_legend(hdc, 50, 700);
 }
 
 void draw_bfs(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count, int bfs_step)
@@ -319,21 +319,21 @@ void draw_legend(HDC hdc, int start_x, int start_y)
 
 	SelectObject(hdc, default_pen);
 	Ellipse(hdc, start_x + VERTEX_DIAMETER, start_y + VERTEX_DIAMETER, start_x, start_y);
-	TextOut(hdc, start_x + VERTEX_DIAMETER * 1.5, start_y + VERTEX_RADIUS/ 1.5, "NOT VISITED VERTEX", 19);
-	start_y += 100;
+	TextOut(hdc, start_x + VERTEX_DIAMETER * 1.2, start_y + VERTEX_RADIUS/ 1.2, "NOT VISITED VERTEX", 19);
+	start_x += 320;
 
 	SelectObject(hdc, active_pen);
 	Ellipse(hdc, start_x + VERTEX_DIAMETER, start_y + VERTEX_DIAMETER, start_x, start_y);
-	TextOut(hdc, start_x + VERTEX_DIAMETER * 1.5, start_y + VERTEX_RADIUS/ 1.5, "ACTIVE VERTEX", 14);
-	start_y += 100;
+	TextOut(hdc, start_x + VERTEX_DIAMETER * 1.2, start_y + VERTEX_RADIUS/ 1.2, "ACTIVE VERTEX", 14);
+	start_x += 320;
 
 	SelectObject(hdc, new_pen);
 	Ellipse(hdc, start_x + VERTEX_DIAMETER, start_y + VERTEX_DIAMETER, start_x, start_y);
-	TextOut(hdc, start_x + VERTEX_DIAMETER * 1.5, start_y + VERTEX_RADIUS/ 1.5, "VISITED VERTEX", 15);
-	start_y += 100;
+	TextOut(hdc, start_x + VERTEX_DIAMETER * 1.2, start_y + VERTEX_RADIUS/ 1.2, "VISITED VERTEX", 15);
+	start_x += 320;
 
 	SelectObject(hdc, closed_pen);
 	Ellipse(hdc, start_x + VERTEX_DIAMETER, start_y + VERTEX_DIAMETER, start_x, start_y);
-	TextOut(hdc, start_x + VERTEX_DIAMETER * 1.5, start_y + VERTEX_RADIUS/ 1.5, "CLOSED VERTEX", 14);
-	start_y += 100;
+	TextOut(hdc, start_x + VERTEX_DIAMETER * 1.2, start_y + VERTEX_RADIUS/ 1.2, "CLOSED VERTEX", 14);
+	start_x += 320;
 }
