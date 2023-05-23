@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+/*
+	Файл описує структуру даних, яка використовується для створення черги та стеку, 
+	для виконання bfs та dfs обходів.
+*/
 typedef struct list
 {
 	int data;
