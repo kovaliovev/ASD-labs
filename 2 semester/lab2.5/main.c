@@ -12,19 +12,13 @@
 // Число вершин: 11
 // Розміщення вершин: коло
 
-int is_bfs_started = 0;
-int is_dfs_started = 0;
-
-int bfs_step = 0;
-int dfs_step = 0;
-
 HWND start_bfs_button;
 HWND start_dfs_button;
 HWND bfs_button;
 HWND dfs_button;
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип функції потоку вікна
 
-void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
+void draw_window(HWND hWnd, HDC hdc, int drawing_flag, int bfs_step, int dfs_step)
 {
 	HPEN vertex_pen = CreatePen(PS_SOLID, 3, RGB(50, 0, 255)); // стиль = неперервний; товщина = 3; колір = синій
 	HPEN edge_pen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));		 // стиль = неперервний; товщина = 1; колір = чорний
@@ -124,11 +118,17 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam)
 
 	static int drawing_flag = DRAW_DIRECTED_CODE;
 
+	static int is_bfs_started = 0;
+	static int is_dfs_started = 0;
+
+	static int bfs_step = 0;
+	static int dfs_step = 0;
+
 	switch (messg)
 	{
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-		draw_window(hWnd, hdc, drawing_flag);
+		draw_window(hWnd, hdc, drawing_flag, bfs_step, dfs_step);
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_COMMAND:
