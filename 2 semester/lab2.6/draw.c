@@ -63,10 +63,8 @@ void draw_reflect_edge(HPEN edge_pen, Vertex *vertex, HDC hdc)
 	}
 }
 
-void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count)
+void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count, double **weights_matrix)
 {
-	make_matrix_symmetric(matrix, MATRIX_SIZE);
-	
 	SelectObject(hdc, edge_pen);
 
 	Vertex *current_vertex = vertex;
@@ -77,11 +75,18 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **mat
 		{
 			if (matrix[row][col])
 			{
-				double start_x = current_vertex->x;
-				double start_y = current_vertex->y;
+				int start_x = current_vertex->x;
+				int start_y = current_vertex->y;
 
-				double end_x = calc_x(360.0 / vertices_count, col, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
-				double end_y = calc_y(360.0 / vertices_count, col, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
+				int end_x = calc_x(360.0 / vertices_count, col, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
+				int end_y = calc_y(360.0 / vertices_count, col, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
+
+				int center_x = (start_x + end_x) / 2;
+				int center_y = (start_y + end_y) / 2;
+
+				char weight[4];
+				sprintf(weight, "%.0lf", weights_matrix[row][col]);
+				TextOut(hdc, center_x, center_y, weight, 4);
 
 				if (row == col)
 				{
@@ -102,4 +107,6 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **mat
 		draw_vertex(vertex_pen, current_vertex, hdc);
 		current_vertex = current_vertex->p_next;
 	}
+
+	make_matrix_symmetric(matrix, MATRIX_SIZE);
 }

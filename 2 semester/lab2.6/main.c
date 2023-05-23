@@ -58,7 +58,7 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	switch (drawing_flag)
 	{
 	case DRAW_UNDIRECTED_CODE:
-		draw_undirected_graph(hdc, vertex_pen, edge_pen, matrix_A, vertex, VERTICES_COUNT);
+		draw_undirected_graph(hdc, vertex_pen, edge_pen, matrix_A, vertex, VERTICES_COUNT, matrix_W);
 		break;
 	default:
 		printf("ERROR! Value of drawing flag is not equal to any drawing code!\n");
