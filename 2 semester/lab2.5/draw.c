@@ -210,6 +210,23 @@ void draw_directed_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matri
 	draw_legend(hdc, 50, 700);
 }
 
+void draw_visiting_order(HDC hdc, int vertices_count, int *order, int start_x, int start_y)
+{
+	int x = start_x;
+	int y = start_y;
+	int i;
+	for (i = 0; i < vertices_count; i++)
+	{
+		char index[3];
+		sprintf(index, "%d", i + 1);
+		TextOut(hdc, x, y, index, 2);
+		char vertex[2];
+		sprintf(vertex, "%d", order[i]);
+		TextOut(hdc, x, y + 16, vertex, 2);
+		x += 24;
+	}
+}
+
 void draw_visited_vertices(HDC hdc, int *order, int vertices_count, int start_x, int start_y)
 {
 	int is_all_visited = 1;
@@ -231,6 +248,9 @@ void draw_visited_vertices(HDC hdc, int *order, int vertices_count, int start_x,
 	if (is_all_visited)
 	{
 		TextOut(hdc, start_x, start_y, "All vertices were visited!", 27);
+		start_y += 32;
+		start_x -= 32;
+		draw_visiting_order(hdc, vertices_count, order, start_x, start_y);
 	}
 }
 
