@@ -81,8 +81,8 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **mat
 				int end_x = calc_x(360.0 / vertices_count, col, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
 				int end_y = calc_y(360.0 / vertices_count, col, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
 
-				int center_x = (start_x + end_x) / 2;
-				int center_y = (start_y + end_y) / 2;
+				int center_x = (start_x + end_x) / 2 - 10;
+				int center_y = (start_y + end_y) / 2 - 10;
 
 				char weight[4];
 				sprintf(weight, "%.0lf", weights_matrix[row][col]);

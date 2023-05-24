@@ -1,4 +1,5 @@
 #include "draw.c"
+#include "Edge.c"
 /*
 	Головний файл проекту, описує створення вікна та взаємодію з ним.
 */
@@ -67,6 +68,10 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	// вивід матриці суміжності
 	printf("\nAdjacency matrix of the depicted graph:\n\n");
 	print_matrix(matrix_A, MATRIX_SIZE);
+
+	Edge * edge = create_edges(matrix_W, VERTICES_COUNT);
+	print_edges(edge);
+
 	// очищення пам'яті
 	delete_matrix(matrix_A, MATRIX_SIZE);
 	delete_matrix(matrix_Wt, MATRIX_SIZE);
@@ -76,6 +81,7 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	delete_matrix(matrix_Tr, MATRIX_SIZE);
 	delete_matrix(matrix_W, MATRIX_SIZE);
 	delete_vertices(&vertex);
+	delete_edges(&edge);
 	printf("=========================================================\n");
 }
 
