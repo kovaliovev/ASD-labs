@@ -1,5 +1,4 @@
 #include "draw.c"
-#include "Edge.c"
 /*
 	Головний файл проекту, описує створення вікна та взаємодію з ним.
 */
@@ -50,16 +49,19 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	mult_matrix_by_matrix(matrix_D, VERTICES_COUNT, matrix_Tr);
 	add_matrix_to_matrix(matrix_C, VERTICES_COUNT, matrix_D);
 	mult_matrix_by_matrix(matrix_Wt, VERTICES_COUNT, matrix_C);
-	//print_matrix(matrix_Wt, MATRIX_SIZE);
+	// print_matrix(matrix_Wt, MATRIX_SIZE);
 
 	double **matrix_W = get_matrix_W(matrix_Wt, VERTICES_COUNT);
 	printf("Matrix of weights:\n");
 	print_matrix(matrix_W, MATRIX_SIZE);
 
+	Edge *edge = create_edges(matrix_W, VERTICES_COUNT);
+	print_edges(edge);
+
 	switch (drawing_flag)
 	{
 	case DRAW_UNDIRECTED_CODE:
-		draw_undirected_graph(hdc, vertex_pen, edge_pen, matrix_A, vertex, VERTICES_COUNT, matrix_W);
+		draw_undirected_graph(hdc, vertex_pen, edge_pen, matrix_A, vertex, VERTICES_COUNT, edge);
 		break;
 	default:
 		printf("ERROR! Value of drawing flag is not equal to any drawing code!\n");
@@ -68,9 +70,6 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	// вивід матриці суміжності
 	printf("\nAdjacency matrix of the depicted graph:\n\n");
 	print_matrix(matrix_A, MATRIX_SIZE);
-
-	Edge * edge = create_edges(matrix_W, VERTICES_COUNT);
-	print_edges(edge);
 
 	// очищення пам'яті
 	delete_matrix(matrix_A, MATRIX_SIZE);
