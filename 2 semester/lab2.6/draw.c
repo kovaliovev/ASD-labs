@@ -20,7 +20,7 @@
 // Кольори:
 #define COL_BLACK RGB(0, 0, 0)
 #define COL_BLUE RGB(50, 0, 255)
-#define COL_GREEN RGB(50,205,50)
+#define COL_GREEN RGB(50, 205, 50)
 #define COL_RED RGB(255, 0, 0)
 #define COL_DARK_ORANGE RGB(255, 140, 0)
 #define COL_DARK_VIOLET RGB(148, 0, 211)
@@ -80,6 +80,18 @@ void draw_reflect_edge(HDC hdc, HPEN edge_pen, Vertex *vertex)
 	}
 }
 
+void write_weight(HDC hdc, COLORREF text_color, int weight, int start_x, int start_y, int end_x, int end_y)
+{
+	SetTextColor(hdc, text_color);
+
+	int text_x = (start_x + end_x) / 2 - 10;
+	int text_y = (start_y + end_y) / 2 - 10;
+
+	char str_weight[4];
+	sprintf(str_weight, "%d", weight);
+	TextOut(hdc, text_x, text_y, str_weight, strlen(str_weight));
+}
+
 void draw_undirected_graph(HDC hdc, HPEN vertex_pen, int vertices_count, double **matrix, Vertex *head_vertex, Edge *head_edge)
 {
 	make_matrix_symmetric(VERTICES_COUNT, matrix);
@@ -96,8 +108,7 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, int vertices_count, double 
 			{
 				COLORREF rand_color = get_random_color();
 				HPEN edge_pen = CreatePen(PS_SOLID, 1, rand_color);
-				SetTextColor(hdc, rand_color);
-				SelectObject(hdc, edge_pen);
+
 				if (row == col)
 				{
 					draw_reflect_edge(hdc, edge_pen, current_vertex);
@@ -111,13 +122,7 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, int vertices_count, double 
 					int end_y = calc_y(360.0 / vertices_count, col, GRAPH_COEF, GRAPH_Y_MARGIN);
 
 					draw_edge(hdc, edge_pen, start_x, start_y, end_x, end_y);
-
-					int center_x = (start_x + end_x) / 2 - 10;
-					int center_y = (start_y + end_y) / 2 - 10;
-
-					char weight[4];
-					sprintf(weight, "%d", current_edge->weight);
-					TextOut(hdc, center_x, center_y, weight, strlen(weight));
+					write_weight(hdc, rand_color, current_edge->weight, start_x, start_y, end_x, end_y);
 
 					current_edge = current_edge->p_next;
 				}

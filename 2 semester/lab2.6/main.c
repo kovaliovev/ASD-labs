@@ -62,7 +62,7 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	printf("AFTER SORTING:\n");
 	print_edges(head_edge);
 
-	draw_minimum_spanning_tree(hdc, spanning_tree_pen, VERTICES_COUNT, head_vertex, head_edge);
+	// draw_minimum_spanning_tree(hdc, spanning_tree_pen, VERTICES_COUNT, head_vertex, head_edge);
 
 	// вивід матриці суміжності
 	printf("\nAdjacency matrix of the depicted graph:\n\n");
