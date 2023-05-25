@@ -14,9 +14,9 @@
 #define WINDOW_RIGHT_TOP_CORNER_Y 5
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 820
-#define GRAPH_X_MARGIN 350
-#define GRAPH_Y_MARGIN 350
-#define GRAPH_COEF 300
+#define GRAPH_X_MARGIN 410
+#define GRAPH_Y_MARGIN 395
+#define GRAPH_COEF 325
 
 void draw_vertex(HDC hdc, HPEN vertex_pen, Vertex *vertex)
 {
