@@ -27,11 +27,12 @@
 #define COL_MEDIUM_VIOLET_RED RGB(199, 21, 133)
 #define COL_SIENNA RGB(160, 82, 45)
 #define COL_DARK_AQUA RGB(7, 144, 121)
+#define COL_DARK_PINK RGB(223, 7, 130)
 
 COLORREF get_random_color()
 {
-	COLORREF COLORS[] = {COL_RED, COL_DARK_ORANGE, COL_FOREST_GREEN, COL_DARK_VIOLET, COL_MEDIUM_VIOLET_RED, COL_SIENNA, COL_BLACK, COL_DARK_AQUA};
-	int random_number = round(get_rand_num(0, 7));
+	COLORREF COLORS[] = {COL_RED, COL_DARK_ORANGE, COL_FOREST_GREEN, COL_DARK_VIOLET, COL_MEDIUM_VIOLET_RED, COL_SIENNA, COL_BLACK, COL_DARK_AQUA, COL_DARK_PINK};
+	int random_number = round(get_rand_num(0, 8));
 	return COLORS[random_number];
 }
 
@@ -107,6 +108,8 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, int vertices_count, double 
 					int end_x = calc_x(360.0 / vertices_count, col, GRAPH_COEF, GRAPH_X_MARGIN);
 					int end_y = calc_y(360.0 / vertices_count, col, GRAPH_COEF, GRAPH_Y_MARGIN);
 
+					draw_edge(hdc, edge_pen, start_x, start_y, end_x, end_y);
+
 					int center_x = (start_x + end_x) / 2 - 10;
 					int center_y = (start_y + end_y) / 2 - 10;
 
@@ -114,7 +117,6 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, int vertices_count, double 
 					sprintf(weight, "%d", current_edge->weight);
 					TextOut(hdc, center_x, center_y, weight, strlen(weight));
 
-					draw_edge(hdc, edge_pen, start_x, start_y, end_x, end_y);
 					current_edge = current_edge->p_next;
 				}
 			}
