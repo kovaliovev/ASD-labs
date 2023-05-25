@@ -21,6 +21,7 @@
 #define COL_BLACK RGB(0, 0, 0)
 #define COL_BLUE RGB(50, 0, 255)
 #define COL_GREEN RGB(50, 205, 50)
+#define COL_DARK_GREEN RGB(0, 128, 0)
 #define COL_RED RGB(255, 0, 0)
 #define COL_DARK_ORANGE RGB(255, 140, 0)
 #define COL_DARK_VIOLET RGB(148, 0, 211)
@@ -49,6 +50,7 @@ void draw_vertex(HDC hdc, HPEN vertex_pen, Vertex *vertex)
 	char vertex_name[3];
 	sprintf(vertex_name, "%d", vertex->num);
 
+	SetTextColor(hdc, COL_BLACK);
 	TextOut(hdc, text_x, text_y, vertex_name, strlen(vertex_name));
 }
 
@@ -140,7 +142,7 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, int vertices_count, double 
 	}
 }
 
-void draw_minimum_spanning_tree(HDC hdc, HPEN spanning_tree_pen, int vertices_count, Vertex *head_vertex, Edge *head_edge)
+void draw_minimum_spanning_tree(HDC hdc, HPEN spanning_tree_vertex_pen, HPEN spanning_tree_edge_pen, int vertices_count, Vertex *head_vertex, Edge *head_edge)
 {
 	int added[vertices_count];
 	int i;
@@ -175,9 +177,10 @@ void draw_minimum_spanning_tree(HDC hdc, HPEN spanning_tree_pen, int vertices_co
 			current_vertex = current_vertex->p_next;
 		}
 
-		draw_edge(hdc, spanning_tree_pen, first_vertex->x, first_vertex->y, second_vertex->x, second_vertex->y);
-		draw_vertex(hdc, spanning_tree_pen, first_vertex);
-		draw_vertex(hdc, spanning_tree_pen, second_vertex);
+		draw_edge(hdc, spanning_tree_edge_pen, first_vertex->x, first_vertex->y, second_vertex->x, second_vertex->y);
+		write_weight(hdc, COL_GREEN, current_edge->weight, first_vertex->x, first_vertex->y, second_vertex->x, second_vertex->y);
+		draw_vertex(hdc, spanning_tree_vertex_pen, first_vertex);
+		draw_vertex(hdc, spanning_tree_vertex_pen, second_vertex);
 
 		if (added[current_edge->first_vertex_num - 1] < added[current_edge->second_vertex_num - 1])
 		{

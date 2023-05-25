@@ -17,8 +17,9 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 {
 	Rectangle(hdc, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	HPEN vertex_pen = CreatePen(PS_SOLID, 3, COL_BLUE);					// стиль = неперервний; товщина = 3; колір = синій
-	HPEN spanning_tree_pen = CreatePen(PS_SOLID, 3, COL_GREEN); // стиль = неперервний; товщина = 3; колір = зелений
+	HPEN vertex_pen = CreatePen(PS_SOLID, 3, COL_BLUE);											// стиль = неперервний; товщина = 3; колір = синій
+	HPEN spanning_tree_vertex_pen = CreatePen(PS_SOLID, 3, COL_DARK_GREEN); // стиль = неперервний; товщина = 3; колір = темно-зелений
+	HPEN spanning_tree_edge_pen = CreatePen(PS_SOLID, 3, COL_GREEN);				// стиль = неперервний; товщина = 3; колір = зелений
 
 	Vertex *head_vertex = create_vertices(VERTICES_COUNT, GRAPH_COEF, GRAPH_X_MARGIN, GRAPH_Y_MARGIN);
 
@@ -62,7 +63,7 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	printf("AFTER SORTING:\n");
 	print_edges(head_edge);
 
-	// draw_minimum_spanning_tree(hdc, spanning_tree_pen, VERTICES_COUNT, head_vertex, head_edge);
+	draw_minimum_spanning_tree(hdc, spanning_tree_vertex_pen, spanning_tree_edge_pen, VERTICES_COUNT, head_vertex, head_edge);
 
 	// вивід матриці суміжності
 	printf("\nAdjacency matrix of the depicted graph:\n\n");
