@@ -19,7 +19,7 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 
 	HPEN vertex_pen = CreatePen(PS_SOLID, 3, COL_BLUE); // стиль = неперервний; товщина = 3; колір = синій
 
-	Vertex *vertex = create_vertices(VERTICES_COUNT, GRAPH_COEF, GRAPH_X_MARGIN, GRAPH_Y_MARGIN);
+	Vertex *head_vertex = create_vertices(VERTICES_COUNT, GRAPH_COEF, GRAPH_X_MARGIN, GRAPH_Y_MARGIN);
 
 	double **matrix_A = get_rand_matrix(VERTICES_COUNT);
 	mulmr(VERTICES_COUNT, (1.0 - N3 * 0.01 - N4 * 0.005 - 0.05), matrix_A);
@@ -45,18 +45,22 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	printf("Matrix of weights:\n");
 	print_matrix(VERTICES_COUNT, matrix_W);
 
-	Edge *edge = create_edges(VERTICES_COUNT, matrix_W);
-	print_edges(edge);
+	Edge *head_edge = create_edges(VERTICES_COUNT, matrix_W);
+	print_edges(head_edge);
 
 	switch (drawing_flag)
 	{
 	case DRAW_UNDIRECTED_CODE:
-		draw_undirected_graph(hdc, vertex_pen, VERTICES_COUNT, matrix_A, vertex, edge);
+		draw_undirected_graph(hdc, vertex_pen, VERTICES_COUNT, matrix_A, head_vertex, head_edge);
 		break;
 	default:
 		printf("ERROR! Value of drawing flag is not equal to any drawing code!\n");
 	}
 
+	sort_edges_by_weight(head_edge);
+	printf("AFTER SORTING:\n");
+	print_edges(head_edge);
+	
 	// вивід матриці суміжності
 	printf("\nAdjacency matrix of the depicted graph:\n\n");
 	print_matrix(VERTICES_COUNT, matrix_A);
@@ -69,8 +73,8 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	delete_matrix(VERTICES_COUNT, matrix_D);
 	delete_matrix(VERTICES_COUNT, matrix_Tr);
 	delete_matrix(VERTICES_COUNT, matrix_W);
-	delete_vertices(&vertex);
-	delete_edges(&edge);
+	delete_vertices(&head_vertex);
+	delete_edges(&head_edge);
 	printf("=========================================================\n");
 }
 

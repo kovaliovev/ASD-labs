@@ -20,6 +20,7 @@ Edge *create_edges(int size, double **weights_matrix)
 		exit(1);
 	}
 	Edge *current = p_head;
+
 	Edge *last;
 	int row, col;
 	for (row = 0; row < size; row++)
@@ -38,6 +39,7 @@ Edge *create_edges(int size, double **weights_matrix)
 					printf("Memory allocation failed!\n");
 					exit(1);
 				}
+
 				current->p_next = next;
 				last = current;
 				current = next;
@@ -71,4 +73,35 @@ void delete_edges(Edge **pp_head)
 	}
 	(*pp_head) = NULL;
 	printf("Edges have been deleted from memory!\n");
+}
+
+void sort_edges_by_weight(Edge *p_head)
+{
+	int is_sorted = 0;
+	while (!is_sorted)
+	{
+		is_sorted = 1;
+		Edge *current = p_head;
+		while (current->p_next != NULL)
+		{
+			Edge *next = current->p_next;
+			if (current->weight > next->weight)
+			{
+				is_sorted = 0;
+
+				int temp_first_vertex = current->first_vertex_num;
+				int temp_second_vertex = current->second_vertex_num;
+				int temp_weight = current->weight;
+
+				current->first_vertex_num = next->first_vertex_num;
+				current->second_vertex_num = next->second_vertex_num;
+				current->weight = next->weight;
+
+				next->first_vertex_num = temp_first_vertex;
+				next->second_vertex_num = temp_second_vertex;
+				next->weight = temp_weight;
+			}
+			current = current->p_next;
+		}
+	}
 }
