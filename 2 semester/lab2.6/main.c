@@ -48,7 +48,6 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag, int kruskal_step)
 	print_matrix(VERTICES_COUNT, matrix_W);
 
 	Edge *head_edge = create_edges(VERTICES_COUNT, matrix_W);
-	print_edges(head_edge);
 
 	switch (drawing_flag)
 	{
@@ -60,9 +59,6 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag, int kruskal_step)
 	}
 
 	sort_edges_by_weight(head_edge);
-	printf("AFTER SORTING:\n");
-	print_edges(head_edge);
-
 	draw_minimum_spanning_tree(hdc, spanning_tree_vertex_pen, spanning_tree_edge_pen, VERTICES_COUNT, kruskal_step, head_vertex, head_edge);
 
 	// вивід матриці суміжності

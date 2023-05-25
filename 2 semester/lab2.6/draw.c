@@ -144,21 +144,21 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, int vertices_count, double 
 
 void draw_minimum_spanning_tree(HDC hdc, HPEN spanning_tree_vertex_pen, HPEN spanning_tree_edge_pen, int vertices_count, int max_step, Vertex *head_vertex, Edge *head_edge)
 {
-	if (max_step > vertices_count)
-		max_step = vertices_count;
+	if (max_step > vertices_count - 1)
+		max_step = vertices_count - 1;
 
-	int added[vertices_count];
+	int flags[vertices_count];
 	int i;
 	for (i = 0; i < vertices_count; i++)
 	{
-		added[i] = i;
+		flags[i] = i;
 	}
 	Edge *current_edge = head_edge;
 
 	int step;
 	for (step = 0; step < max_step; step++)
 	{
-		while (added[current_edge->first_vertex_num - 1] == added[current_edge->second_vertex_num - 1])
+		while (flags[current_edge->first_vertex_num - 1] == flags[current_edge->second_vertex_num - 1])
 		{
 			current_edge = current_edge->p_next;
 		}
@@ -185,13 +185,30 @@ void draw_minimum_spanning_tree(HDC hdc, HPEN spanning_tree_vertex_pen, HPEN spa
 		draw_vertex(hdc, spanning_tree_vertex_pen, first_vertex);
 		draw_vertex(hdc, spanning_tree_vertex_pen, second_vertex);
 
-		if (added[current_edge->first_vertex_num - 1] < added[current_edge->second_vertex_num - 1])
+		int first_vertex_flag = flags[current_edge->first_vertex_num - 1];
+		int second_vertex_flag = flags[current_edge->second_vertex_num - 1];
+
+		if (first_vertex_flag < second_vertex_flag)
 		{
-			added[current_edge->second_vertex_num - 1] = added[current_edge->first_vertex_num - 1];
+			int j;
+			for (j = 0; j < vertices_count; j++)
+			{
+				if (flags[j] == second_vertex_flag)
+				{
+					flags[j] = first_vertex_flag;
+				}
+			}
 		}
 		else
 		{
-			added[current_edge->first_vertex_num - 1] = added[current_edge->second_vertex_num - 1];
+			int j;
+			for (j = 0; j < vertices_count; j++)
+			{
+				if (flags[j] == first_vertex_flag)
+				{
+					flags[j] = second_vertex_flag;
+				}
+			}
 		}
 	}
 }
