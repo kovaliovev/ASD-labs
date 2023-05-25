@@ -17,8 +17,7 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 {
 	Rectangle(hdc, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	HPEN vertex_pen = CreatePen(PS_SOLID, 3, RGB(50, 0, 255)); // стиль = неперервний; товщина = 3; колір = синій
-	HPEN edge_pen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));		 // стиль = неперервний; товщина = 1; колір = чорний
+	HPEN vertex_pen = CreatePen(PS_SOLID, 3, COL_BLUE); // стиль = неперервний; товщина = 3; колір = синій
 
 	Vertex *vertex = create_vertices(VERTICES_COUNT, GRAPH_COEF, GRAPH_X_MARGIN, GRAPH_Y_MARGIN);
 
@@ -52,7 +51,7 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	switch (drawing_flag)
 	{
 	case DRAW_UNDIRECTED_CODE:
-		draw_undirected_graph(hdc, vertex_pen, edge_pen, VERTICES_COUNT, matrix_A, vertex, edge);
+		draw_undirected_graph(hdc, vertex_pen, VERTICES_COUNT, matrix_A, vertex, edge);
 		break;
 	default:
 		printf("ERROR! Value of drawing flag is not equal to any drawing code!\n");

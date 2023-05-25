@@ -17,6 +17,23 @@
 #define GRAPH_X_MARGIN 410
 #define GRAPH_Y_MARGIN 395
 #define GRAPH_COEF 325
+// Кольори:
+#define COL_BLACK RGB(0, 0, 0)
+#define COL_BLUE RGB(50, 0, 255)
+#define COL_RED RGB(255, 0, 0)
+#define COL_DARK_ORANGE RGB(255, 140, 0)
+#define COL_FOREST_GREEN RGB(34, 139, 34)
+#define COL_DARK_VIOLET RGB(148, 0, 211)
+#define COL_MEDIUM_VIOLET_RED RGB(199, 21, 133)
+#define COL_SIENNA RGB(160, 82, 45)
+#define COL_DARK_AQUA RGB(7, 144, 121)
+
+COLORREF get_random_color()
+{
+	COLORREF COLORS[] = {COL_RED, COL_DARK_ORANGE, COL_FOREST_GREEN, COL_DARK_VIOLET, COL_MEDIUM_VIOLET_RED, COL_SIENNA, COL_BLACK, COL_DARK_AQUA};
+	int random_number = round(get_rand_num(0, 7));
+	return COLORS[random_number];
+}
 
 void draw_vertex(HDC hdc, HPEN vertex_pen, Vertex *vertex)
 {
@@ -60,11 +77,9 @@ void draw_reflect_edge(HDC hdc, HPEN edge_pen, Vertex *vertex)
 	}
 }
 
-void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, int vertices_count, double **matrix, Vertex *head_vertex, Edge *head_edge)
+void draw_undirected_graph(HDC hdc, HPEN vertex_pen, int vertices_count, double **matrix, Vertex *head_vertex, Edge *head_edge)
 {
 	make_matrix_symmetric(VERTICES_COUNT, matrix);
-
-	SelectObject(hdc, edge_pen);
 
 	Vertex *current_vertex = head_vertex;
 	Edge *current_edge = head_edge;
@@ -76,6 +91,10 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, int vertices
 		{
 			if (matrix[row][col])
 			{
+				COLORREF rand_color = get_random_color();
+				HPEN edge_pen = CreatePen(PS_SOLID, 1, rand_color);
+				SetTextColor(hdc, rand_color);
+				SelectObject(hdc, edge_pen);
 				if (row == col)
 				{
 					draw_reflect_edge(hdc, edge_pen, current_vertex);
@@ -104,6 +123,7 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, int vertices
 	}
 
 	current_vertex = head_vertex;
+	SetTextColor(hdc, COL_BLACK);
 	while (current_vertex != NULL)
 	{
 		draw_vertex(hdc, vertex_pen, current_vertex);
