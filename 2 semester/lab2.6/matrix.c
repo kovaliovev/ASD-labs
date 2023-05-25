@@ -5,7 +5,6 @@
 	Файл описує динамічний двовимірний масив, який використовується як матриця суміжності
 	графа, що зображується; а також функції для роботи з цим масивом.
 */
-#define MATRIX_SIZE 11
 #define SEED 2110
 
 double **create_matrix(int size)
@@ -16,10 +15,7 @@ double **create_matrix(int size)
 	for (i = 0; i < size; i++)
 	{
 		matrix[i] = (double *)malloc(size * sizeof(double));
-	}
-	// заповнення створеної матриці нулями
-	for (i = 0; i < size; i++)
-	{
+
 		for (j = 0; j < size; j++)
 		{
 			matrix[i][j] = 0;
@@ -28,7 +24,7 @@ double **create_matrix(int size)
 	return matrix;
 }
 
-void delete_matrix(double **matrix, int size)
+void delete_matrix(int size, double **matrix)
 {
 	int i;
 	for (i = 0; i < size; i++)
@@ -39,16 +35,18 @@ void delete_matrix(double **matrix, int size)
 	printf("Matrix have been deleted from memory!\n");
 }
 
-double get_rand_num(double min, double max)
+double get_rand_num(int min, int max)
 {
-	double randomNum = ((double)rand() / RAND_MAX) * (max - min);
-	return randomNum;
+	double random_num = ((double)rand() / RAND_MAX) * (max - min);
+	return random_num;
 }
 
 double **get_rand_matrix(int size)
 {
 	srand(SEED);
+
 	double **matrix = create_matrix(size);
+
 	int i, j;
 	for (i = 0; i < size; i++)
 	{
@@ -57,10 +55,11 @@ double **get_rand_matrix(int size)
 			matrix[i][j] = get_rand_num(0, 2);
 		}
 	}
+
 	return matrix;
 }
 
-double **get_matrix_B(double **matrix_Wt, int size)
+double **get_matrix_B(int size, double **matrix_Wt)
 {
 	double **matrix_B = create_matrix(size);
 	int i, j;
@@ -68,13 +67,13 @@ double **get_matrix_B(double **matrix_Wt, int size)
 	{
 		for (j = 0; j < size; j++)
 		{
-			matrix_B[i][j] = matrix_Wt[i][j] == 0.0 ? 0.0 : 1.0;
+			matrix_B[i][j] = !matrix_Wt[i][j] ? 0 : 1;
 		}
 	}
 	return matrix_B;
 }
 
-double **get_matrix_C(double **matrix_B, int size)
+double **get_matrix_C(int size, double **matrix_B)
 {
 	double **matrix_C = create_matrix(size);
 	int i, j;
@@ -82,13 +81,13 @@ double **get_matrix_C(double **matrix_B, int size)
 	{
 		for (j = 0; j < size; j++)
 		{
-			matrix_C[i][j] = matrix_B[i][j] != matrix_B[j][i] ? 1.0 : 0.0;
+			matrix_C[i][j] = matrix_B[i][j] != matrix_B[j][i] ? 1 : 0;
 		}
 	}
 	return matrix_C;
 }
 
-double **get_matrix_D(double **matrix_B, int size)
+double **get_matrix_D(int size, double **matrix_B)
 {
 	double **matrix_D = create_matrix(size);
 	int i, j;
@@ -96,7 +95,7 @@ double **get_matrix_D(double **matrix_B, int size)
 	{
 		for (j = 0; j < size; j++)
 		{
-			matrix_D[i][j] = (matrix_B[i][j] == matrix_B[j][i] && matrix_B[i][j]) ? 1.0 : 0.0;
+			matrix_D[i][j] = (matrix_B[i][j] == matrix_B[j][i] && matrix_B[i][j]) ? 1 : 0;
 		}
 	}
 	return matrix_D;
@@ -110,13 +109,13 @@ double **get_matrix_Tr(int size)
 	{
 		for (j = 0; j < size; j++)
 		{
-			matrix_Tr[i][j] = i < j ? 1.0 : 0.0;
+			matrix_Tr[i][j] = i < j ? 1 : 0;
 		}
 	}
 	return matrix_Tr;
 }
 
-double **get_matrix_W(double **matrix_Wt, int size)
+double **get_matrix_W(int size, double **matrix_Wt)
 {
 	double **matrix_W = create_matrix(size);
 	int i, j;
@@ -130,7 +129,7 @@ double **get_matrix_W(double **matrix_Wt, int size)
 	return matrix_W;
 }
 
-void make_matrix_symmetric(double **matrix, int size)
+void make_matrix_symmetric(int size, double **matrix)
 {
 	int i, j;
 	for (i = 0; i < size; i++)
@@ -145,7 +144,7 @@ void make_matrix_symmetric(double **matrix, int size)
 	}
 }
 
-void make_matrix_rounded(double **matrix, int size)
+void make_matrix_rounded(int size, double **matrix)
 {
 	int i, j;
 	for (i = 0; i < size; i++)
@@ -157,7 +156,7 @@ void make_matrix_rounded(double **matrix, int size)
 	}
 }
 
-void mulmr(double **matrix, int size, double coefficient)
+void mulmr(int size, double coefficient, double **matrix)
 {
 	int i, j;
 	for (i = 0; i < size; i++)
@@ -169,7 +168,7 @@ void mulmr(double **matrix, int size, double coefficient)
 	}
 }
 
-void mult_matrix_by_num(double **matrix, int size, double number)
+void mult_matrix_by_num(int size, int number, double **matrix)
 {
 	int i, j;
 	for (i = 0; i < size; i++)
@@ -181,7 +180,7 @@ void mult_matrix_by_num(double **matrix, int size, double number)
 	}
 }
 
-void mult_matrix_by_matrix(double **result_matrix, int size, double **matrix)
+void mult_matrix_by_matrix(int size, double **result_matrix, double **matrix)
 {
 	int i, j;
 	for (i = 0; i < size; i++)
@@ -193,7 +192,7 @@ void mult_matrix_by_matrix(double **result_matrix, int size, double **matrix)
 	}
 }
 
-void add_matrix_to_matrix(double **result_matrix, int size, double **matrix)
+void add_matrix_to_matrix(int size, double **result_matrix, double **matrix)
 {
 	int i, j;
 	for (i = 0; i < size; i++)
@@ -205,7 +204,7 @@ void add_matrix_to_matrix(double **result_matrix, int size, double **matrix)
 	}
 }
 
-void print_matrix(double **matrix, int size)
+void print_matrix(int size, double **matrix)
 {
 	int i, j;
 	for (i = 0; i < size; i++)

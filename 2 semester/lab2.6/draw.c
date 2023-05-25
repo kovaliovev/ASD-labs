@@ -14,37 +14,33 @@
 #define WINDOW_RIGHT_TOP_CORNER_Y 5
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 820
-#define STANDART_GRAPH_MARGIN 350
-#define STANDART_GRAPH_COEF 300
-#define N3 1
-#define N4 0
+#define GRAPH_X_MARGIN 350
+#define GRAPH_Y_MARGIN 350
+#define GRAPH_COEF 300
 
-void draw_vertex(HPEN vertex_pen, Vertex *vertex, HDC hdc)
+void draw_vertex(HDC hdc, HPEN vertex_pen, Vertex *vertex)
 {
 	// малювання вершини
 	SelectObject(hdc, vertex_pen);
 	Ellipse(hdc, vertex->x - VERTEX_RADIUS, vertex->y - VERTEX_RADIUS, vertex->x + VERTEX_RADIUS, vertex->y + VERTEX_RADIUS);
 
+	// написання номеру вершини
+	int text_y = vertex->y - VERTEX_RADIUS / 4;
+	int text_x = vertex->num <= 9 ? vertex->x - TEXT_MARGIN : vertex->x - TEXT_MARGIN - 4;
+
 	char vertex_name[3];
 	sprintf(vertex_name, "%d", vertex->num);
-	// написання номеру вершини
-	if (vertex->num <= 9)
-	{
-		TextOut(hdc, vertex->x - TEXT_MARGIN, vertex->y - VERTEX_RADIUS / 4, vertex_name, 1);
-	}
-	else
-	{
-		TextOut(hdc, vertex->x - TEXT_MARGIN - 4, vertex->y - VERTEX_RADIUS / 4, vertex_name, 2);
-	}
+
+	TextOut(hdc, text_x, text_y, vertex_name, strlen(vertex_name));
 }
 
-void draw_edge(HPEN edge_pen, double start_x, double start_y, double end_x, double end_y, HDC hdc)
+void draw_edge(HDC hdc, HPEN edge_pen, int start_x, int start_y, int end_x, int end_y)
 {
 	MoveToEx(hdc, start_x, start_y, NULL);
 	LineTo(hdc, end_x, end_y);
 }
 
-void draw_reflect_edge(HPEN edge_pen, Vertex *vertex, HDC hdc)
+void draw_reflect_edge(HDC hdc, HPEN edge_pen, Vertex *vertex)
 {
 	if (vertex->num <= ceil(VERTICES_COUNT / 4.0)) // 2 чверть
 	{
@@ -64,14 +60,14 @@ void draw_reflect_edge(HPEN edge_pen, Vertex *vertex, HDC hdc)
 	}
 }
 
-void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **matrix, Vertex *vertex, int vertices_count, Edge *edge)
+void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, int vertices_count, double **matrix, Vertex *head_vertex, Edge *head_edge)
 {
-	make_matrix_symmetric(matrix, MATRIX_SIZE);
+	make_matrix_symmetric(VERTICES_COUNT, matrix);
 
 	SelectObject(hdc, edge_pen);
 
-	Vertex *current_vertex = vertex;
-	Edge *current_edge = edge;
+	Vertex *current_vertex = head_vertex;
+	Edge *current_edge = head_edge;
 
 	int row, col;
 	for (row = 0; row < vertices_count; row++)
@@ -82,24 +78,24 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **mat
 			{
 				if (row == col)
 				{
-					draw_reflect_edge(edge_pen, current_vertex, hdc);
+					draw_reflect_edge(hdc, edge_pen, current_vertex);
 				}
 				else
 				{
 					int start_x = current_vertex->x;
 					int start_y = current_vertex->y;
 
-					int end_x = calc_x(360.0 / vertices_count, col, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
-					int end_y = calc_y(360.0 / vertices_count, col, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
+					int end_x = calc_x(360.0 / vertices_count, col, GRAPH_COEF, GRAPH_X_MARGIN);
+					int end_y = calc_y(360.0 / vertices_count, col, GRAPH_COEF, GRAPH_Y_MARGIN);
 
 					int center_x = (start_x + end_x) / 2 - 10;
 					int center_y = (start_y + end_y) / 2 - 10;
 
 					char weight[4];
 					sprintf(weight, "%d", current_edge->weight);
-					TextOut(hdc, center_x, center_y, weight, 4);
-					
-					draw_edge(edge_pen, start_x, start_y, end_x, end_y, hdc);
+					TextOut(hdc, center_x, center_y, weight, strlen(weight));
+
+					draw_edge(hdc, edge_pen, start_x, start_y, end_x, end_y);
 					current_edge = current_edge->p_next;
 				}
 			}
@@ -107,10 +103,10 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, HPEN edge_pen, double **mat
 		current_vertex = current_vertex->p_next;
 	}
 
-	current_vertex = vertex;
+	current_vertex = head_vertex;
 	while (current_vertex != NULL)
 	{
-		draw_vertex(vertex_pen, current_vertex, hdc);
+		draw_vertex(hdc, vertex_pen, current_vertex);
 		current_vertex = current_vertex->p_next;
 	}
 }

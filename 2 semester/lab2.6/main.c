@@ -5,8 +5,8 @@
 #define DRAW_UNDIRECTED_CODE 8812
 // n1 = 2
 // n2 = 1
-// n3 = 1
-// n4 = 0
+#define N3 1
+#define N4 0
 
 // Число вершин: 11
 // Розміщення вершин: коло
@@ -20,48 +20,39 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	HPEN vertex_pen = CreatePen(PS_SOLID, 3, RGB(50, 0, 255)); // стиль = неперервний; товщина = 3; колір = синій
 	HPEN edge_pen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));		 // стиль = неперервний; товщина = 1; колір = чорний
 
-	Vertex *vertex = create_vertices(VERTICES_COUNT, STANDART_GRAPH_MARGIN, STANDART_GRAPH_MARGIN, STANDART_GRAPH_COEF);
+	Vertex *vertex = create_vertices(VERTICES_COUNT, GRAPH_COEF, GRAPH_X_MARGIN, GRAPH_Y_MARGIN);
 
-	double **matrix_A = get_rand_matrix(MATRIX_SIZE);
-	mulmr(matrix_A, MATRIX_SIZE, (1.0 - N3 * 0.01 - N4 * 0.005 - 0.05));
+	double **matrix_A = get_rand_matrix(VERTICES_COUNT);
+	mulmr(VERTICES_COUNT, (1.0 - N3 * 0.01 - N4 * 0.005 - 0.05), matrix_A);
 
-	double **matrix_Wt = get_rand_matrix(MATRIX_SIZE);
-	// print_matrix(matrix_Wt, MATRIX_SIZE);
-	mult_matrix_by_num(matrix_Wt, VERTICES_COUNT, 100);
-	// print_matrix(matrix_Wt, MATRIX_SIZE);
-	mult_matrix_by_matrix(matrix_Wt, VERTICES_COUNT, matrix_A);
-	// print_matrix(matrix_Wt, MATRIX_SIZE);
-	make_matrix_rounded(matrix_Wt, VERTICES_COUNT);
-	// print_matrix(matrix_Wt, MATRIX_SIZE);
+	double **matrix_Wt = get_rand_matrix(VERTICES_COUNT);
+	mult_matrix_by_num(VERTICES_COUNT, 100, matrix_Wt);
+	mult_matrix_by_matrix(VERTICES_COUNT, matrix_Wt, matrix_A);
+	make_matrix_rounded(VERTICES_COUNT, matrix_Wt);
 
-	double **matrix_B = get_matrix_B(matrix_Wt, VERTICES_COUNT);
-	// print_matrix(matrix_B, MATRIX_SIZE);
+	double **matrix_B = get_matrix_B(VERTICES_COUNT, matrix_Wt);
 
-	double **matrix_C = get_matrix_C(matrix_B, VERTICES_COUNT);
-	// print_matrix(matrix_C, MATRIX_SIZE);
+	double **matrix_C = get_matrix_C(VERTICES_COUNT, matrix_B);
 
-	double **matrix_D = get_matrix_D(matrix_B, VERTICES_COUNT);
-	// print_matrix(matrix_D, MATRIX_SIZE);
+	double **matrix_D = get_matrix_D(VERTICES_COUNT, matrix_B);
 
 	double **matrix_Tr = get_matrix_Tr(VERTICES_COUNT);
-	// print_matrix(matrix_Tr, MATRIX_SIZE);
 
-	mult_matrix_by_matrix(matrix_D, VERTICES_COUNT, matrix_Tr);
-	add_matrix_to_matrix(matrix_C, VERTICES_COUNT, matrix_D);
-	mult_matrix_by_matrix(matrix_Wt, VERTICES_COUNT, matrix_C);
-	// print_matrix(matrix_Wt, MATRIX_SIZE);
+	mult_matrix_by_matrix(VERTICES_COUNT, matrix_D, matrix_Tr);
+	add_matrix_to_matrix(VERTICES_COUNT, matrix_C, matrix_D);
+	mult_matrix_by_matrix(VERTICES_COUNT, matrix_Wt, matrix_C);
 
-	double **matrix_W = get_matrix_W(matrix_Wt, VERTICES_COUNT);
+	double **matrix_W = get_matrix_W(VERTICES_COUNT, matrix_Wt);
 	printf("Matrix of weights:\n");
-	print_matrix(matrix_W, MATRIX_SIZE);
+	print_matrix(VERTICES_COUNT, matrix_W);
 
-	Edge *edge = create_edges(matrix_W, VERTICES_COUNT);
+	Edge *edge = create_edges(VERTICES_COUNT, matrix_W);
 	print_edges(edge);
 
 	switch (drawing_flag)
 	{
 	case DRAW_UNDIRECTED_CODE:
-		draw_undirected_graph(hdc, vertex_pen, edge_pen, matrix_A, vertex, VERTICES_COUNT, edge);
+		draw_undirected_graph(hdc, vertex_pen, edge_pen, VERTICES_COUNT, matrix_A, vertex, edge);
 		break;
 	default:
 		printf("ERROR! Value of drawing flag is not equal to any drawing code!\n");
@@ -69,16 +60,16 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 
 	// вивід матриці суміжності
 	printf("\nAdjacency matrix of the depicted graph:\n\n");
-	print_matrix(matrix_A, MATRIX_SIZE);
+	print_matrix(VERTICES_COUNT, matrix_A);
 
 	// очищення пам'яті
-	delete_matrix(matrix_A, MATRIX_SIZE);
-	delete_matrix(matrix_Wt, MATRIX_SIZE);
-	delete_matrix(matrix_B, MATRIX_SIZE);
-	delete_matrix(matrix_C, MATRIX_SIZE);
-	delete_matrix(matrix_D, MATRIX_SIZE);
-	delete_matrix(matrix_Tr, MATRIX_SIZE);
-	delete_matrix(matrix_W, MATRIX_SIZE);
+	delete_matrix(VERTICES_COUNT, matrix_A);
+	delete_matrix(VERTICES_COUNT, matrix_Wt);
+	delete_matrix(VERTICES_COUNT, matrix_B);
+	delete_matrix(VERTICES_COUNT, matrix_C);
+	delete_matrix(VERTICES_COUNT, matrix_D);
+	delete_matrix(VERTICES_COUNT, matrix_Tr);
+	delete_matrix(VERTICES_COUNT, matrix_W);
 	delete_vertices(&vertex);
 	delete_edges(&edge);
 	printf("=========================================================\n");

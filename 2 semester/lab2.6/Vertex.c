@@ -10,8 +10,8 @@
 typedef struct vertices_list
 {
 	int num;
-	double x;
-	double y;
+	int x;
+	int y;
 	struct vertices_list *p_next;
 } Vertex;
 
@@ -24,24 +24,24 @@ void check_mem_error(Vertex *new_elem)
 	}
 }
 
-double to_radians(double degrees)
+double to_radians(int degrees)
 {
 	return degrees * PI / 180.0;
 }
 
-double calc_x(double rotate_angle, int i, int margin, int coefficient)
+int calc_x(double rotate_angle, int num, int coefficient, int margin)
 {
-	double x = -cos(to_radians(rotate_angle * i)) * coefficient + margin;
+	int x = -cos(to_radians(rotate_angle * num)) * coefficient + margin;
 	return x;
 }
 
-double calc_y(double rotate_angle, int i, int margin, int coefficient)
+int calc_y(double rotate_angle, int num, int coefficient, int margin)
 {
-	double y = -sin(to_radians(rotate_angle * i)) * coefficient + margin;
+	int y = -sin(to_radians(rotate_angle * num)) * coefficient + margin;
 	return y;
 }
 
-Vertex *create_vertices(double count, int x_margin, int y_margin, int coefficient)
+Vertex *create_vertices(int count, int coefficient, int x_margin, int y_margin)
 {
 	if (count < 1)
 	{
@@ -52,14 +52,14 @@ Vertex *create_vertices(double count, int x_margin, int y_margin, int coefficien
 	Vertex *p_head = (Vertex *)malloc(sizeof(Vertex));
 	check_mem_error(p_head);
 
-	double i;
-	double rotate_angle = 360 / count;
+	double rotate_angle = 360.0 / (double)count;
 	Vertex *current = p_head;
+	int i;
 	for (i = 0; i < count; i++)
 	{
 		current->num = i + 1;
-		current->x = calc_x(rotate_angle, i, x_margin, coefficient);
-		current->y = calc_y(rotate_angle, i, y_margin, coefficient);
+		current->x = calc_x(rotate_angle, i, coefficient, x_margin);
+		current->y = calc_y(rotate_angle, i, coefficient, y_margin);
 
 		if (i + 1 == count)
 		{

@@ -11,7 +11,7 @@ typedef struct edges_list
 	struct edges_list *p_next;
 } Edge;
 
-Edge *create_edges(double **weights_matrix, int size)
+Edge *create_edges(int size, double **weights_matrix)
 {
 	Edge *p_head = (Edge *)malloc(sizeof(Edge));
 	if (p_head == NULL)
