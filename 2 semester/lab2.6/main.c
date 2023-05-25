@@ -10,10 +10,10 @@
 
 // Число вершин: 11
 // Розміщення вершин: коло
-
+HWND kruskal_step_button;
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип функції потоку вікна
 
-void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
+void draw_window(HWND hWnd, HDC hdc, int drawing_flag, int kruskal_step)
 {
 	Rectangle(hdc, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -63,7 +63,7 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag)
 	printf("AFTER SORTING:\n");
 	print_edges(head_edge);
 
-	draw_minimum_spanning_tree(hdc, spanning_tree_vertex_pen, spanning_tree_edge_pen, VERTICES_COUNT, head_vertex, head_edge);
+	draw_minimum_spanning_tree(hdc, spanning_tree_vertex_pen, spanning_tree_edge_pen, VERTICES_COUNT, kruskal_step, head_vertex, head_edge);
 
 	// вивід матриці суміжності
 	printf("\nAdjacency matrix of the depicted graph:\n\n");
@@ -120,6 +120,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 
 	ShowWindow(hWnd, nCmdShow);
 
+	kruskal_step_button = CreateWindow("button", "NEXT STEP", WS_VISIBLE | WS_CHILD | WS_BORDER, 900, 680, 196, 32, hWnd, NULL, NULL, NULL);
+
 	while (GetMessage(&lpMsg, hWnd, 0, 0))
 	{
 		TranslateMessage(&lpMsg); // перетворення повідомлення
@@ -136,14 +138,21 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam)
 
 	static int drawing_flag = DRAW_UNDIRECTED_CODE;
 
+	static int kruskal_step = 0;
+
 	switch (messg)
 	{
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-		draw_window(hWnd, hdc, drawing_flag);
+		draw_window(hWnd, hdc, drawing_flag, kruskal_step);
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_COMMAND:
+		if (lParam == kruskal_step_button)
+		{
+			kruskal_step++;
+		}
+		RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
 		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);

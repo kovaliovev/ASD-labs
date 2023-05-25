@@ -142,8 +142,11 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, int vertices_count, double 
 	}
 }
 
-void draw_minimum_spanning_tree(HDC hdc, HPEN spanning_tree_vertex_pen, HPEN spanning_tree_edge_pen, int vertices_count, Vertex *head_vertex, Edge *head_edge)
+void draw_minimum_spanning_tree(HDC hdc, HPEN spanning_tree_vertex_pen, HPEN spanning_tree_edge_pen, int vertices_count, int max_step, Vertex *head_vertex, Edge *head_edge)
 {
+	if (max_step > vertices_count)
+		max_step = vertices_count;
+
 	int added[vertices_count];
 	int i;
 	for (i = 0; i < vertices_count; i++)
@@ -153,7 +156,7 @@ void draw_minimum_spanning_tree(HDC hdc, HPEN spanning_tree_vertex_pen, HPEN spa
 	Edge *current_edge = head_edge;
 
 	int step;
-	for (step = 0; step < vertices_count; step++)
+	for (step = 0; step < max_step; step++)
 	{
 		while (added[current_edge->first_vertex_num - 1] == added[current_edge->second_vertex_num - 1])
 		{
