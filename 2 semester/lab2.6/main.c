@@ -59,7 +59,7 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag, int kruskal_step)
 	}
 
 	sort_edges_by_weight(head_edge);
-	draw_minimum_spanning_tree(hdc, spanning_tree_vertex_pen, spanning_tree_edge_pen, VERTICES_COUNT, kruskal_step, head_vertex, head_edge);
+	draw_minimum_spanning_tree(hdc, spanning_tree_vertex_pen, spanning_tree_edge_pen, VERTICES_COUNT, kruskal_step, 810, 50, head_vertex, head_edge);
 
 	// вивід матриці суміжності
 	printf("\nAdjacency matrix of the depicted graph:\n\n");

@@ -95,6 +95,27 @@ void write_weight(HDC hdc, COLORREF text_color, int weight, int start_x, int sta
 	TextOut(hdc, text_x, text_y, str_weight, strlen(str_weight));
 }
 
+void write_added_edge(HDC hdc, int step, int text_x, int text_y, Edge *added_edge)
+{
+	SetTextColor(hdc, COL_BLACK);
+
+	char str_step[10];
+	sprintf(str_step, "Step #%d:", step);
+	TextOut(hdc, text_x, text_y, str_step, strlen(str_step));
+	text_y += 24;
+
+	char str_edge[60];
+	sprintf(str_edge, "[%d]-----{%d}-----[%d] edge was added to minimum spanning tree!", added_edge->first_vertex_num, added_edge->weight, added_edge->second_vertex_num);
+	TextOut(hdc, text_x, text_y, str_edge, strlen(str_edge));
+}
+
+void write_minimum_spanning_tree_weight(HDC hdc, int text_x, int text_y, int minimum_spanning_tree_weight)
+{
+	char str_weight[48];
+	sprintf(str_weight, "Minimum spanning tree was found! It's weight: %d", minimum_spanning_tree_weight);
+	TextOut(hdc, text_x, text_y, str_weight, strlen(str_weight));
+}
+
 void draw_undirected_graph(HDC hdc, HPEN vertex_pen, int vertices_count, double **matrix, Vertex *head_vertex, Edge *head_edge)
 {
 	make_matrix_symmetric(VERTICES_COUNT, matrix);
@@ -143,13 +164,14 @@ void draw_undirected_graph(HDC hdc, HPEN vertex_pen, int vertices_count, double 
 	}
 }
 
-void draw_minimum_spanning_tree(HDC hdc, HPEN spanning_tree_vertex_pen, HPEN spanning_tree_edge_pen, int vertices_count, int max_step, Vertex *head_vertex, Edge *head_edge)
+void draw_minimum_spanning_tree(HDC hdc, HPEN spanning_tree_vertex_pen, HPEN spanning_tree_edge_pen, int vertices_count, int max_step, int text_x, int text_y, Vertex *head_vertex, Edge *head_edge)
 {
 	if (max_step > vertices_count - 1)
 		max_step = vertices_count - 1;
 
-	int flags[vertices_count];
-	int i;
+	int minimum_spanning_tree_weight = 0;
+
+	int i, flags[vertices_count];
 	for (i = 0; i < vertices_count; i++)
 	{
 		flags[i] = i;
@@ -157,7 +179,7 @@ void draw_minimum_spanning_tree(HDC hdc, HPEN spanning_tree_vertex_pen, HPEN spa
 	Edge *current_edge = head_edge;
 
 	int step;
-	for (step = 0; step < max_step; step++)
+	for (step = 1; step <= max_step; step++)
 	{
 		while (flags[current_edge->first_vertex_num - 1] == flags[current_edge->second_vertex_num - 1])
 		{
@@ -165,8 +187,7 @@ void draw_minimum_spanning_tree(HDC hdc, HPEN spanning_tree_vertex_pen, HPEN spa
 		}
 
 		Vertex *current_vertex = head_vertex;
-		Vertex *first_vertex;
-		Vertex *second_vertex;
+		Vertex *first_vertex, *second_vertex;
 
 		while (current_vertex != NULL)
 		{
@@ -181,8 +202,13 @@ void draw_minimum_spanning_tree(HDC hdc, HPEN spanning_tree_vertex_pen, HPEN spa
 			current_vertex = current_vertex->p_next;
 		}
 
+		minimum_spanning_tree_weight += current_edge->weight;
 		draw_edge(hdc, spanning_tree_edge_pen, first_vertex->x, first_vertex->y, second_vertex->x, second_vertex->y);
 		write_weight(hdc, COL_GREEN, current_edge->weight, first_vertex->x, first_vertex->y, second_vertex->x, second_vertex->y);
+
+		write_added_edge(hdc, step, text_x, text_y, current_edge);
+		text_y += 48;
+
 		draw_vertex(hdc, spanning_tree_vertex_pen, first_vertex);
 		draw_vertex(hdc, spanning_tree_vertex_pen, second_vertex);
 
@@ -211,5 +237,12 @@ void draw_minimum_spanning_tree(HDC hdc, HPEN spanning_tree_vertex_pen, HPEN spa
 				}
 			}
 		}
+	}
+	
+	if (max_step == vertices_count - 1)
+	{
+		text_x += 20;
+		text_y += 20;
+		write_minimum_spanning_tree_weight(hdc, text_x, text_y, minimum_spanning_tree_weight);
 	}
 }
