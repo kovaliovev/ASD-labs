@@ -17,6 +17,8 @@
 #define WINDOW_HEIGHT 820
 #define GRAPH_X_MARGIN 410
 #define GRAPH_Y_MARGIN 395
+#define KRUSKAL_INFO_X 810
+#define KRUSKAL_INFO_Y 50
 #define GRAPH_COEF 325
 // Кольори:
 #define COL_BLACK RGB(0, 0, 0)
@@ -111,6 +113,8 @@ void write_added_edge(HDC hdc, int step, int text_x, int text_y, Edge *added_edg
 
 void write_minimum_spanning_tree_weight(HDC hdc, int text_x, int text_y, int minimum_spanning_tree_weight)
 {
+	SetTextColor(hdc, COL_DARK_GREEN);
+
 	char str_weight[48];
 	sprintf(str_weight, "Minimum spanning tree was found! It's weight: %d", minimum_spanning_tree_weight);
 	TextOut(hdc, text_x, text_y, str_weight, strlen(str_weight));
@@ -238,7 +242,7 @@ void draw_minimum_spanning_tree(HDC hdc, HPEN spanning_tree_vertex_pen, HPEN spa
 			}
 		}
 	}
-	
+
 	if (max_step == vertices_count - 1)
 	{
 		text_x += 20;

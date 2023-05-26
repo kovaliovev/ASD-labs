@@ -108,9 +108,9 @@ double **get_matrix_Tr(int size)
 	int i, j;
 	for (i = 0; i < size; i++)
 	{
-		for (j = 0; j < size; j++)
+		for (j = i + 1; j < size; j++)
 		{
-			matrix_Tr[i][j] = i < j ? 1 : 0;
+			matrix_Tr[i][j] = 1;
 		}
 	}
 	return matrix_Tr;
