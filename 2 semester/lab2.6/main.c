@@ -25,11 +25,9 @@ void draw_window(HWND hWnd, HDC hdc, int drawing_flag, int kruskal_step)
 
 	double **matrix_A = get_rand_matrix(VERTICES_COUNT);
 	mulmr(VERTICES_COUNT, (1.0 - N3 * 0.01 - N4 * 0.005 - 0.05), matrix_A);
+	make_matrix_symmetric(VERTICES_COUNT, matrix_A); // робимо матрицю симетричною, оскільки граф завжди ненапрямлений
 
-	double **matrix_Wt = get_rand_matrix(VERTICES_COUNT);
-	mult_matrix_by_num(VERTICES_COUNT, 100, matrix_Wt);
-	mult_matrix_by_matrix(VERTICES_COUNT, matrix_Wt, matrix_A);
-	make_matrix_rounded(VERTICES_COUNT, matrix_Wt);
+	double **matrix_Wt = get_matrix_Wt(VERTICES_COUNT, matrix_A);
 
 	double **matrix_B = get_matrix_B(VERTICES_COUNT, matrix_Wt);
 
