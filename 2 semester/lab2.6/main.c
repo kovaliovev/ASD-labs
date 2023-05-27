@@ -15,8 +15,6 @@ LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM); // прототип ф�
 
 void draw_window(HWND hWnd, HDC hdc, int drawing_flag, int kruskal_step)
 {
-	Rectangle(hdc, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-
 	HPEN vertex_pen = CreatePen(PS_SOLID, 3, COL_BLUE);											// стиль = неперервний; товщина = 3; колір = синій
 	HPEN spanning_tree_vertex_pen = CreatePen(PS_SOLID, 3, COL_DARK_GREEN); // стиль = неперервний; товщина = 3; колір = темно-зелений
 	HPEN spanning_tree_edge_pen = CreatePen(PS_SOLID, 3, COL_GREEN);				// стиль = неперервний; товщина = 3; колір = зелений
